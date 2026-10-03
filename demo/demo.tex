@@ -1,0 +1,100 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\usepackage{icl26}
+
+\title{Variational inequalities and their finite element solutions}
+\subtitle{Obstacle problems, convexity, and a priori estimates}
+\author{Ed Bueler}
+\institute{University of Alaska Fairbanks}
+\date{Imperial College London \quad October 2026}
+
+\newcommand{\cK}{{\mathcal{K}}}  % outer braces: safe in P_\cK under unicode-math
+\newcommand{\ip}[2]{\left\langle #1, #2 \right\rangle}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{Examples}
+
+\begin{frame}{The classical obstacle problem}
+  Given an obstacle $\psi$ and source $f$ on $\Omega\subset\mathbb{R}^d$, let
+  \[
+    \cK = \{ v \in H_0^1(\Omega) : v \ge \psi \}.
+  \]
+  Find $u\in\cK$ so that
+  \[
+    \int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u)
+    \qquad \text{for all } v\in\cK.
+  \]
+  \begin{itemize}
+    \item $\cK$ is a closed, convex set but \alert{not} a subspace
+    \item equivalent to minimizing $J(v)=\tfrac12\|\nabla v\|^2-\ip{f}{v}$ over $\cK$
+    \item free boundary $\partial\{u>\psi\}$ is \emph{unknown}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{A picture}
+  % obstacle psi = 0.3 - x^2; u = psi on contact set |x| <= a, linear tangent to 0 at x = +-1
+  \pgfmathsetmacro{\a}{1-sqrt(0.7)}
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[width=0.8\linewidth, height=0.5\linewidth,
+                 axis lines=none, xmin=-1.1, xmax=1.1, ymin=-0.75, ymax=0.4,
+                 xtick=\empty, ytick=\empty, samples=100]
+      \draw[icNavy] (axis cs:-1.05,0) -- (axis cs:1.05,0);
+      \addplot[icGrey, thick, domain=-1:1] {0.3 - x^2};
+      \addplot[icBlue, very thick, domain=-1:-\a] {(0.3-\a^2)*(x+1)/(1-\a)};
+      \addplot[icBlue, very thick, domain=\a:1]   {(0.3-\a^2)*(1-x)/(1-\a)};
+      \addplot[icAccent, ultra thick, domain=-\a:\a] {0.3 - x^2};
+      \node[icGrey, right] at (axis cs:0.75,-0.3) {$\psi$};
+      \node[icBlue, above] at (axis cs:-0.6,0.15) {$u$};
+      \node[icAccent, above] at (axis cs:0,0.3) {contact set $u=\psi$};
+    \end{axis}
+  \end{tikzpicture}
+\end{frame}
+
+\section{Theory}
+
+\begin{frame}{Existence and uniqueness}
+  \begin{block}{Theorem (Lions--Stampacchia)}
+    Let $a(\cdot,\cdot)$ be bounded and coercive on a Hilbert space $V$, and
+    $\cK\subset V$ nonempty, closed, convex. Then for each $\ell\in V'$ there is a
+    unique $u\in\cK$ with
+    \[ a(u,v-u)\ge \ell(v-u) \quad\forall v\in\cK. \]
+  \end{block}
+  \pause
+  \begin{itemize}
+    \item proof: Banach fixed point for $u\mapsto P_\cK\big(u-\rho(Au-\ell)\big)$
+    \item generalizes Lax--Milgram, which is the case $\cK=V$
+  \end{itemize}
+\end{frame}
+
+\section{Finite elements}
+
+\begin{frame}{Falk's a priori estimate}
+  For $P_1$ elements on a quasi-uniform mesh, with $\cK_h\not\subset\cK$ in general,
+  \[
+    \|u-u_h\|_{H^1} \le C\Big(
+      \inf_{v_h\in\cK_h}\|u-v_h\| + \inf_{v\in\cK}\|u_h - v\| \Big)^{1/2}
+      \lesssim C\,h .
+  \]
+  \grey{Falk, Math.\ Comp.\ 1974.}
+\end{frame}
+
+\begin{frame}[standout]
+  Questions?
+\end{frame}
+
+\appendix
+
+\begin{frame}{Backup: projection onto a convex set}
+  $P_\cK v$ is the unique $w\in\cK$ with $\ip{v-w}{z-w}\le 0$ for all $z\in\cK$.
+\end{frame}
+
+\end{document}

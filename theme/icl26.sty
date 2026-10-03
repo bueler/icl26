@@ -1,0 +1,72 @@
+% icl26.sty -- shared look for the ICL 2026 talk series
+% build with lualatex (see latexmkrc); based on the moloch beamer theme
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{icl26}[2026/10/03 ICL26 talk series style]
+
+\usetheme[progressbar=frametitle, sectionpage=none,
+          titleformat frame=regular]{moloch}
+
+% ---------- fonts: Fira Sans text + Fira Math (lualatex) ----------
+\RequirePackage{amsmath,amssymb,mathtools}
+\RequirePackage{fontspec}
+\RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket}]{unicode-math}
+\setsansfont{Fira Sans}[
+  UprightFont = *-Book, ItalicFont = *-Book Italic,
+  BoldFont = *-SemiBold, BoldItalicFont = *-SemiBold Italic]
+\setmonofont{Fira Mono}[Scale=MatchLowercase]
+\setmathfont{FiraMath-Regular.otf}  % vendored in theme/fonts/
+% Fira Math has no calligraphic alphabet; take the classic one from Latin Modern
+\setmathfont{latinmodern-math.otf}[range={scr,bfscr}, Scale=MatchUppercase]
+\usefonttheme{professionalfonts}
+
+% ---------- colours ----------
+\definecolor{icNavy}{HTML}{1B2A41}   % text, titles
+\definecolor{icBlue}{HTML}{2F6DB5}   % structure / example
+\definecolor{icAccent}{HTML}{B03A48} % the one accent: alerts, progress bar, rules
+\definecolor{icPaper}{HTML}{FBFAF7}  % background
+\definecolor{icGrey}{HTML}{8A8F98}   % de-emphasised text
+
+\setbeamercolor{normal text}{fg=icNavy, bg=icPaper}
+\setbeamercolor{background canvas}{bg=icPaper}
+\setbeamercolor{frametitle}{fg=icNavy, bg=icPaper}
+\setbeamercolor{alerted text}{fg=icAccent}
+\setbeamercolor{example text}{fg=icBlue}
+\setbeamercolor{progress bar}{fg=icAccent, bg=icNavy!12}
+\setbeamercolor{title separator}{fg=icAccent}
+\setbeamercolor{structure}{fg=icBlue}
+\setbeamercolor{item}{fg=icBlue}
+\setbeamercolor{block title}{fg=icNavy, bg=icNavy!8}
+\setbeamercolor{block body}{fg=icNavy, bg=icNavy!3}
+\setbeamercolor{footline}{fg=icGrey}
+\setbeamercolor{page number in head/foot}{fg=icGrey}
+\setbeamercolor{standout}{fg=icPaper, bg=icNavy}
+\molochset{block=fill}
+
+% ---------- footer: short title . section ........ n / N ----------
+\setbeamertemplate{page number in head/foot}[totalframenumber]
+\setbeamerfont{page number in head/foot}{size=\scriptsize}
+\setbeamertemplate{frame footer}{%
+  \insertshorttitle%
+  \ifx\insertsectionhead\@empty\else
+    \enspace\textperiodcentered\enspace\insertsectionhead
+  \fi}
+
+% ---------- table of contents ----------
+\setbeamertemplate{section in toc}{%
+  \leavevmode\makebox[1.6em][l]{\inserttocsectionnumber.}%
+  \inserttocsection\par}
+\setbeamertemplate{section in toc shaded}[default][25]
+\setbeamerfont{section in toc}{size=\large}
+
+% ---------- misc ----------
+\RequirePackage{appendixnumberbeamer}  % backup slides not counted in n / N
+\gdef\appendixtotalframenumber{1}  % not 0: else progress bar divides by 0 on a fresh build
+\RequirePackage{tikz,pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,calc,positioning}
+\RequirePackage{booktabs}
+\RequirePackage{xcolor}
+\setbeamertemplate{caption}[default]
+\newcommand{\grey}[1]{{\color{icGrey}#1}}
+
+\endinput

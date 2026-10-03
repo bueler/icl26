@@ -1,0 +1,87 @@
+%%
+%% This is file `beamerthememoloch.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% beamerthememoloch.dtx  (with options: `package')
+%% 
+%% IMPORTANT NOTICE:
+%% 
+%% For the copyright see the source file.
+%% 
+%% Any modified versions of this file must be renamed
+%% with new filenames distinct from beamerthememoloch.sty.
+%% 
+%% For distribution of the original source see the terms
+%% for copying and modification in the file beamerthememoloch.dtx.
+%% 
+%% This generated file may be distributed as long as the
+%% original source files, as listed above, are part of the
+%% same distribution. (The sources need not necessarily be
+%% in the same archive or directory.)
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthememoloch}[2025-12-18 v2.1.0 Moloch theme]
+\RequirePackage{pgfopts}
+\pgfkeys{/moloch/.cd,
+  .search also={
+      /moloch/inner,
+      /moloch/outer,
+      /moloch/color,
+      /moloch/font,
+    }
+}
+\pgfkeys{/moloch/.cd,
+  colortheme/.code=\pgfkeysalso{/moloch/colors/theme=#1},
+  colorthemevariant/.code=\pgfkeysalso{/moloch/colors/variant=#1},
+  colortheme variant/.code=\pgfkeysalso{/moloch/colors/variant=#1},
+}
+\pgfkeys{
+  /moloch/titleformat plain/.cd,
+  .is choice,
+  regular/.code={%
+      \let\moloch@plaintitleformat\@empty%
+      \setbeamerfont{standout}{shape=\normalfont}%
+    },
+  smallcaps/.code={%
+      \let\moloch@plaintitleformat\@empty%
+      \setbeamerfont{standout}{shape=\scshape}%
+    },
+  allsmallcaps/.code={%
+      \let\moloch@plaintitleformat\MakeLowercase%
+      \setbeamerfont{standout}{shape=\scshape}%
+    },
+  allcaps/.code={%
+      \let\moloch@plaintitleformat\MakeUppercase%
+      \setbeamerfont{standout}{shape=\normalfont}%
+    },
+}
+\pgfkeys{
+  /moloch/titleformat/.code=\pgfkeysalso{
+    font/titleformat title=#1,
+    font/titleformat subtitle=#1,
+    font/titleformat section=#1,
+    font/titleformat frame=#1,
+    titleformat plain=#1,
+  }
+}
+\newcommand{\moloch@setdefaults}{
+  \pgfkeys{/moloch/.cd,
+    titleformat plain=regular,
+  }
+}
+\useinnertheme{moloch}
+\useoutertheme{moloch}
+\usecolortheme{moloch}
+\usefonttheme{moloch}
+\newcommand{\molochset}[1]{\pgfkeys{/moloch/.cd,#1}}
+\newcommand{\mreducelistspacing}{%
+  \PackageWarning{beamerthememoloch}{%
+    \string\mreducelistspacing\space is deprecated and will be removed in a future version}%
+  \vspace{-\topsep}%
+}
+\moloch@setdefaults
+\ProcessPgfOptions{/moloch}
+\endinput
+%%
+%% End of file `beamerthememoloch.sty'.
