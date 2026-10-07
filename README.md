@@ -34,7 +34,7 @@ TODO: Mine talks from mcd-extended/, and VI-AMR/presentations/.  Feature Falk, m
 * Berstein polynomials
 * LVPP
 
-## lecture 3: Stokes glacier models with Firedrake
+## lecture 3: Stokes glacier models with Firedrake: A tutorial
 
 slides from stokes-ice-tutorial/
 
