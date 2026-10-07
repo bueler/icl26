@@ -12,13 +12,18 @@ This four-lecture series introduces variational inequalities to a general applie
 
 TODO: Mine talks-public/2014/DMScolloq/ talk.  (Its pdf is at https://www.pism.io/uaf-iceflow/buelerDMScolloqJan2014.pdf)  Examples/intro includes starting with examples: calc 1 example, distance to a closed convex set example, convex minimization, classical obstacle problem, fluid layer problem, Signorini.  Theory: Lax-Milgram for K, monotone ops.  FE setup, Falk a priori.
 
+1.
 * calc 1 problem
 * projection to a closed convex set in a Hilbert space
+2.
 * classical obstacle problem
 * Signorini
+* multiple solutions and deflation
 * fluid layer in a climate
+3.
 * convex objective --> monotonicity and coercivity
 * Lax-Milgram --> Lions-Stampacchia
+4.
 * basic FE, and the Ciarlet non-admissible picture
 * Falk a priori
 * active-set methods
@@ -27,10 +32,18 @@ TODO: Mine talks-public/2014/DMScolloq/ talk.  (Its pdf is at https://www.pism.i
 
 TODO: Mine talks from mcd-extended/, and VI-AMR/presentations/.  Feature Falk, my extension of Falk, PDAS, HIK, Benson&Munson, Papadapoulos&Hintermuller peeling theorem, FASCD, NSV03, VIAMR.  Mention LVPP (but others have talked about that).
 
+1.
 * active-set Newton methods
+* vinewtonrsls in Petsc (BM06)
 * Papa. & Hintermuller: one layer of triangles per iteration
+2.
+* a posterior estimators, esp NSV 03
 * AMR
+3.
+* grid sequencing
+* Newton-multigrid
 * FASCD
+4.
 * Berstein polynomials
 * LVPP
 
