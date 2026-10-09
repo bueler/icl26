@@ -44,18 +44,33 @@
 \setbeamercolor{item}{fg=icBlue}
 \setbeamercolor{block title}{fg=icNavy, bg=icNavy!8}
 \setbeamercolor{block body}{fg=icNavy, bg=icNavy!3}
-\setbeamercolor{footline}{fg=icGrey}
-\setbeamercolor{page number in head/foot}{fg=icGrey}
+\setbeamercolor{footline}{fg=icBlue}
+\setbeamercolor{page number in head/foot}{fg=icBlue}
 \setbeamercolor{standout}{fg=icPaper, bg=icNavy}
+\setbeamercolor{institute}{fg=black}
+\setbeamercolor{date}{fg=icGrey}
 \molochset{block=fill}
 
-% ---------- footer: short title . section ........ n / N ----------
+% ---------- footer: section ........ n / N ----------
 \setbeamertemplate{page number in head/foot}[totalframenumber]
-\setbeamerfont{page number in head/foot}{size=\scriptsize}
-\setbeamertemplate{frame footer}{%
-  \insertshorttitle%
-  \ifx\insertsectionhead\@empty\else
-    \enspace\textperiodcentered\enspace\insertsectionhead
+\setbeamerfont{page number in head/foot}{size=\tiny}
+\setbeamertemplate{frame footer}{\insertsectionhead}
+% no footer on the title page or outline frames: they set a global flag,
+% which the footline reads (it is typeset after the frame body) and resets
+\newif\ificl@nofoot
+\AddToHook{cmd/titlepage/before}{\global\icl@nofoottrue}
+\AddToHook{cmd/tableofcontents/before}{\global\icl@nofoottrue}
+\setbeamertemplate{footline}{%
+  \ificl@nofoot
+    \global\icl@nofootfalse
+  \else
+    \begin{beamercolorbox}[leftskip=4pt, rightskip=5pt, wd=\textwidth]{footline}%
+      \usebeamercolor[fg]{page number in head/foot}%
+      \usebeamerfont{page number in head/foot}%
+      \usebeamertemplate*{frame footer}%
+      \hfill%
+      \usebeamertemplate*{page number in head/foot}\vskip4pt%
+    \end{beamercolorbox}%
   \fi}
 
 % ---------- table of contents ----------
@@ -75,6 +90,5 @@
 \RequirePackage{xcolor}
 \setbeamertemplate{caption}[default]
 \newcommand{\grey}[1]{{\color{icGrey}#1}}
-\newcommand{\sdoi}[1]{\,\href{https://doi.org/#1}{\color{icGrey}doi:#1}}  % for reference lists
 
 \endinput
