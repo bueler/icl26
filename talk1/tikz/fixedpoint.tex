@@ -1,0 +1,11 @@
+\begin{tikzpicture}[scale=0.85]
+  \fill[icBlue!12] (1,0.4) -- (3.4,0.6) -- (3.8,2.4) -- (2.4,3.2) -- (1,2.7) -- cycle;
+  \draw[icBlue, thick] (1,0.4) -- (3.4,0.6) -- (3.8,2.4) -- (2.4,3.2) -- (1,2.7) -- cycle;
+  \node[icBlue] at (3,1.3) {$K$};
+  \draw[-{Stealth}, icAccent, thick] (1,1.5) -- (-0.4,1.5)
+    node[above, pos=0.5] {\small $-F(x)$};
+  \fill (-0.4,1.5) circle (1.8pt) node[left] {$z$};
+  \fill (1,1.5) circle (1.8pt) node[below right] {$x$};
+  \draw[-{Stealth}, icNavy] (1,1.5) -- (2.7,2.5);
+  \fill (2.7,2.5) circle (1.5pt) node[above right] {$y$};
+\end{tikzpicture}

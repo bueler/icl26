@@ -35,38 +35,7 @@
   \medskip
 
   \centering
-  \begin{tikzpicture}[x=0.95cm, y=1.1cm,
-                      fn/.style={icBlue, very thick, domain=0:3, samples=40},
-                      tan/.style={icAccent, thick, dashed}]
-    \foreach \xo/\la/\lb/\lab/\cond in {0/a/b/interior/{$f'(u)=0$},
-                                4.4/a=u/b/{left endpoint}/{$f'(u)\ge 0$},
-                                8.8/a/u=b/{right endpoint}/{$f'(u)\le 0$}} {
-      \begin{scope}[xshift=\xo cm]
-        \draw[icNavy] (-0.2,0) -- (3.2,0);
-        \draw[icNavy] (0,0.08) -- (0,-0.08) node[below] {$\la$};
-        \draw[icNavy] (3,0.08) -- (3,-0.08) node[below] {$\lb$};
-        \node[icGrey] at (1.5,-0.95) {\lab};
-        \node at (1.5,-1.5) {\cond};
-      \end{scope}
-    }
-    % interior minimum
-    \draw[fn] plot (\x, {0.5 + 0.4*(\x-1.8)^2});
-    \draw[tan] (1.2,0.5) -- (2.4,0.5);
-    \fill (1.8,0.5) circle (1.8pt);
-    \draw[icNavy] (1.8,0.08) -- (1.8,-0.08) node[below] {$u$};
-    % minimum at left endpoint
-    \begin{scope}[xshift=4.4cm]
-      \draw[fn] plot (\x, {0.5 + 0.25*\x + 0.08*\x^2});
-      \draw[tan] (0,0.5) -- (1.2,0.8);
-      \fill (0,0.5) circle (1.8pt);
-    \end{scope}
-    % minimum at right endpoint
-    \begin{scope}[xshift=8.8cm]
-      \draw[fn] plot (\x, {0.5 + 0.25*(3-\x) + 0.08*(3-\x)^2});
-      \draw[tan] (3,0.5) -- (1.8,0.8);
-      \fill (3,0.5) circle (1.8pt);
-    \end{scope}
-  \end{tikzpicture}
+  \input{tikz/calcI.tex}
 
   \pause
   \raggedright
@@ -100,20 +69,7 @@
     \end{column}
     \begin{column}{0.38\textwidth}
       \centering
-      \begin{tikzpicture}[scale=0.85, rotate=20]
-        \fill[icBlue!12] (0,0.3) -- (2,0.6) -- (2,2.6) -- (0.6,3) -- (-0.4,1.6) -- cycle;
-        \draw[icBlue, thick] (0,0.3) -- (2,0.6) -- (2,2.6) -- (0.6,3) -- (-0.4,1.6) -- cycle;
-        \node[icBlue] at (0.5,2.2) {$K$};
-        \foreach \s in {0.5,1,1.5}
-          \draw[icGrey] (3.4,1.7) ellipse ({1.4*\s} and {0.8*\s});
-        \fill[icGrey] (3.4,1.7) circle (1.5pt);
-        \draw[-{Stealth}, icAccent, thick] (2,1.7) -- (2.9,1.7)
-          node[below, pos=0.75] {\small $-\nabla f$};
-        \coordinate (v) at (0.7,0.9);
-        \draw[-{Stealth}, icNavy] (2,1.7) -- (v);
-        \fill (v) circle (1.5pt) node[below left] {$v$};
-        \fill (2,1.7) circle (1.8pt) node[above left] {$u$};
-      \end{tikzpicture}
+      \input{tikz/convexmin.tex}
 
       \smallskip
       {\small level sets of $f$}
@@ -147,19 +103,7 @@
     \end{column}
     \begin{column}{0.4\textwidth}
       \centering
-      \begin{tikzpicture}[scale=0.85, rotate=-15]
-        \fill[icBlue!12] (1,0.5) -- (3.5,0.2) -- (4,2) -- (2.2,3) -- (1,2.5) -- cycle;
-        \draw[icBlue, thick] (1,0.5) -- (3.5,0.2) -- (4,2) -- (2.2,3) -- (1,2.5) -- cycle;
-        \node[icBlue] at (3.2,1.2) {$K$};
-        \fill (-0.4,1.6) circle (1.8pt) node[left] {$x$};
-        \draw[-{Stealth}, icNavy, thick] (-0.4,1.6) -- (1,1.6);
-        \fill (1,1.6) circle (1.8pt) node[below right] {$y$};
-        \uncover<2->{
-          \draw[icGrey, dashed] (1,1.6) -- (2,1.6);
-          \draw[-{Stealth}, icAccent, thick] (1,1.6) -- (2.6,2.4);
-          \fill (2.6,2.4) circle (1.8pt) node[above right] {$\eta$};
-        }
-      \end{tikzpicture}
+      \input{tikz/projection.tex}
     \end{column}
   \end{columns}
 \end{frame}
@@ -211,17 +155,7 @@
     \end{column}
     \begin{column}{0.4\textwidth}
       \centering
-      \begin{tikzpicture}[scale=0.85]
-        \fill[icBlue!12] (1,0.4) -- (3.4,0.6) -- (3.8,2.4) -- (2.4,3.2) -- (1,2.7) -- cycle;
-        \draw[icBlue, thick] (1,0.4) -- (3.4,0.6) -- (3.8,2.4) -- (2.4,3.2) -- (1,2.7) -- cycle;
-        \node[icBlue] at (3,1.3) {$K$};
-        \draw[-{Stealth}, icAccent, thick] (1,1.5) -- (-0.4,1.5)
-          node[above, pos=0.5] {\small $-F(x)$};
-        \fill (-0.4,1.5) circle (1.8pt) node[left] {$z$};
-        \fill (1,1.5) circle (1.8pt) node[below right] {$x$};
-        \draw[-{Stealth}, icNavy] (1,1.5) -- (2.7,2.5);
-        \fill (2.7,2.5) circle (1.5pt) node[above right] {$y$};
-      \end{tikzpicture}
+      \input{tikz/fixedpoint.tex}
     \end{column}
   \end{columns}
 \end{frame}
@@ -264,40 +198,226 @@
 \section[2]{Infinite-dimensional examples \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{some applications of VIs}}}
 
 \begin{frame}{The classical obstacle problem}
-  Given an obstacle $\psi$ and source $f$ on $\Omega\subset\mathbb{R}^d$, let
+  An elastic membrane over $\Omega\subset\mathbb{R}^d$, with small vertical displacement $u$,
+  fixed $u=g$ on $\partial\Omega$, under force $f$, and constrained to lie above an obstacle $\psi$:
   \[
-    \cK = \{ v \in H_0^1(\Omega) : v \ge \psi \}.
+    u-\psi\ge 0, \qquad -\nabla^2 u - f \ge 0, \qquad (u-\psi)(-\nabla^2 u - f) = 0
+    \qquad \text{a.e.~in } \Omega
   \]
-  Find $u\in\cK$ so that
+  \vspace{-3mm}
+  \begin{columns}[T]
+    \begin{column}{0.45\textwidth}
+      \begin{itemize}
+        \item \emph{inactive set} $E_u=\{u>\psi\}$: \\ Poisson $-\nabla^2 u=f$ holds
+        \item \emph{active} or \emph{contact set} \\ $C_u=\Omega\setminus E_u$: $u=\psi$
+        \item \emph{free boundary} $\Gamma_u=\Omega\cap\partial E_u$
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.53\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{figs/viamr-obstacle.png}
+
+      {\scriptsize \grey{hemisphere obstacle; contact set is a disc \quad
+      (Fochesatto \& Bueler, VIAMR)}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Obstacle problem: weak form}
+  Let $\cK = \{v\in H^1(\Omega) : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$, a closed, convex set
+  but \alert{not} a subspace.  Find $u\in\cK$ so that
   \[
     \int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u)
     \qquad \text{for all } v\in\cK.
   \]
   \begin{itemize}
-    \item $\cK$ is a closed, convex set but \alert{not} a subspace
-    \item equivalent to minimizing $J(v)=\tfrac12\|\nabla v\|^2-\ip{f}{v}$ over $\cK$
-    \item free boundary $\partial\{u>\psi\}$ is \emph{unknown}
+    \item equivalent to minimizing $J(v)=\int_\Omega \tfrac12|\nabla v|^2 - fv$ over $\cK$
+    \item integrate by parts: $\ip{\sigma}{v-u}\ge 0$ for the residual $\sigma=-\nabla^2u-f$
+    \begin{itemize}
+      \item[$\circ$] if $u$ is in the interior of $\cK$ then $\sigma=0$: the VI generalizes Poisson
+    \end{itemize}
+    \item both $u=\psi$ \emph{and} $\partial(u-\psi)/\partial n=0$ hold along $\Gamma_u$
+          \grey{(compensates for its unknown location)}
+    \item other interpretations:
+    \begin{itemize}
+      \item[$\circ$] pressure in a porous dam \grey{($u\ge 0$; which part is saturated?)}
+      \item[$\circ$] elastic-plastic torsion \grey{($u\le\psi$; which part has failed?)}
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{A picture}
-  % obstacle psi = 0.3 - x^2; u = psi on contact set |x| <= a, linear tangent to 0 at x = +-1
-  \pgfmathsetmacro{\a}{1-sqrt(0.7)}
+\begin{frame}{Obstacle problem in one dimension}
   \centering
-  \begin{tikzpicture}
-    \begin{axis}[width=0.8\linewidth, height=0.5\linewidth,
-                 axis lines=none, xmin=-1.1, xmax=1.1, ymin=-0.75, ymax=0.4,
-                 xtick=\empty, ytick=\empty, samples=100]
-      \draw[icNavy] (axis cs:-1.05,0) -- (axis cs:1.05,0);
-      \addplot[icGrey, thick, domain=-1:1] {0.3 - x^2};
-      \addplot[icBlue, very thick, domain=-1:-\a] {(0.3-\a^2)*(x+1)/(1-\a)};
-      \addplot[icBlue, very thick, domain=\a:1]   {(0.3-\a^2)*(1-x)/(1-\a)};
-      \addplot[icAccent, ultra thick, domain=-\a:\a] {0.3 - x^2};
-      \node[icGrey, right] at (axis cs:0.75,-0.3) {$\psi$};
-      \node[icBlue, above] at (axis cs:-0.6,0.15) {$u$};
-      \node[icAccent, above] at (axis cs:0,0.3) {contact set $u=\psi$};
-    \end{axis}
-  \end{tikzpicture}
+  \input{tikz/obstacle1d.tex}
+
+  \raggedright
+  with $f=0$: \, $u''=0$ on $E_u$, \, $u=\psi$ on $C_u=[-a,a]$, \,
+  free boundary $\Gamma_u=\{\pm a\}$ where $u$ meets $\psi$ tangentially
+\end{frame}
+
+\begin{frame}{Signorini problem: elastic contact}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      linear elasticity on $\Omega\subset\mathbb{R}^2$, displacement $u:\Omega\to\mathbb{R}^2$:
+      \begin{align*}
+        \epsilon(u) &= \tfrac12\left(\nabla u+\nabla u^\top\right) \\
+        \sigma(u)   &= \lambda\, (\operatorname{tr}\epsilon)\, I + 2\mu\, \epsilon \\
+        -\nabla\cdot\sigma(u) &= f \quad \text{in } \Omega
+      \end{align*}
+      \begin{itemize}
+        \item $\Gamma_D$: pressed down, $u=u_D$
+        \item $\Gamma_N$: traction-free
+        \item $\Gamma_C$: \alert{possible contact}, gap $g\ge 0$
+      \end{itemize}
+      non-penetration: \, $u\cdot n \le g$ on $\Gamma_C$
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \centering
+      \input{tikz/signorini.tex}
+    \end{column}
+  \end{columns}
+  \grey{\scriptsize Signorini 1933; Fichera 1964; Kikuchi \& Oden, \emph{Contact Problems in Elasticity}, 1988}
+\end{frame}
+
+\begin{frame}{Signorini problem: VI and complementarity}
+  Let $\cK = \{v\in H^1(\Omega;\mathbb{R}^2) : v=u_D \text{ on } \Gamma_D \text{ and }
+  v\cdot n\le g \text{ on } \Gamma_C\}$.  Find $u\in\cK$ so that
+  \[
+    \int_\Omega \sigma(u):\epsilon(v-u) \ge \int_\Omega f\cdot(v-u)
+    \qquad\text{for all } v\in\cK.
+  \]
+  \begin{itemize}
+    \item equivalent to minimizing the elastic energy
+          $J(v)=\int_\Omega \tfrac12\sigma(v):\epsilon(v) - f\cdot v$ over $\cK$
+    \item convex, and coercive by Korn's inequality, so a \emph{unique} solution
+    \item on $\Gamma_C$, with normal stress $\sigma_n=n\cdot\sigma(u)\,n$:
+          \[
+            u\cdot n - g\le 0, \qquad \sigma_n\le 0, \qquad \sigma_n\,(u\cdot n - g)=0,
+            \qquad \sigma_t = 0
+          \]
+    \item the constraint is only on the boundary, so the free boundary is a \alert{subset of $\Gamma_C$}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Contact in nonlinear hyperelasticity}
+  Large deformations: $x\mapsto x+u(x)$, deformation gradient $F=I+\nabla u$, $J=\det F>0$.
+  \begin{itemize}
+    \item hyperelastic: stored energy density $W(F)$, e.g.~compressible neo-Hookean
+          \[
+            W(F) = \tfrac{\mu}{2}\left(|F|^2-2\right) - \mu\ln J + \tfrac{\lambda}{2}(\ln J)^2
+          \]
+    \item minimize $\displaystyle \Pi(v) = \int_\Omega W(I+\nabla v) - B\cdot v$
+          \; over the same kind of $\cK$
+    \item a minimizer solves the VI
+          \[
+            \ip{\Pi'(u)}{v-u}\ge 0 \qquad\text{for all } v\in\cK
+          \]
+  \end{itemize}
+  \pause
+  \begin{itemize}
+    \item linearizing $W$ at $F=I$ recovers the Signorini problem
+    \item but $W$ is \alert{not convex} \grey{(only polyconvex; Ball 1977)}, so the VI is only a
+          \emph{necessary} condition, and solutions need not be unique
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Multiple solutions}
+  \begin{columns}[T]
+    \begin{column}{0.6\textwidth}
+      a neo-Hookean beam $(0,1)\times(0,\tfrac{1}{10})$:
+      \begin{itemize}
+        \item clamped at left, compressed axially at right, with gravity
+        \item obstacles: $u_2\le \alpha$ on top, $u_2\ge-\alpha$ on bottom
+      \end{itemize}
+      \medskip
+      \alert{seven} solutions: three never touch the obstacles, four (right) are in contact
+
+      \medskip
+      found by \emph{deflation}: modify the semismooth Newton residual so known solutions
+      are no longer roots, then re-solve from the same initial guess
+
+      \medskip
+      {\scriptsize \grey{Farrell, Croci \& Surowiec, \emph{Deflation for semismooth
+      equations}, Optim.~Methods Softw.~2020, Fig.~2 (CC BY 4.0)}}
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      \centering
+      \includegraphics[height=0.8\textheight]{figs/farrell2020-fig2.jpg}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{A fluid layer in a climate}
+  A thin fluid layer moves on a substrate, with mass added (precipitation, accumulation)
+  or removed (evaporation, ablation) by a signed source $f$, the \emph{climate}.
+  \begin{center}
+    \includegraphics[width=0.45\textwidth]{figs/bueler2021-fig1.png}
+  \end{center}
+  thickness $u(x,t)\ge 0$, flux $q=q(\nabla u,u,x,t)$, e.g.~$q=-D\nabla u+Xu$:
+  \[
+    u_t+\nabla\cdot q = f \quad \text{where } u>0, \qquad\qquad u\ge 0 \quad\text{everywhere}
+  \]
+  \vspace{-2mm}
+  \begin{itemize}
+    \item glaciers and ice sheets, sea ice, subglacial water, rain on a windshield
+    \item the fluid-covered area is a \alert{leading-order} modeling goal \grey{(e.g.~albedo)}
+  \end{itemize}
+  {\scriptsize \grey{Bueler, \emph{Conservation laws for free-boundary fluid layers}, SIAM J.~Appl.~Math.~2021}}
+\end{frame}
+
+\begin{frame}{Fluid layer: one implicit time step}
+  \begin{columns}[T]
+    \begin{column}{0.6\textwidth}
+      given $u_{n-1}\ge0$, find $u_n\ge0$ so that
+      \[
+        \frac{u_n-u_{n-1}}{\Delta t}+\nabla\cdot Q_n = F_n \quad \text{where } u_n>0
+      \]
+      this decomposes $\Omega$ into disjoint sets:
+      \begin{align*}
+        \Omega_n         &= \{u_n>0\} \\
+        \Omega_n^r       &= \{u_n=0 \text{ and } u_{n-1}>0\} \quad \grey{\text{retreat}} \\
+        \Omega_n^{00}    &= \{u_n=0 \text{ and } u_{n-1}=0\}
+      \end{align*}
+      \vspace{-2mm}
+      \uncover<2->{
+      VI on $\cK=\{v\in W^{1,p}(\Omega) : v\ge 0\}$: for all $v\in\cK$,
+      \[
+        \int_\Omega \frac{u_n-u_{n-1}}{\Delta t}(v-u_n) - Q_n\cdot\nabla(v-u_n)
+        \ge \int_\Omega F_n\,(v-u_n)
+      \]}
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      \centering
+      \includegraphics[width=0.85\textwidth]{figs/bueler2021-fig3.png}
+
+      \medskip
+      \raggedright
+      {\small on $\Omega_n^r\cup\Omega_n^{00}$: \, $u_{n-1}+\Delta t\,F_n\le 0$}
+
+      \smallskip
+      {\small \grey{mass is \emph{not} exactly conserved on the retreat set}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Examples so far}
+  \begin{center}
+    \begin{tabular}{llll}
+      \toprule
+      problem                & unknown          & constraint in $\cK$     & minimization? \\
+      \midrule
+      obstacle               & $u\in H^1$       & $u\ge\psi$              & convex \\
+      Signorini              & $u\in H^1(\Omega;\mathbb{R}^2)$ & $u\cdot n\le g$ on $\Gamma_C$ & convex \\
+      hyperelastic contact   & $u\in W^{1,p}(\Omega;\mathbb{R}^2)$ & $u\cdot n\le g$ on $\Gamma_C$ & nonconvex \\
+      fluid layer time step  & $u_n\in W^{1,p}$ & $u_n\ge 0$              & generally not \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \begin{itemize}
+    \item in each, a PDE holds on an \emph{unknown} subset, and the constraint holds on the rest
+    \item the VI is posed on all of $\Omega$, with no reference to the free boundary
+    \item \emph{next:} when does such a VI have a unique solution?
+  \end{itemize}
 \end{frame}
 
 

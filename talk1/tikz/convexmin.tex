@@ -1,0 +1,14 @@
+\begin{tikzpicture}[scale=0.85, rotate=20]
+  \fill[icBlue!12] (0,0.3) -- (2,0.6) -- (2,2.6) -- (0.6,3) -- (-0.4,1.6) -- cycle;
+  \draw[icBlue, thick] (0,0.3) -- (2,0.6) -- (2,2.6) -- (0.6,3) -- (-0.4,1.6) -- cycle;
+  \node[icBlue] at (0.5,2.2) {$K$};
+  \foreach \s in {0.5,1,1.5}
+    \draw[icGrey] (3.4,1.7) ellipse ({1.4*\s} and {0.8*\s});
+  \fill[icGrey] (3.4,1.7) circle (1.5pt);
+  \draw[-{Stealth}, icAccent, thick] (2,1.7) -- (2.9,1.7)
+    node[below, pos=0.75] {\small $-\nabla f$};
+  \coordinate (v) at (0.7,0.9);
+  \draw[-{Stealth}, icNavy] (2,1.7) -- (v);
+  \fill (v) circle (1.5pt) node[below left] {$v$};
+  \fill (2,1.7) circle (1.8pt) node[above left] {$u$};
+\end{tikzpicture}

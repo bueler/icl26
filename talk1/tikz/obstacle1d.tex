@@ -1,0 +1,16 @@
+\begin{tikzpicture}
+  % obstacle psi = 0.3 - x^2; u = psi on contact set |x| <= a, linear tangent to 0 at x = +-1
+  \pgfmathsetmacro{\a}{1-sqrt(0.7)}
+  \begin{axis}[width=0.8\linewidth, height=0.5\linewidth,
+               axis lines=none, xmin=-1.1, xmax=1.1, ymin=-0.75, ymax=0.4,
+               xtick=\empty, ytick=\empty, samples=100]
+    \draw[icNavy] (axis cs:-1.05,0) -- (axis cs:1.05,0);
+    \addplot[icGrey, thick, domain=-1:1] {0.3 - x^2};
+    \addplot[icBlue, very thick, domain=-1:-\a] {(0.3-\a^2)*(x+1)/(1-\a)};
+    \addplot[icBlue, very thick, domain=\a:1]   {(0.3-\a^2)*(1-x)/(1-\a)};
+    \addplot[icAccent, ultra thick, domain=-\a:\a] {0.3 - x^2};
+    \node[icGrey, right] at (axis cs:0.75,-0.3) {$\psi$};
+    \node[icBlue, above] at (axis cs:-0.6,0.15) {$u$};
+    \node[icAccent, above] at (axis cs:0,0.3) {contact set $u=\psi$};
+  \end{axis}
+\end{tikzpicture}
