@@ -14,7 +14,10 @@
   UprightFont = *-Book, ItalicFont = *-Book Italic,
   BoldFont = *-SemiBold, BoldItalicFont = *-SemiBold Italic]
 \setmonofont{Fira Mono}[Scale=MatchLowercase]
-\setmathfont{FiraMath-Regular.otf}  % vendored in theme/fonts/
+% vendored in theme/fonts/; found via OPENTYPEFONTS (makefile), else by path
+\IfFontExistsTF{FiraMath-Regular.otf}
+  {\setmathfont{FiraMath-Regular.otf}}
+  {\setmathfont{FiraMath-Regular.otf}[Path=../theme/fonts/]}
 % Fira Math has no calligraphic alphabet; take the classic one from Latin Modern
 \setmathfont{latinmodern-math.otf}[range={scr,bfscr}, Scale=MatchUppercase]
 \usefonttheme{professionalfonts}
