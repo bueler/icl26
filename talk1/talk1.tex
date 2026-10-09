@@ -23,37 +23,66 @@
   \titlepage
 \end{frame}
 
-\begin{frame}{Outline}
+\begin{frame}{outline}
   \tableofcontents
 \end{frame}
 
 
-\section[1]{Finite-dimensional examples \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{geometry of VIs}}}
+\section[finite-dim examples]{finite-dimensional examples \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{geometry of VIs}}}
 
-\begin{frame}{A calculus I problem}
-  Minimize a smooth function $f$ on a closed interval $[a,b]$.
-  \medskip
+\begin{frame}{a calculus I problem}
 
+\begin{itemize}
+\item minimize smooth $f(x)$ over a closed interval $[a,b]$?
+\item what we tell our students: \quad $f'(x)=0$, but test the end-points
+
+\medskip
   \centering
-  \input{tikz/calcI.tex}
+  \only<1>{\input{tikz/calcIgeneric.tex}}%
+  \only<2->{\input{tikz/calcIcases.tex}}
 
-  \pause
-  \raggedright
-  all three cases are captured by a \alert{variational inequality}:
-  \[
-    u\in[a,b] \quad\text{and}\quad f'(u)\,(v-u) \ge 0 \qquad \text{for all } v\in[a,b]
-  \]
-  \grey{\small a \emph{necessary} condition only: a local min, or a local max at an endpoint, also qualifies}
+\raggedright
+\item<2-> 3 cases arise
+\item<3-> all cases captured by this \alert{variational inequality} (VI):
+  $$f'(u)\,(x-u) \ge 0 \qquad \text{for all } x\in[a,b]$$
+
+\quad \grey{\small as you travel into $[a,b]$, $f$ \strikeThrough{slopes up} does not slope down}
+\end{itemize}
 \end{frame}
 
-\begin{frame}{Minimize $f$ over a convex set $K\subset\mathbb{R}^n$}
+
+\begin{frame}{projection onto a closed, convex set}
+
+\begin{itemize}
+\item suppose $H$ is a Hilbert space \grey{(e.g.~$\mathbb{R}^n$)}
+\item let $K\subset H$ be a nonempty, closed, and convex subset
+
+\begin{definition}
+for $x\in H$, define the \emph{projection} of $x$ onto $K$:
+  $$u = \Pi_K x = \operatorname*{argmin}_{y\in K}\, \|y-x\| \hspace{50mm}$$
+
+\vspace{-18mm}
+\hfill \input{tikz/projection.tex}
+\end{definition}
+
+\pause
+\begin{theorem}
+$$u=\Pi_K x \qquad \iff \qquad u\in K, \quad \ip{u-x}{y-u}\ge 0 \quad \text{for all } y\in K$$
+
+\quad \grey{\small angle between $u-x$ and $y-u$ is at most $90^\circ$ (not obtuse)}
+\end{theorem}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{minimize $f$ over a convex set $K\subset\mathbb{R}^n$}
   \begin{columns}[T]
     \begin{column}{0.6\textwidth}
       \textbf{Theorem.}\, Let $K\subset\mathbb{R}^n$ be convex and $f\in C^1$.
       If $u\in K$ minimizes $f$ over $K$ then
-      \[
+      $$
         \nabla f(u)\cdot(v-u)\ge 0 \qquad\text{for all } v\in K.
-      \]
+      $$
       \pause
       \emph{Proof.}\, For $v\in K$, $u+t(v-u)\in K$ for $0\le t\le 1$, so
       $t=0$ minimizes $g(t)=f(u+t(v-u))$ on $[0,1]$.  By the calculus I problem,
@@ -65,6 +94,7 @@
         \item if $f$ is convex then the VI is also \emph{sufficient}
         \item exists if $K$ compact \grey{(or closed, with $f$ coercive)}
         \item unique if $f$ strictly convex
+        \item FIXME example; $f(u) = \tfrac{1}{2} \|u-x\|^2$ on previous
       \end{itemize}
     \end{column}
     \begin{column}{0.38\textwidth}
@@ -77,38 +107,8 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Projection onto a closed, convex set}
-  \begin{columns}[T]
-    \begin{column}{0.58\textwidth}
-      Let $K\subset\mathcal{H}$ be nonempty, closed, and convex in a Hilbert space
-      \grey{(e.g.~$\mathbb{R}^n$)}.
 
-      \medskip
-      \textbf{Definition.}\, For $x\in\mathcal{H}$ the unique minimizer
-      \[
-        P_K x = \operatorname*{argmin}_{z\in K}\, \tfrac12\|z-x\|^2
-      \]
-      is the \emph{projection} of $x$ onto $K$.
-
-      \pause
-      \medskip
-      \textbf{Theorem.}\, $y=P_K x$ if and only if $y\in K$ and
-      \[
-        \ip{y-x}{\eta-y}\ge 0 \qquad \text{for all } \eta\in K.
-      \]
-      \grey{\small \emph{idea:} angle between $y-x$ and $\eta-y$ is not obtuse}
-
-      \smallskip
-      \grey{\small \emph{proof:} previous slide with $f(z)=\tfrac12\|z-x\|^2$}
-    \end{column}
-    \begin{column}{0.4\textwidth}
-      \centering
-      \input{tikz/projection.tex}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Nonlinear equations $F(x)=0$}
+\begin{frame}{nonlinear equations $F(x)=0$}
   Given continuous $F:\mathbb{R}^n\to\mathbb{R}^n$, find $x$ so that $F(x)=0$.
   \begin{itemize}
     \item there is little positive to say in general: no existence
@@ -121,9 +121,9 @@
   \begin{block}{Theorem (Hartman \& Stampacchia, 1966)}
     If $K\subset\mathbb{R}^n$ is nonempty, compact, and convex, and $F$ is continuous,
     then there exists $x\in K$ so that
-    \[
+    $$
       F(x)\cdot(y-x)\ge 0 \qquad\text{for all } y\in K.
-    \]
+    $$
   \end{block}
   \pause
   \begin{itemize}
@@ -133,19 +133,19 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Proof: a fixed point of a projected map}
+\begin{frame}{proof: a fixed point of a projected map}
   \begin{columns}[T]
     \begin{column}{0.58\textwidth}
       The map $x'\mapsto P_K\big(x'-F(x')\big)$ is continuous from $K$ to $K$, so by
       Brouwer it has a fixed point:
-      \[
+      $$
         x = P_K z, \qquad z = x - F(x).
-      \]
+      $$
       \pause
       By the projection theorem, for all $y\in K$,
-      \[
+      $$
         0 \le \ip{P_K z - z}{y - P_K z} = F(x)\cdot(y-x). \qquad\qed
-      \]
+      $$
       \pause
       \begin{itemize}
         \item converse: VI solutions are fixed points of
@@ -160,11 +160,11 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{What is a variational inequality?}
+\begin{frame}{what is a variational inequality?}
   Given a closed, convex $K\subset\mathcal{H}$ and $F:K\to\mathcal{H}'$, find $u\in K$ so that
-  \[
+  $$
     \ip{F(u)}{v-u} \ge 0 \qquad \text{for all } v\in K.
-  \]
+  $$
   \begin{center}
     \begin{tabular}{lll}
       \toprule
@@ -189,21 +189,21 @@
 
 \AtBeginSection[]
 {
-  \begin{frame}{Outline}
+  \begin{frame}{outline}
   \tableofcontents[currentsection]
   \end{frame}
 }
 
 
-\section[2]{Infinite-dimensional examples \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{some applications of VIs}}}
+\section[\texorpdfstring{$\infty$}{inf}-dim examples]{infinite-dimensional examples \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{some applications of VIs}}}
 
-\begin{frame}{The classical obstacle problem}
+\begin{frame}{the classical obstacle problem}
   An elastic membrane over $\Omega\subset\mathbb{R}^d$, with small vertical displacement $u$,
   fixed $u=g$ on $\partial\Omega$, under force $f$, and constrained to lie above an obstacle $\psi$:
-  \[
+  $$
     u-\psi\ge 0, \qquad -\nabla^2 u - f \ge 0, \qquad (u-\psi)(-\nabla^2 u - f) = 0
     \qquad \text{a.e.~in } \Omega
-  \]
+  $$
   \vspace{-3mm}
   \begin{columns}[T]
     \begin{column}{0.45\textwidth}
@@ -223,13 +223,13 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Obstacle problem: weak form}
+\begin{frame}{obstacle problem: weak form}
   Let $\cK = \{v\in H^1(\Omega) : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$, a closed, convex set
   but \alert{not} a subspace.  Find $u\in\cK$ so that
-  \[
+  $$
     \int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u)
     \qquad \text{for all } v\in\cK.
-  \]
+  $$
   \begin{itemize}
     \item equivalent to minimizing $J(v)=\int_\Omega \tfrac12|\nabla v|^2 - fv$ over $\cK$
     \item integrate by parts: $\ip{\sigma}{v-u}\ge 0$ for the residual $\sigma=-\nabla^2u-f$
@@ -246,7 +246,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Obstacle problem in one dimension}
+\begin{frame}{obstacle problem in one dimension}
   \centering
   \input{tikz/obstacle1d.tex}
 
@@ -282,36 +282,36 @@
 \begin{frame}{Signorini problem: VI and complementarity}
   Let $\cK = \{v\in H^1(\Omega;\mathbb{R}^2) : v=u_D \text{ on } \Gamma_D \text{ and }
   v\cdot n\le g \text{ on } \Gamma_C\}$.  Find $u\in\cK$ so that
-  \[
+  $$
     \int_\Omega \sigma(u):\epsilon(v-u) \ge \int_\Omega f\cdot(v-u)
     \qquad\text{for all } v\in\cK.
-  \]
+  $$
   \begin{itemize}
     \item equivalent to minimizing the elastic energy
           $J(v)=\int_\Omega \tfrac12\sigma(v):\epsilon(v) - f\cdot v$ over $\cK$
     \item convex, and coercive by Korn's inequality, so a \emph{unique} solution
     \item on $\Gamma_C$, with normal stress $\sigma_n=n\cdot\sigma(u)\,n$:
-          \[
+          $$
             u\cdot n - g\le 0, \qquad \sigma_n\le 0, \qquad \sigma_n\,(u\cdot n - g)=0,
             \qquad \sigma_t = 0
-          \]
+          $$
     \item the constraint is only on the boundary, so the free boundary is a \alert{subset of $\Gamma_C$}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Contact in nonlinear hyperelasticity}
+\begin{frame}{contact in nonlinear hyperelasticity}
   Large deformations: $x\mapsto x+u(x)$, deformation gradient $F=I+\nabla u$, $J=\det F>0$.
   \begin{itemize}
     \item hyperelastic: stored energy density $W(F)$, e.g.~compressible neo-Hookean
-          \[
+          $$
             W(F) = \tfrac{\mu}{2}\left(|F|^2-2\right) - \mu\ln J + \tfrac{\lambda}{2}(\ln J)^2
-          \]
+          $$
     \item minimize $\displaystyle \Pi(v) = \int_\Omega W(I+\nabla v) - B\cdot v$
           \; over the same kind of $\cK$
     \item a minimizer solves the VI
-          \[
+          $$
             \ip{\Pi'(u)}{v-u}\ge 0 \qquad\text{for all } v\in\cK
-          \]
+          $$
   \end{itemize}
   \pause
   \begin{itemize}
@@ -321,7 +321,7 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Multiple solutions}
+\begin{frame}{multiple solutions}
   \begin{columns}[T]
     \begin{column}{0.6\textwidth}
       a neo-Hookean beam $(0,1)\times(0,\tfrac{1}{10})$:
@@ -347,16 +347,16 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{A fluid layer in a climate}
+\begin{frame}{a fluid layer in a climate}
   A thin fluid layer moves on a substrate, with mass added (precipitation, accumulation)
   or removed (evaporation, ablation) by a signed source $f$, the \emph{climate}.
   \begin{center}
     \includegraphics[width=0.45\textwidth]{figs/bueler2021-fig1.png}
   \end{center}
   thickness $u(x,t)\ge 0$, flux $q=q(\nabla u,u,x,t)$, e.g.~$q=-D\nabla u+Xu$:
-  \[
+  $$
     u_t+\nabla\cdot q = f \quad \text{where } u>0, \qquad\qquad u\ge 0 \quad\text{everywhere}
-  \]
+  $$
   \vspace{-2mm}
   \begin{itemize}
     \item glaciers and ice sheets, sea ice, subglacial water, rain on a windshield
@@ -365,13 +365,13 @@
   {\scriptsize \grey{Bueler, \emph{Conservation laws for free-boundary fluid layers}, SIAM J.~Appl.~Math.~2021}}
 \end{frame}
 
-\begin{frame}{Fluid layer: one implicit time step}
+\begin{frame}{fluid layer: one implicit time step}
   \begin{columns}[T]
     \begin{column}{0.6\textwidth}
       given $u_{n-1}\ge0$, find $u_n\ge0$ so that
-      \[
+      $$
         \frac{u_n-u_{n-1}}{\Delta t}+\nabla\cdot Q_n = F_n \quad \text{where } u_n>0
-      \]
+      $$
       this decomposes $\Omega$ into disjoint sets:
       \begin{align*}
         \Omega_n         &= \{u_n>0\} \\
@@ -381,10 +381,10 @@
       \vspace{-2mm}
       \uncover<2->{
       VI on $\cK=\{v\in W^{1,p}(\Omega) : v\ge 0\}$: for all $v\in\cK$,
-      \[
+      $$
         \int_\Omega \frac{u_n-u_{n-1}}{\Delta t}(v-u_n) - Q_n\cdot\nabla(v-u_n)
         \ge \int_\Omega F_n\,(v-u_n)
-      \]}
+      $$}
     \end{column}
     \begin{column}{0.38\textwidth}
       \centering
@@ -400,7 +400,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Examples so far}
+\begin{frame}{examples so far}
   \begin{center}
     \begin{tabular}{llll}
       \toprule
@@ -421,14 +421,24 @@
 \end{frame}
 
 
-\section[3]{Well-posedness}
+\section[FE solutions]{finite element solutions}
 
-\begin{frame}{Existence and uniqueness}
+\begin{frame}{foo}
+
+  \begin{itemize}
+    \item bar
+  \end{itemize}
+\end{frame}\texorpdfstring{$\leftarrow$}{←}
+
+
+\section[theory]{theory: well-posedness, \emph{a priori} estimate}
+
+\begin{frame}{existence and uniqueness}
   \begin{block}{Theorem (Stampacchia 1964)}
     Let $a(\cdot,\cdot)$ be bounded and coercive on a Hilbert space $V$, and
     $\cK\subset V$ nonempty, closed, convex. Then for each $\ell\in V'$ there is a
     unique $u\in\cK$ with
-    \[ a(u,v-u)\ge \ell(v-u) \quad\forall v\in\cK. \]
+    $$ a(u,v-u)\ge \ell(v-u) \quad\forall v\in\cK. $$
   \end{block}
   \pause
   \begin{itemize}
@@ -437,20 +447,18 @@
   \end{itemize}
 \end{frame}
 
-
-\section[4]{Finite element solutions}
-
 \begin{frame}{Falk's a priori estimate}
   For $P_1$ elements on a quasi-uniform mesh, with $\cK_h\not\subset\cK$ in general,
-  \[
+  $$
     \|u-u_h\|_{H^1} \le C\Big(
       \inf_{v_h\in\cK_h}\|u-v_h\| + \inf_{v\in\cK}\|u_h - v\| \Big)^{1/2}
       \lesssim C\,h .
-  \]
+  $$
   \grey{Falk, Math.\ Comp.\ 1974.}
 \end{frame}
 
-\begin{frame}{References}
+
+\begin{frame}{references}
   {\fontsize{7}{8.2}\selectfont \input{references.tex}}
 \end{frame}
 
@@ -460,7 +468,7 @@
 
 \appendix
 
-\begin{frame}{Backup: projection onto a convex set}
+\begin{frame}{backup: projection onto a convex set}
   $P_\cK v$ is the unique $w\in\cK$ with $\ip{v-w}{z-w}\le 0$ for all $z\in\cK$.
 \end{frame}
 

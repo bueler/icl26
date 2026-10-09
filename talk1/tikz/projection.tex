@@ -1,13 +1,20 @@
-\begin{tikzpicture}[scale=0.85, rotate=-15]
-  \fill[icBlue!12] (1,0.5) -- (3.5,0.2) -- (4,2) -- (2.2,3) -- (1,2.5) -- cycle;
-  \draw[icBlue, thick] (1,0.5) -- (3.5,0.2) -- (4,2) -- (2.2,3) -- (1,2.5) -- cycle;
-  \node[icBlue] at (3.2,1.2) {$K$};
-  \fill (-0.4,1.6) circle (1.8pt) node[left] {$x$};
-  \draw[-{Stealth}, icNavy, thick] (-0.4,1.6) -- (1,1.6);
-  \fill (1,1.6) circle (1.8pt) node[below right] {$y$};
-  \uncover<2->{
-    \draw[icGrey, dashed] (1,1.6) -- (2,1.6);
-    \draw[-{Stealth}, icAccent, thick] (1,1.6) -- (2.6,2.4);
-    \fill (2.6,2.4) circle (1.8pt) node[above right] {$\eta$};
-  }
+% K is unbounded toward the southeast; its far end fades out
+\pgfdeclarehorizontalshading{projKshade}{100bp}{color(0bp)=(pgftransparent!0);
+  color(50bp)=(pgftransparent!0); color(55bp)=(pgftransparent!100);
+  color(100bp)=(pgftransparent!100)}
+\pgfdeclarefading{projKfade}{\pgfuseshading{projKshade}}
+\begin{tikzpicture}[scale=0.85, rotate=-15,
+                    Kfade/.style={path fading=projKfade, fit fading=false,
+                                  fading transform={shift={(3.8,0.5)}, rotate=-10, scale=5}}]
+  \fill[icBlue!12, Kfade] (4.8,0.67) -- (1,0.4) -- (1,2.23) -- (2.2,2.58)
+                          -- (6.2,2.88) -- cycle;
+  \draw[icBlue, thick, Kfade] (4.8,0.67) -- (1,0.4) -- (1,2.23) -- (2.2,2.58)
+                              -- (6.2,2.88);
+  \node[icBlue] at (3.0,1.3) {$K$};
+  \fill (-0.4,1.1) circle (1.8pt) node[left] {$x$};
+  \draw[-{Stealth}, icNavy, thick] (-0.4,1.1) -- (1,1.1);
+  \fill (1,1.1) circle (1.8pt) node[below right] {$u$};
+  \draw[icGrey, dashed] (1,1.1) -- (2,1.1);
+  \draw[-{Stealth}, icAccent, thick] (1,1.1) -- (2.3,2.0);
+  \fill (2.3,2.0) circle (1.8pt) node[above right] {$y$};
 \end{tikzpicture}

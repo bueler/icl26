@@ -7,7 +7,7 @@
           titleformat frame=regular]{moloch}
 
 % ---------- fonts: Fira Sans text + Fira Math (lualatex) ----------
-\RequirePackage{amsmath,amssymb,mathtools}
+\RequirePackage{amsmath,amssymb,mathtools,lua-ul}
 \RequirePackage{fontspec}
 \RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket}]{unicode-math}
 \setsansfont{Fira Sans}[
@@ -70,7 +70,7 @@
 \gdef\appendixtotalframenumber{1}  % not 0: else progress bar divides by 0 on a fresh build
 \RequirePackage{tikz,pgfplots}
 \pgfplotsset{compat=1.18}
-\usetikzlibrary{arrows.meta,calc,positioning}
+\usetikzlibrary{arrows.meta,calc,fadings,positioning}
 \RequirePackage{booktabs}
 \RequirePackage{xcolor}
 \setbeamertemplate{caption}[default]

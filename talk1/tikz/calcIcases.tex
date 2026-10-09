@@ -1,15 +1,15 @@
-\begin{tikzpicture}[x=0.95cm, y=1.1cm,
+\begin{tikzpicture}[x=0.95cm, y=1.0cm,
                     fn/.style={icBlue, very thick, domain=0:3, samples=40},
                     tan/.style={icAccent, thick, dashed}]
-  \foreach \xo/\la/\lb/\lab/\cond in {0/a/b/interior/{$f'(u)=0$},
-                              4.4/a=u/b/{left endpoint}/{$f'(u)\ge 0$},
-                              8.8/a/u=b/{right endpoint}/{$f'(u)\le 0$}} {
+  \useasboundingbox (-0.2,-1.1) rectangle (12,1.9);  % shared with calcIgeneric.tex
+  \foreach \xo/\la/\lb/\cond in {0/a/b/{$f'(u)=0$},
+                              4.4/a=u/b/{$f'(u)\ge 0$},
+                              8.8/a/u=b/{$f'(u)\le 0$}} {
     \begin{scope}[xshift=\xo cm]
       \draw[icNavy] (-0.2,0) -- (3.2,0);
       \draw[icNavy] (0,0.08) -- (0,-0.08) node[below] {$\la$};
       \draw[icNavy] (3,0.08) -- (3,-0.08) node[below] {$\lb$};
-      \node[icGrey] at (1.5,-0.95) {\lab};
-      \node at (1.5,-1.5) {\cond};
+      \node at (1.5,-0.85) {\cond};
     \end{scope}
   }
   % interior minimum
@@ -19,8 +19,8 @@
   \draw[icNavy] (1.8,0.08) -- (1.8,-0.08) node[below] {$u$};
   % minimum at left endpoint
   \begin{scope}[xshift=4.4cm]
-    \draw[fn] plot (\x, {0.5 + 0.25*\x + 0.08*\x^2});
-    \draw[tan] (0,0.5) -- (1.2,0.8);
+    \draw[fn] plot (\x, {0.5 + 0.45*\x - 0.06*\x^2});
+    \draw[tan] (0,0.5) -- (1.2,1.04);
     \fill (0,0.5) circle (1.8pt);
   \end{scope}
   % minimum at right endpoint
