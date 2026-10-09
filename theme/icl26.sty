@@ -19,7 +19,11 @@
   {\setmathfont{FiraMath-Regular.otf}}
   {\setmathfont{FiraMath-Regular.otf}[Path=../theme/fonts/]}
 % Fira Math has no calligraphic alphabet; take the classic one from Latin Modern
-\setmathfont{latinmodern-math.otf}[range={scr,bfscr}, Scale=MatchUppercase]
+\setmathfont{latinmodern-math.otf}[range={cal,bfcal,scr,bfscr}, Scale=MatchUppercase]
+% operator names (\sin, \inf, \operatorname) use the math roman font; match the text
+\setmathrm{Fira Sans}[
+  UprightFont = *-Book, ItalicFont = *-Book Italic,
+  BoldFont = *-SemiBold, BoldItalicFont = *-SemiBold Italic]
 \usefonttheme{professionalfonts}
 
 % ---------- colours ----------
