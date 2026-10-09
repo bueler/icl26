@@ -30,6 +30,239 @@
 
 \section[1]{Finite-dimensional examples \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{geometry of VIs}}}
 
+\begin{frame}{A calculus I problem}
+  Minimize a smooth function $f$ on a closed interval $[a,b]$.
+  \medskip
+
+  \centering
+  \begin{tikzpicture}[x=0.95cm, y=1.1cm,
+                      fn/.style={icBlue, very thick, domain=0:3, samples=40},
+                      tan/.style={icAccent, thick, dashed}]
+    \foreach \xo/\la/\lb/\lab/\cond in {0/a/b/interior/{$f'(u)=0$},
+                                4.4/a=u/b/{left endpoint}/{$f'(u)\ge 0$},
+                                8.8/a/u=b/{right endpoint}/{$f'(u)\le 0$}} {
+      \begin{scope}[xshift=\xo cm]
+        \draw[icNavy] (-0.2,0) -- (3.2,0);
+        \draw[icNavy] (0,0.08) -- (0,-0.08) node[below] {$\la$};
+        \draw[icNavy] (3,0.08) -- (3,-0.08) node[below] {$\lb$};
+        \node[icGrey] at (1.5,-0.95) {\lab};
+        \node at (1.5,-1.5) {\cond};
+      \end{scope}
+    }
+    % interior minimum
+    \draw[fn] plot (\x, {0.5 + 0.4*(\x-1.8)^2});
+    \draw[tan] (1.2,0.5) -- (2.4,0.5);
+    \fill (1.8,0.5) circle (1.8pt);
+    \draw[icNavy] (1.8,0.08) -- (1.8,-0.08) node[below] {$u$};
+    % minimum at left endpoint
+    \begin{scope}[xshift=4.4cm]
+      \draw[fn] plot (\x, {0.5 + 0.25*\x + 0.08*\x^2});
+      \draw[tan] (0,0.5) -- (1.2,0.8);
+      \fill (0,0.5) circle (1.8pt);
+    \end{scope}
+    % minimum at right endpoint
+    \begin{scope}[xshift=8.8cm]
+      \draw[fn] plot (\x, {0.5 + 0.25*(3-\x) + 0.08*(3-\x)^2});
+      \draw[tan] (3,0.5) -- (1.8,0.8);
+      \fill (3,0.5) circle (1.8pt);
+    \end{scope}
+  \end{tikzpicture}
+
+  \pause
+  \raggedright
+  all three cases are captured by a \alert{variational inequality}:
+  \[
+    u\in[a,b] \quad\text{and}\quad f'(u)\,(v-u) \ge 0 \qquad \text{for all } v\in[a,b]
+  \]
+  \grey{\small a \emph{necessary} condition only: a local min, or a local max at an endpoint, also qualifies}
+\end{frame}
+
+\begin{frame}{Minimize $f$ over a convex set $K\subset\mathbb{R}^n$}
+  \begin{columns}[T]
+    \begin{column}{0.6\textwidth}
+      \textbf{Theorem.}\, Let $K\subset\mathbb{R}^n$ be convex and $f\in C^1$.
+      If $u\in K$ minimizes $f$ over $K$ then
+      \[
+        \nabla f(u)\cdot(v-u)\ge 0 \qquad\text{for all } v\in K.
+      \]
+      \pause
+      \emph{Proof.}\, For $v\in K$, $u+t(v-u)\in K$ for $0\le t\le 1$, so
+      $t=0$ minimizes $g(t)=f(u+t(v-u))$ on $[0,1]$.  By the calculus I problem,
+      $0\le g'(0)=\nabla f(u)\cdot(v-u)$. \qed
+
+      \smallskip
+      \pause
+      \begin{itemize}
+        \item if $f$ is convex then the VI is also \emph{sufficient}
+        \item exists if $K$ compact \grey{(or closed, with $f$ coercive)}
+        \item unique if $f$ strictly convex
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.85, rotate=20]
+        \fill[icBlue!12] (0,0.3) -- (2,0.6) -- (2,2.6) -- (0.6,3) -- (-0.4,1.6) -- cycle;
+        \draw[icBlue, thick] (0,0.3) -- (2,0.6) -- (2,2.6) -- (0.6,3) -- (-0.4,1.6) -- cycle;
+        \node[icBlue] at (0.5,2.2) {$K$};
+        \foreach \s in {0.5,1,1.5}
+          \draw[icGrey] (3.4,1.7) ellipse ({1.4*\s} and {0.8*\s});
+        \fill[icGrey] (3.4,1.7) circle (1.5pt);
+        \draw[-{Stealth}, icAccent, thick] (2,1.7) -- (2.9,1.7)
+          node[below, pos=0.75] {\small $-\nabla f$};
+        \coordinate (v) at (0.7,0.9);
+        \draw[-{Stealth}, icNavy] (2,1.7) -- (v);
+        \fill (v) circle (1.5pt) node[below left] {$v$};
+        \fill (2,1.7) circle (1.8pt) node[above left] {$u$};
+      \end{tikzpicture}
+
+      \smallskip
+      {\small level sets of $f$}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Projection onto a closed, convex set}
+  \begin{columns}[T]
+    \begin{column}{0.58\textwidth}
+      Let $K\subset\mathcal{H}$ be nonempty, closed, and convex in a Hilbert space
+      \grey{(e.g.~$\mathbb{R}^n$)}.
+
+      \medskip
+      \textbf{Definition.}\, For $x\in\mathcal{H}$ the unique minimizer
+      \[
+        P_K x = \operatorname*{argmin}_{z\in K}\, \tfrac12\|z-x\|^2
+      \]
+      is the \emph{projection} of $x$ onto $K$.
+
+      \pause
+      \medskip
+      \textbf{Theorem.}\, $y=P_K x$ if and only if $y\in K$ and
+      \[
+        \ip{y-x}{\eta-y}\ge 0 \qquad \text{for all } \eta\in K.
+      \]
+      \grey{\small \emph{idea:} angle between $y-x$ and $\eta-y$ is not obtuse}
+
+      \smallskip
+      \grey{\small \emph{proof:} previous slide with $f(z)=\tfrac12\|z-x\|^2$}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.85, rotate=-15]
+        \fill[icBlue!12] (1,0.5) -- (3.5,0.2) -- (4,2) -- (2.2,3) -- (1,2.5) -- cycle;
+        \draw[icBlue, thick] (1,0.5) -- (3.5,0.2) -- (4,2) -- (2.2,3) -- (1,2.5) -- cycle;
+        \node[icBlue] at (3.2,1.2) {$K$};
+        \fill (-0.4,1.6) circle (1.8pt) node[left] {$x$};
+        \draw[-{Stealth}, icNavy, thick] (-0.4,1.6) -- (1,1.6);
+        \fill (1,1.6) circle (1.8pt) node[below right] {$y$};
+        \uncover<2->{
+          \draw[icGrey, dashed] (1,1.6) -- (2,1.6);
+          \draw[-{Stealth}, icAccent, thick] (1,1.6) -- (2.6,2.4);
+          \fill (2.6,2.4) circle (1.8pt) node[above right] {$\eta$};
+        }
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Nonlinear equations $F(x)=0$}
+  Given continuous $F:\mathbb{R}^n\to\mathbb{R}^n$, find $x$ so that $F(x)=0$.
+  \begin{itemize}
+    \item there is little positive to say in general: no existence
+          \grey{(e.g.~$F(x)=e^x$)}, no uniqueness
+  \end{itemize}
+
+  \pause
+  \medskip
+  Change the problem minimally: seek $x$ in a compact, convex $K\subset\mathbb{R}^n$.
+  \begin{block}{Theorem (Hartman \& Stampacchia, 1966)}
+    If $K\subset\mathbb{R}^n$ is nonempty, compact, and convex, and $F$ is continuous,
+    then there exists $x\in K$ so that
+    \[
+      F(x)\cdot(y-x)\ge 0 \qquad\text{for all } y\in K.
+    \]
+  \end{block}
+  \pause
+  \begin{itemize}
+    \item if $x$ is in the interior of $K$ then $F(x)=0$ \grey{(take $y=x\pm\epsilon e_i$)}
+    \item for $K=\mathbb{R}^n$ the VI \emph{is} $F(x)=0$ \grey{(but $\mathbb{R}^n$ is not compact)}
+    \item example: $F(x)=e^x$ on $K=[a,b]$ has solution $x=a$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Proof: a fixed point of a projected map}
+  \begin{columns}[T]
+    \begin{column}{0.58\textwidth}
+      The map $x'\mapsto P_K\big(x'-F(x')\big)$ is continuous from $K$ to $K$, so by
+      Brouwer it has a fixed point:
+      \[
+        x = P_K z, \qquad z = x - F(x).
+      \]
+      \pause
+      By the projection theorem, for all $y\in K$,
+      \[
+        0 \le \ip{P_K z - z}{y - P_K z} = F(x)\cdot(y-x). \qquad\qed
+      \]
+      \pause
+      \begin{itemize}
+        \item converse: VI solutions are fixed points of
+              $x\mapsto P_K(x-\rho F(x))$ for any $\rho>0$
+        \item \alert{projection} is the basic geometric operation for VIs
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.85]
+        \fill[icBlue!12] (1,0.4) -- (3.4,0.6) -- (3.8,2.4) -- (2.4,3.2) -- (1,2.7) -- cycle;
+        \draw[icBlue, thick] (1,0.4) -- (3.4,0.6) -- (3.8,2.4) -- (2.4,3.2) -- (1,2.7) -- cycle;
+        \node[icBlue] at (3,1.3) {$K$};
+        \draw[-{Stealth}, icAccent, thick] (1,1.5) -- (-0.4,1.5)
+          node[above, pos=0.5] {\small $-F(x)$};
+        \fill (-0.4,1.5) circle (1.8pt) node[left] {$z$};
+        \fill (1,1.5) circle (1.8pt) node[below right] {$x$};
+        \draw[-{Stealth}, icNavy] (1,1.5) -- (2.7,2.5);
+        \fill (2.7,2.5) circle (1.5pt) node[above right] {$y$};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{What is a variational inequality?}
+  Given a closed, convex $K\subset\mathcal{H}$ and $F:K\to\mathcal{H}'$, find $u\in K$ so that
+  \[
+    \ip{F(u)}{v-u} \ge 0 \qquad \text{for all } v\in K.
+  \]
+  \begin{center}
+    \begin{tabular}{lll}
+      \toprule
+      problem                     & $K$                      & $F(u)$ \\
+      \midrule
+      calculus I                  & $[a,b]$                  & $f'(u)$ \\
+      minimize $f$ over $K$       & convex                   & $\nabla f(u)$ \\
+      projection of $x$ onto $K$  & closed, convex           & $u-x$ \\
+      nonlinear equations         & compact, convex          & $F(u)$ \\
+      \midrule
+      $F(u)=0$                    & $\mathcal{H}$            & $F(u)$ \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \pause
+  \begin{itemize}
+    \item VIs generalize equations, and not every VI is a minimization
+    \item \emph{next:} $K\subset$ a function space, $F$ from a PDE
+  \end{itemize}
+\end{frame}
+
+
+\AtBeginSection[]
+{
+  \begin{frame}{Outline}
+  \tableofcontents[currentsection]
+  \end{frame}
+}
+
+
+\section[2]{Infinite-dimensional examples \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{some applications of VIs}}}
+
 \begin{frame}{The classical obstacle problem}
   Given an obstacle $\psi$ and source $f$ on $\Omega\subset\mathbb{R}^d$, let
   \[
@@ -65,23 +298,6 @@
       \node[icAccent, above] at (axis cs:0,0.3) {contact set $u=\psi$};
     \end{axis}
   \end{tikzpicture}
-\end{frame}
-
-
-\AtBeginSection[]
-{
-  \begin{frame}{Outline}
-  \tableofcontents[currentsection]
-  \end{frame}
-}
-
-
-\section[2]{Infinite-dimensional examples \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{some applications of VIs}}}
-
-\begin{frame}{a slide}
-  \begin{itemize}
-    \item a bullet
-  \end{itemize}
 \end{frame}
 
 
