@@ -1,4 +1,4 @@
-\documentclass[aspectratio=169,11pt]{beamer}
+\documentclass[aspectratio=169,10pt]{beamer}
 
 % fallback search path for ../theme/ when TEXINPUTS is not set (e.g. texmaker
 % quick build); the makefile's TEXINPUTS takes precedence, so no conflict
@@ -8,11 +8,11 @@
 \makeatother
 \usepackage{icl26}
 
-\title[VIs and their FE solutions]{Variational inequalities and their finite element solutions}
+\title{Variational inequalities and their finite element solutions}
 \subtitle{A genuine introduction}
 \author{Ed Bueler}
 \institute{University of Alaska Fairbanks}
-\date{Imperial College London \quad 2026}
+\date{Imperial College London \, 2026}
 
 \newcommand{\cK}{{\mathcal{K}}}  % outer braces: safe in P_\cK under unicode-math
 \newcommand{\ip}[2]{\left\langle #1, #2 \right\rangle}
@@ -28,7 +28,7 @@
 \end{frame}
 
 
-\section[finite-dim examples]{finite-dimensional examples \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{geometry of VIs}}}
+\section[finite-dimensional examples]{finite-dimensional examples \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{geometry of VIs}}}
 
 \begin{frame}{a calculus I problem}
 
@@ -42,11 +42,11 @@
   \only<2->{\input{tikz/calcIcases.tex}}
 
 \raggedright
-\item<2-> 3 cases arise
-\item<3-> all cases captured by this \alert{variational inequality} (VI):
-  $$f'(u)\,(x-u) \ge 0 \qquad \text{for all } x\in[a,b]$$
+\item<2-> 3 cases arise for a minimizer $u$
+\item<3-> all cases are captured by this \alert{variational inequality} (VI):
+  $$\alert{f'(u)\,(x-u) \ge 0} \qquad \text{for all } x\in[a,b]$$
 
-\quad \grey{\small as you travel into $[a,b]$, $f$ \strikeThrough{slopes up} does not slope down}
+\quad \grey{\small as you travel from $u$ into $[a,b]$, $f$ \strikeThrough{slopes upward} does not slope downward}
 \end{itemize}
 \end{frame}
 
@@ -60,56 +60,58 @@
 \begin{definition}
 for $x\in H$, define the \emph{projection} of $x$ onto $K$:
   $$u = \Pi_K x = \operatorname*{argmin}_{y\in K}\, \|y-x\| \hspace{50mm}$$
+\grey{\small (a parallelogram and completeness argument}
 
-\vspace{-18mm}
+\noindent \grey{\small shows $u$ exists and is unique)}
+
+\vspace{-25mm}
 \hfill \input{tikz/projection.tex}
+
+\medskip
 \end{definition}
 
 \pause
-\begin{theorem}
-$$u=\Pi_K x \qquad \iff \qquad u\in K, \quad \ip{u-x}{y-u}\ge 0 \quad \text{for all } y\in K$$
+\item but how do we characterize $u=\Pi_K x$ by its geometrical properties?
+\pause
+\item $u=\Pi_K x\in K \qquad \iff \alert{\ip{u-x}{y-u}\ge 0} \quad \text{for all } y\in K$
 
 \quad \grey{\small angle between $u-x$ and $y-u$ is at most $90^\circ$ (not obtuse)}
-\end{theorem}
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{minimize $f$ over a convex set $K\subset\mathbb{R}^n$}
-  \begin{columns}[T]
-    \begin{column}{0.6\textwidth}
-      \textbf{Theorem.}\, Let $K\subset\mathbb{R}^n$ be convex and $f\in C^1$.
-      If $u\in K$ minimizes $f$ over $K$ then
-      $$
-        \nabla f(u)\cdot(v-u)\ge 0 \qquad\text{for all } v\in K.
-      $$
-      \pause
-      \emph{Proof.}\, For $v\in K$, $u+t(v-u)\in K$ for $0\le t\le 1$, so
-      $t=0$ minimizes $g(t)=f(u+t(v-u))$ on $[0,1]$.  By the calculus I problem,
-      $0\le g'(0)=\nabla f(u)\cdot(v-u)$. \qed
+\begin{theorem}
+\begin{minipage}{0.6\linewidth}
+let $K\subset\mathbb{R}^n$ be convex and $f\in C^1$; if $u\in K$ minimizes $f$ over $K$ then
+  $$\nabla f(u)\cdot(v-u)\ge 0 \qquad\text{for all } v\in K$$
+\end{minipage}
+\hfill
+\begin{minipage}{0.36\linewidth}
+  \centering
+  \scalebox{0.75}{\input{tikz/convexmin.tex}}
 
-      \smallskip
-      \pause
-      \begin{itemize}
-        \item if $f$ is convex then the VI is also \emph{sufficient}
-        \item exists if $K$ compact \grey{(or closed, with $f$ coercive)}
-        \item unique if $f$ strictly convex
-        \item FIXME example; $f(u) = \tfrac{1}{2} \|u-x\|^2$ on previous
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.38\textwidth}
-      \centering
-      \input{tikz/convexmin.tex}
+  {\small level sets of $f$}
+\end{minipage}
+\end{theorem}
 
-      \smallskip
-      {\small level sets of $f$}
-    \end{column}
-  \end{columns}
+\pause
+\emph{proof:}\, for $v\in K$, $u+t(v-u)\in K$ for $0\le t\le 1$, so
+$t=0$ minimizes $g(t)=f(u+t(v-u))$ on $[0,1]$; by the calculus I problem,
+$0\le g'(0)=\nabla f(u)\cdot(v-u)$ \qed
+
+\pause
+\begin{itemize}
+\item if $f$ is convex then the VI is also \emph{sufficient}
+\item exists if $K$ compact \grey{(or closed, with $f$ coercive)}
+\item unique if $f$ strictly convex
+\item FIXME example; $f(u) = \tfrac{1}{2} \|u-x\|^2$ on previous
+\end{itemize}
 \end{frame}
 
 
 \begin{frame}{nonlinear equations $F(x)=0$}
-  Given continuous $F:\mathbb{R}^n\to\mathbb{R}^n$, find $x$ so that $F(x)=0$.
+  given continuous $F:\mathbb{R}^n\to\mathbb{R}^n$, find $x$ so that $F(x)=0$
   \begin{itemize}
     \item there is little positive to say in general: no existence
           \grey{(e.g.~$F(x)=e^x$)}, no uniqueness
@@ -117,14 +119,14 @@ $$u=\Pi_K x \qquad \iff \qquad u\in K, \quad \ip{u-x}{y-u}\ge 0 \quad \text{for 
 
   \pause
   \medskip
-  Change the problem minimally: seek $x$ in a compact, convex $K\subset\mathbb{R}^n$.
-  \begin{block}{Theorem (Hartman \& Stampacchia, 1966)}
-    If $K\subset\mathbb{R}^n$ is nonempty, compact, and convex, and $F$ is continuous,
+  change the problem minimally: seek $x$ in a compact, convex $K\subset\mathbb{R}^n$
+  \begin{theorem}[Hartman \& Stampacchia, 1966]
+    if $K\subset\mathbb{R}^n$ is nonempty, compact, and convex, and $F$ is continuous,
     then there exists $x\in K$ so that
     $$
-      F(x)\cdot(y-x)\ge 0 \qquad\text{for all } y\in K.
+      F(x)\cdot(y-x)\ge 0 \qquad\text{for all } y\in K
     $$
-  \end{block}
+  \end{theorem}
   \pause
   \begin{itemize}
     \item if $x$ is in the interior of $K$ then $F(x)=0$ \grey{(take $y=x\pm\epsilon e_i$)}
@@ -136,13 +138,13 @@ $$u=\Pi_K x \qquad \iff \qquad u\in K, \quad \ip{u-x}{y-u}\ge 0 \quad \text{for 
 \begin{frame}{proof: a fixed point of a projected map}
   \begin{columns}[T]
     \begin{column}{0.58\textwidth}
-      The map $x'\mapsto P_K\big(x'-F(x')\big)$ is continuous from $K$ to $K$, so by
+      the map $x'\mapsto P_K\big(x'-F(x')\big)$ is continuous from $K$ to $K$, so by
       Brouwer it has a fixed point:
       $$
         x = P_K z, \qquad z = x - F(x).
       $$
       \pause
-      By the projection theorem, for all $y\in K$,
+      by the projection theorem, for all $y\in K$,
       $$
         0 \le \ip{P_K z - z}{y - P_K z} = F(x)\cdot(y-x). \qquad\qed
       $$
@@ -161,11 +163,13 @@ $$u=\Pi_K x \qquad \iff \qquad u\in K, \quad \ip{u-x}{y-u}\ge 0 \quad \text{for 
 \end{frame}
 
 \begin{frame}{what is a variational inequality?}
-  Given a closed, convex $K\subset\mathcal{H}$ and $F:K\to\mathcal{H}'$, find $u\in K$ so that
+  \begin{definition}
+  given a closed, convex $K\subset\mathcal{H}$ and $F:K\to\mathcal{H}'$, find $u\in K$ so that
   $$
-    \ip{F(u)}{v-u} \ge 0 \qquad \text{for all } v\in K.
+    \ip{F(u)}{v-u} \ge 0 \qquad \text{for all } v\in K
   $$
-  \begin{center}
+  \end{definition}
+  {\centering\small
     \begin{tabular}{lll}
       \toprule
       problem                     & $K$                      & $F(u)$ \\
@@ -178,7 +182,7 @@ $$u=\Pi_K x \qquad \iff \qquad u\in K, \quad \ip{u-x}{y-u}\ge 0 \quad \text{for 
       $F(u)=0$                    & $\mathcal{H}$            & $F(u)$ \\
       \bottomrule
     \end{tabular}
-  \end{center}
+  \par}
   \pause
   \begin{itemize}
     \item VIs generalize equations, and not every VI is a minimization
@@ -195,10 +199,10 @@ $$u=\Pi_K x \qquad \iff \qquad u\in K, \quad \ip{u-x}{y-u}\ge 0 \quad \text{for 
 }
 
 
-\section[\texorpdfstring{$\infty$}{inf}-dim examples]{infinite-dimensional examples \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{some applications of VIs}}}
+\section[infinite-dimensional examples]{infinite-dimensional examples \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{some applications of VIs}}}
 
 \begin{frame}{the classical obstacle problem}
-  An elastic membrane over $\Omega\subset\mathbb{R}^d$, with small vertical displacement $u$,
+  an elastic membrane over $\Omega\subset\mathbb{R}^d$, with small vertical displacement $u$,
   fixed $u=g$ on $\partial\Omega$, under force $f$, and constrained to lie above an obstacle $\psi$:
   $$
     u-\psi\ge 0, \qquad -\nabla^2 u - f \ge 0, \qquad (u-\psi)(-\nabla^2 u - f) = 0
@@ -224,11 +228,11 @@ $$u=\Pi_K x \qquad \iff \qquad u\in K, \quad \ip{u-x}{y-u}\ge 0 \quad \text{for 
 \end{frame}
 
 \begin{frame}{obstacle problem: weak form}
-  Let $\cK = \{v\in H^1(\Omega) : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$, a closed, convex set
-  but \alert{not} a subspace.  Find $u\in\cK$ so that
+  let $\cK = \{v\in H^1(\Omega) : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$, a closed, convex set
+  but \alert{not} a subspace; find $u\in\cK$ so that
   $$
     \int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u)
-    \qquad \text{for all } v\in\cK.
+    \qquad \text{for all } v\in\cK
   $$
   \begin{itemize}
     \item equivalent to minimizing $J(v)=\int_\Omega \tfrac12|\nabla v|^2 - fv$ over $\cK$
@@ -280,11 +284,11 @@ $$u=\Pi_K x \qquad \iff \qquad u\in K, \quad \ip{u-x}{y-u}\ge 0 \quad \text{for 
 \end{frame}
 
 \begin{frame}{Signorini problem: VI and complementarity}
-  Let $\cK = \{v\in H^1(\Omega;\mathbb{R}^2) : v=u_D \text{ on } \Gamma_D \text{ and }
-  v\cdot n\le g \text{ on } \Gamma_C\}$.  Find $u\in\cK$ so that
+  let $\cK = \{v\in H^1(\Omega;\mathbb{R}^2) : v=u_D \text{ on } \Gamma_D \text{ and }
+  v\cdot n\le g \text{ on } \Gamma_C\}$; find $u\in\cK$ so that
   $$
     \int_\Omega \sigma(u):\epsilon(v-u) \ge \int_\Omega f\cdot(v-u)
-    \qquad\text{for all } v\in\cK.
+    \qquad\text{for all } v\in\cK
   $$
   \begin{itemize}
     \item equivalent to minimizing the elastic energy
@@ -300,7 +304,7 @@ $$u=\Pi_K x \qquad \iff \qquad u\in K, \quad \ip{u-x}{y-u}\ge 0 \quad \text{for 
 \end{frame}
 
 \begin{frame}{contact in nonlinear hyperelasticity}
-  Large deformations: $x\mapsto x+u(x)$, deformation gradient $F=I+\nabla u$, $J=\det F>0$.
+  large deformations: $x\mapsto x+u(x)$, deformation gradient $F=I+\nabla u$, $J=\det F>0$
   \begin{itemize}
     \item hyperelastic: stored energy density $W(F)$, e.g.~compressible neo-Hookean
           $$
@@ -348,8 +352,8 @@ $$u=\Pi_K x \qquad \iff \qquad u\in K, \quad \ip{u-x}{y-u}\ge 0 \quad \text{for 
 \end{frame}
 
 \begin{frame}{a fluid layer in a climate}
-  A thin fluid layer moves on a substrate, with mass added (precipitation, accumulation)
-  or removed (evaporation, ablation) by a signed source $f$, the \emph{climate}.
+  a thin fluid layer moves on a substrate, with mass added (precipitation, accumulation)
+  or removed (evaporation, ablation) by a signed source $f$, the \emph{climate}
   \begin{center}
     \includegraphics[width=0.45\textwidth]{figs/bueler2021-fig1.png}
   \end{center}
@@ -428,18 +432,18 @@ $$u=\Pi_K x \qquad \iff \qquad u\in K, \quad \ip{u-x}{y-u}\ge 0 \quad \text{for 
   \begin{itemize}
     \item bar
   \end{itemize}
-\end{frame}\texorpdfstring{$\leftarrow$}{←}
+\end{frame}
 
 
-\section[theory]{theory: well-posedness, \emph{a priori} estimate}
+\section[theory]{theory: well-posedness and an \emph{a priori} error estimate}
 
 \begin{frame}{existence and uniqueness}
-  \begin{block}{Theorem (Stampacchia 1964)}
-    Let $a(\cdot,\cdot)$ be bounded and coercive on a Hilbert space $V$, and
-    $\cK\subset V$ nonempty, closed, convex. Then for each $\ell\in V'$ there is a
+  \begin{theorem}[Stampacchia 1964]
+    let $a(\cdot,\cdot)$ be bounded and coercive on a Hilbert space $V$, and
+    $\cK\subset V$ nonempty, closed, convex; then for each $\ell\in V'$ there is a
     unique $u\in\cK$ with
-    $$ a(u,v-u)\ge \ell(v-u) \quad\forall v\in\cK. $$
-  \end{block}
+    $$ a(u,v-u)\ge \ell(v-u) \quad\forall v\in\cK $$
+  \end{theorem}
   \pause
   \begin{itemize}
     \item proof: Banach fixed point for $u\mapsto P_\cK\big(u-\rho(Au-\ell)\big)$
@@ -448,28 +452,36 @@ $$u=\Pi_K x \qquad \iff \qquad u\in K, \quad \ip{u-x}{y-u}\ge 0 \quad \text{for 
 \end{frame}
 
 \begin{frame}{Falk's a priori estimate}
-  For $P_1$ elements on a quasi-uniform mesh, with $\cK_h\not\subset\cK$ in general,
+  for $P_1$ elements on a quasi-uniform mesh, with $\cK_h\not\subset\cK$ in general,
   $$
     \|u-u_h\|_{H^1} \le C\Big(
       \inf_{v_h\in\cK_h}\|u-v_h\| + \inf_{v\in\cK}\|u_h - v\| \Big)^{1/2}
-      \lesssim C\,h .
+      \lesssim C\,h
   $$
-  \grey{Falk, Math.\ Comp.\ 1974.}
+  \grey{Falk, Math.\ Comp.\ 1974}
 \end{frame}
 
 
-\begin{frame}{references}
-  {\fontsize{7}{8.2}\selectfont \input{references.tex}}
+\begin{frame}{summary}
+
+  foo
 \end{frame}
+
 
 \begin{frame}[standout]
   Questions?
 \end{frame}
 
+
+\begin{frame}{references}
+  \fontsize{7}{8.2}\selectfont \input{references.tex}
+\end{frame}
+
+
 \appendix
 
 \begin{frame}{backup: projection onto a convex set}
-  $P_\cK v$ is the unique $w\in\cK$ with $\ip{v-w}{z-w}\le 0$ for all $z\in\cK$.
+  $P_\cK v$ is the unique $w\in\cK$ with $\ip{v-w}{z-w}\le 0$ for all $z\in\cK$
 \end{frame}
 
 \end{document}
