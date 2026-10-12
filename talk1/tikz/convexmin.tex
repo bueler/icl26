@@ -4,9 +4,9 @@
   \node[icBlue] at (0.5,2.2) {$K$};
   \foreach \s in {0.5,1,1.5}
     \draw[icGrey] (3.4,1.7) ellipse ({1.4*\s} and {0.8*\s});
-  \fill[icGrey] (3.4,1.7) circle (1.5pt);
-  \draw[-{Stealth}, icAccent, thick] (2,1.7) -- (2.9,1.7)
-    node[below, pos=0.75] {\small $-\nabla f$};
+  \fill[icGrey] (3.4,1.7) circle (1.5pt) node[below right, rotate=30.0, xshift=-7mm, yshift=-10mm] {{\small contours of $f$}};
+  \draw[-{Stealth}, icAccent, thick] (2,1.7) -- (1.1,1.7)
+    node[above, pos=0.95] {\small $\nabla f$};
   \coordinate (v) at (0.7,0.9);
   \draw[-{Stealth}, icNavy] (2,1.7) -- (v);
   \fill (v) circle (1.5pt) node[below left] {$v$};

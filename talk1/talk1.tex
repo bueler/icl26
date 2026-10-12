@@ -14,7 +14,11 @@
 \institute{University of Alaska Fairbanks}
 \date{Imperial College London \, 2026}
 
-\newcommand{\cK}{{\mathcal{K}}}  % outer braces: safe in P_\cK under unicode-math
+\newcommand{\cH}{{\mathcal{H}}}
+\newcommand{\cK}{{\mathcal{K}}}  % with extra outer braces: safe in P_\cK under unicode-math
+\newcommand{\cX}{{\mathcal{X}}}
+
+\newcommand{\RR}{{\mathbb{R}}}
 \newcommand{\ip}[2]{\left\langle #1, #2 \right\rangle}
 
 \begin{document}
@@ -33,20 +37,47 @@
 \begin{frame}{a calculus I problem}
 
 \begin{itemize}
-\item minimize smooth $f(x)$ over a closed interval $[a,b]$?
-\item what we tell our students: \quad $f'(x)=0$, but test the end-points
+\item how do you minimize a smooth $f(x)$ over a closed interval $[a,b]$?
+\item what we tell our students:
+
+\bigskip \bigskip
+\quad solve $f'(x)=0$,
+
+\quad but test the end-points
+
+\vspace{-13mm}
+\mbox{\hspace{40mm} \input{tikz/calcIgeneric.tex}}
+
+\pause
+\raggedright
+
+\vspace{-2mm}
+\item 3 cases arise for a local minimizer $u$:
 
 \medskip
   \centering
-  \only<1>{\input{tikz/calcIgeneric.tex}}%
-  \only<2->{\input{tikz/calcIcases.tex}}
+  \input{tikz/calcIcases.tex}
+\end{itemize}
+\end{frame}
 
+
+\begin{frame}{a calculus I problem}
+
+\begin{itemize}
+\item 3 cases for a local minimizer:
+
+\medskip
+  \centering
+  \input{tikz/calcIcases.tex}
+
+\pause
 \raggedright
-\item<2-> 3 cases arise for a minimizer $u$
-\item<3-> all cases are captured by this \alert{variational inequality} (VI):
-  $$\alert{f'(u)\,(x-u) \ge 0} \qquad \text{for all } x\in[a,b]$$
 
-\quad \grey{\small as you travel from $u$ into $[a,b]$, $f$ \strikeThrough{slopes upward} does not slope downward}
+\bigskip
+\item all are captured by a \alert{variational inequality} (VI):
+  $$u \text{ locally minimizes } f \implies \quad \boxed{\alert{f'(u)\,(x-u) \ge 0}} \qquad \text{for all } x\in[a,b]$$
+
+\item traveling infinitesimally from $u$ into $[a,b]$, $f$ \strikeThrough{increases} does not decrease
 \end{itemize}
 \end{frame}
 
@@ -59,23 +90,41 @@
 
 \begin{definition}
 for $x\in H$, define the \emph{projection} of $x$ onto $K$:
-  $$u = \Pi_K x = \operatorname*{argmin}_{y\in K}\, \|y-x\| \hspace{50mm}$$
-\grey{\small (a parallelogram and completeness argument}
+  $$u = \operatorname*{argmin}_{y\in K}\, \|y-x\| \hspace{50mm}$$
 
-\noindent \grey{\small shows $u$ exists and is unique)}
-
-\vspace{-25mm}
+\vspace{-15mm}
 \hfill \input{tikz/projection.tex}
 
 \medskip
 \end{definition}
 
-\pause
-\item but how do we characterize $u=\Pi_K x$ by its geometrical properties?
-\pause
-\item $u=\Pi_K x\in K \qquad \iff \alert{\ip{u-x}{y-u}\ge 0} \quad \text{for all } y\in K$
+\item notation: $u=\Pi_K x$
+\item a parallelogram \& completeness argument shows $u$ exists and is unique
+%\item as you travel from $u$ toward any $y\in K$, $f(y)=\|y-x\|$ does not decrease
+\end{itemize}
+\end{frame}
 
-\quad \grey{\small angle between $u-x$ and $y-u$ is at most $90^\circ$ (not obtuse)}
+
+\begin{frame}{projection onto a closed, convex set}
+
+\begin{definition}
+for $x\in H$, define the \emph{projection} of $x$ onto $K$:
+  $$u = \Pi_K x = \operatorname*{argmin}_{y\in K}\, \|y-x\| \hspace{50mm}$$
+
+\vspace{-15mm}
+\hfill \input{tikz/projection.tex}
+
+\medskip
+\end{definition}
+
+\begin{itemize}
+\item how do we characterize $u=\Pi_K x$ using inner products?
+\pause
+\item answer: $u=\Pi_K x\in K$ if and only if
+
+$$\boxed{\alert{\ip{u-x}{y-u}\ge 0}} \quad \text{for all } y\in K$$
+
+\item angle between $u-x$ and $y-u$ is at most $90^\circ$ (not obtuse)
 \end{itemize}
 \end{frame}
 
@@ -83,29 +132,60 @@ for $x\in H$, define the \emph{projection} of $x$ onto $K$:
 \begin{frame}{minimize $f$ over a convex set $K\subset\mathbb{R}^n$}
 \begin{theorem}
 \begin{minipage}{0.6\linewidth}
-let $K\subset\mathbb{R}^n$ be convex and $f\in C^1$; if $u\in K$ minimizes $f$ over $K$ then
-  $$\nabla f(u)\cdot(v-u)\ge 0 \qquad\text{for all } v\in K$$
+suppose:
+\begin{itemize}
+\item $K\subset\RR^n$ is convex
+\item $f : K \to \RR$ is in $C^1$
+\end{itemize}
+then a local minimizer $u\in K$ satisfies
+  $$\boxed{\alert{\nabla f(u)\cdot(v-u)\ge 0}} \qquad\text{for all } v\in K$$
 \end{minipage}
 \hfill
 \begin{minipage}{0.36\linewidth}
   \centering
-  \scalebox{0.75}{\input{tikz/convexmin.tex}}
-
-  {\small level sets of $f$}
+  \scalebox{1.0}{\input{tikz/convexmin.tex}}
 \end{minipage}
 \end{theorem}
 
 \pause
-\emph{proof:}\, for $v\in K$, $u+t(v-u)\in K$ for $0\le t\le 1$, so
-$t=0$ minimizes $g(t)=f(u+t(v-u))$ on $[0,1]$; by the calculus I problem,
-$0\le g'(0)=\nabla f(u)\cdot(v-u)$ \qed
+\bigskip
+\emph{proof:}\, If $v\in K$ then $(1-t) u + t v = u+t(v-u)\in K$ for $0\le t\le 1$.
+
+We know that $t=0$ locally minimizes $g(t)=f(u+t(v-u))$ on $[0,1]$.
+
+By the calculus I problem, $0\le g'(0)=\nabla f(u)\cdot(v-u)$ \qed
+\end{frame}
+
+
+\begin{frame}{minimize $f$ over a convex set $K\subset\mathbb{R}^n$}
+
+\begin{theorem}[strengthened hypothesis and conclusion]
+\begin{minipage}{0.6\linewidth}
+suppose:
+\begin{itemize}
+\item $K\subset\RR^n$ is convex
+\item $f : K \to \RR$ is in $C^1$ and is convex
+\end{itemize}
+then $u\in K$ is a minimizer if and only if
+  $$\boxed{\alert{\nabla f(u)\cdot(v-u)\ge 0}} \qquad\text{for all } v\in K$$
+\end{minipage}
+\hfill
+\begin{minipage}{0.36\linewidth}
+  \centering
+  \scalebox{1.0}{\input{tikz/convexmin.tex}}
+\end{minipage}
+\end{theorem}
+
 
 \pause
 \begin{itemize}
-\item if $f$ is convex then the VI is also \emph{sufficient}
-\item exists if $K$ compact \grey{(or closed, with $f$ coercive)}
-\item unique if $f$ strictly convex
-\item FIXME example; $f(u) = \tfrac{1}{2} \|u-x\|^2$ on previous
+\item $u$ exists if $K$ is nonempty and
+    \begin{itemize}
+    \item[$\circ$] $K$ is compact, or
+    \item[$\circ$] $K$ is closed and $f$ is \emph{coercive}: $f\to \infty$ as $\|v\|\to \infty$ for $v\in K$
+    \end{itemize}
+\item $u$ is unique if $f$ strictly convex
+\item example: {\small $f(v) = \tfrac{1}{2} \|v-x\|^2$ for $x\in\RR^n$ fixed, over nonempty, closed, and convex $K\subset \RR^n$}
 \end{itemize}
 \end{frame}
 
@@ -162,24 +242,21 @@ $0\le g'(0)=\nabla f(u)\cdot(v-u)$ \qed
   \end{columns}
 \end{frame}
 
-\begin{frame}{what is a variational inequality?}
+
+\begin{frame}{examples of variational inequalities}
   \begin{definition}
-  given a closed, convex $K\subset\mathcal{H}$ and $F:K\to\mathcal{H}'$, find $u\in K$ so that
-  $$
-    \ip{F(u)}{v-u} \ge 0 \qquad \text{for all } v\in K
-  $$
+  given a normed vector space $X$, a closed and convex subset $K\subset X$, and $F: K\to X'$ find $u\in K$ so that
+  $$\ip{F(u)}{v-u} \ge 0 \qquad \text{for all } v\in K$$
   \end{definition}
   {\centering\small
     \begin{tabular}{lll}
       \toprule
-      problem                     & $K$                      & $F(u)$ \\
-      \midrule
-      calculus I                  & $[a,b]$                  & $f'(u)$ \\
-      minimize $f$ over $K$       & convex                   & $\nabla f(u)$ \\
-      projection of $x$ onto $K$  & closed, convex           & $u-x$ \\
-      nonlinear equations         & compact, convex          & $F(u)$ \\
-      \midrule
-      $F(u)=0$                    & $\mathcal{H}$            & $F(u)$ \\
+      example                     & admissible set           & variational inequality \\
+      %\midrule
+      calculus I problem          & $K=[a,b]$                & $f'(u)(x-u) \ge 0 \,\forall x\in K$ \\
+      projection of $x$ onto $K$  & $K$ closed, convex       & $\ip{u-x}{y-u} \ge 0 \,\forall y\in K$ \\
+      minimize $f$ over $K$       & $K$ closed, convex       & $\nabla f(u)(v-u) \ge 0 \,\forall v\in K$ \\
+      nonlinear equations         & $K$ compact, convex      & $F(u)(v-u) \ge 0 \,\forall v\in K$ \\
       \bottomrule
     \end{tabular}
   \par}
