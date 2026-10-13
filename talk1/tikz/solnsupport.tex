@@ -1,0 +1,9 @@
+\begin{tikzpicture}[scale=0.55, rotate=20]
+  \fill[icBlue!12] (0,0.3) -- (2,0.6) -- (2,2.6) -- (0.6,3) -- (-0.4,1.6) -- cycle;
+  \draw[icBlue, thick] (0,0.3) -- (2,0.6) -- (2,2.6) -- (0.6,3) -- (-0.4,1.6) -- cycle;
+  \node[icBlue] at (0.6,2.4) {$K$};
+  \fill (2,1.7) circle (2.2pt) node[above left] {$u$};
+  \draw[-{Stealth}, icAccent, thick] (2,1.7) -- (1.1,1.7)
+    node[below, pos=1.0] {\footnotesize $F(u)$};
+  % FIXME add support plane as dashed grey
+\end{tikzpicture}
