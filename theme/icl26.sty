@@ -24,6 +24,11 @@
 \setmathrm{Fira Sans}[
   UprightFont = *-Book, ItalicFont = *-Book Italic,
   BoldFont = *-SemiBold, BoldItalicFont = *-SemiBold Italic]
+% Fira Math lacks U+29F5 (\setminus) and U+22A4 (\top); unicode-math defines
+% symbols at \begin{document}, so the replacements must be deferred until then
+\AtBeginDocument{%
+  \renewcommand{\setminus}{\mathbin{\backslash}}%
+  \renewcommand{\top}{\mathsf{T}}}
 \usefonttheme{professionalfonts}
 
 % ---------- colours ----------
