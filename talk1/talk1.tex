@@ -274,17 +274,16 @@ some observations:
   \begin{itemize}
     \item $F$ here plays the role of $\grad f$ in optimization
     \item \dots but even if $F$ is smooth, the Jacobian of $F$ need not be symmetric
-
-\pause
     \item if $u$ is in the interior of $K$ then $F(u)=0$ \grey{(take $v = u+\eps w$ for $w\in \RR^n$)}
   \end{itemize}
 
+\pause
 \bigskip
-2 situations, from
+in fact, the theorem
 
-the theorem:
+allows 2 situations:
 
-\vspace{-5mm}
+\vspace{-8mm}
 
 \hfill \mbox{\input{tikz/solninterior.tex} \hspace{35mm} \input{tikz/solnsupport.tex} \hspace{15mm}}
 
@@ -295,9 +294,9 @@ the theorem:
 \begin{frame}{variational inequalities}
 
 \begin{definition}
-Given a normed vector space $X$, a closed and convex subset $K\subset X$, and $F: K\to X'$ find $u\in K$ so that
+Given a normed vector space $X$, a closed and convex subset $K\subset X$, and $F: K\to X'$ generally nonlinear, find $u\in K$ so that
   $$\boxed{\alert{\ip{F(u)}{v-u} \ge 0}} \qquad \text{for all } v\in K.$$
-This is the \alert{variational inequality} problem, for the data $X,K,F$
+This is the \alert{variational inequality} problem for the data $X,K,F$.
 \end{definition}
 
 \pause
@@ -307,10 +306,10 @@ This is the \alert{variational inequality} problem, for the data $X,K,F$
       %\toprule
       example                     & admissible set           & variational inequality \\
       \midrule
-      calculus I problem          & $K=[a,b]\subset\RR$                & $f'(u)(x-u) \ge 0 \quad\forall x\in K$ \\
+      calculus I min problem      & $K=[a,b]\subset\RR$                & $f'(u)(x-u) \ge 0 \quad\forall x\in K$ \\
       projection of $x$ onto $K$  & $K\subset H$ closed, convex        & $\ip{u-x}{y-u} \ge 0 \quad\forall y\in K$ \\
       minimize $f$ over $K$       & $K\subset \RR^n$ closed, convex    & $\ip{\nabla f(u)}{v-u} \ge 0 \quad\forall v\in K$ \\
-      constrained nonlinear ens   & $K\subset \RR^n$ compact, convex   & $\ip{F(u)}{v-u} \ge 0 \quad\forall v\in K$ \\
+      constrained nonlinear eqns  & $K\subset \RR^n$ compact, convex   & $\ip{F(u)}{v-u} \ge 0 \quad\forall v\in K$ \\
       \bottomrule
     \end{tabular}
   \par}
