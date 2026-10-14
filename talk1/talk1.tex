@@ -343,16 +343,14 @@ If $f:\RR^n \to \RR$ is $C^1$ and strictly convex then $F=\grad f$ is strictly m
 \begin{frame}{variational inequalities}
 
 \begin{definition}
-Given a normed vector space $X$, a closed and convex subset $K\subset X$, and $F: K\to X'$ generally nonlinear, find $u\in K$ so that
+Given a normed vector space $X$, a closed and convex \alert{admissible subset} $K\subset X$, and $F: K\to X'$ continuous but generally nonlinear, find $u\in K$ so that
   $$\boxed{\alert{\ip{F(u)}{v-u} \ge 0}} \qquad \text{for all } v\in K.$$
-This is the \alert{variational inequality} problem for the data $X,K,F$.
+This is the \alert{variational inequality} problem for the data $K$ \& $F$, denoted $\operatorname{VI}(K,F)$.
 \end{definition}
 
-\pause
 \bigskip
   {\centering\small
     \begin{tabular}{lll}
-      %\toprule
       example                     & admissible set           & variational inequality \\
       \midrule
       calculus I min problem      & $K=[a,b]\subset\RR$                & $f'(u)(x-u) \ge 0 \quad\forall x\in K$ \\
@@ -364,7 +362,7 @@ This is the \alert{variational inequality} problem for the data $X,K,F$.
   \par}
 
 \bigskip
-{\small \grey{perspective: VIs generalize equations, and not every VI is a minimization}}
+{\small \grey{perspective: VIs generalize systems of equations $F(u)=0$ to apply over $K$ convex}}
 \end{frame}
 
 
