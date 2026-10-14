@@ -8,6 +8,8 @@
 \makeatother
 \usepackage{icl26}
 
+\newtheorem{proposition}[theorem]{Proposition}
+
 \newcommand{\cH}{{\mathcal{H}}}
 \newcommand{\cK}{{\mathcal{K}}}  % with extra outer braces: safe in P_\cK under unicode-math
 \newcommand{\cX}{{\mathcal{X}}}
@@ -20,6 +22,9 @@
 \newcommand{\Div}{\nabla\cdot}
 
 \newcommand{\ip}[2]{\left\langle #1, #2 \right\rangle}
+
+\newcommand{\gcomm}[1]{\ensuremath{\text{\footnotesize \grey{$\leftarrow$ #1}}}}
+
 
 
 \title{Variational inequalities and their finite element solutions}
@@ -262,7 +267,7 @@ Let $z = u - F(u)$ so $u=\Pi_K z$.  By the projection theorem, for all $v\in K$,
 \begin{frame}{constrained nonlinear equations}
 
 \medskip
-{\small
+{\footnotesize
 \begin{theorem}
 If $K\subset\mathbb{R}^n$ is nonempty, compact, and convex, and if $F:K \to\RR^n$ is continuous, then there exists $u\in K$ so that
     $$\boxed{\alert{\ip{F(u)}{v-u} \ge 0}} \qquad\text{for all } v\in K.$$
@@ -281,13 +286,57 @@ some observations:
 \bigskip
 in fact, the theorem
 
-allows 2 situations:
+permits 2 situations:
 
 \vspace{-8mm}
 
 \hfill \mbox{\input{tikz/solninterior.tex} \hspace{35mm} \input{tikz/solnsupport.tex} \hspace{15mm}}
 
 \hfill{\small we found $u$ solving $F(u)=0$} \qquad\qquad {\small we found a support plane for $F$}
+\end{frame}
+
+
+\begin{frame}{uniqueness?}
+
+{\footnotesize
+\begin{theorem}
+If $K\subset\mathbb{R}^n$ is nonempty, compact, and convex, and if $F:K \to\RR^n$ is continuous, then there exists $u\in K$ so that
+    $$\boxed{\alert{\ip{F(u)}{v-u} \ge 0}} \qquad\text{for all } v\in K.$$
+\end{theorem}
+}
+
+\medskip
+\begin{itemize}
+\item what about uniqueness? what hypothesis on $F$ would imply uniqueness?
+
+\pause
+\bigskip
+\item suppose for $u_1,u_2\in K$: \, $\ip{F(u_i)}{v-u_i} \ge 0$ for all $v\in K$
+\item substitute $v=u_2$ and then $v=u_1$, then add, and then negate:
+	$$\ip{F(u_1) - F(u_2)}{u_1-u_2} \le 0 \hspace{20mm} \alert{\leftarrow \text{\small let's \underline{block} this when $u_1\ne u_2$}}$$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{a well-posed problem}
+
+\begin{corollary}
+If additionally $F$ is \alert{strictly monotone}, so that
+    $$\ip{F(v)-F(w)}{v-w} > 0$$
+for all $v\ne w$, then there exists a unique $u\in K$ so that\, $\alert{\ip{F(u)}{v-u} \ge 0}$\, for all $v\in K$.
+\end{corollary}
+
+\begin{itemize}
+\item but is this hypothesis reasonable?
+
+\pause
+\medskip
+\item yes, in the optimization case
+\end{itemize}
+
+\begin{proposition}
+If $f:\RR^n \to \RR$ is $C^1$ and strictly convex then $F=\grad f$ is strictly monotone.
+\end{proposition}
 \end{frame}
 
 
