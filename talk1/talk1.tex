@@ -376,28 +376,72 @@ This is the \alert{variational inequality} problem for the data $K$ \& $F$, deno
 
 \section[infinite-dimensional examples]{infinite-dimensional examples \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{some applications of VIs}}}
 
-\begin{frame}{the classical obstacle problem}
-  an elastic membrane over $\Omega\subset\mathbb{R}^d$, with small vertical displacement $u$,
-  fixed $u=g$ on $\partial\Omega$, under force $f$, and constrained to lie above an obstacle $\psi$:
-  $$
-    u-\psi\ge 0, \qquad -\nabla^2 u - f \ge 0, \qquad (u-\psi)(-\nabla^2 u - f) = 0
-    \qquad \text{a.e.~in } \Omega
-  $$
-  \vspace{-3mm}
-  \begin{columns}[T]
-    \begin{column}{0.45\textwidth}
-      \begin{itemize}
-        \item \emph{inactive set} $E_u=\{u>\psi\}$: \\ Poisson $-\nabla^2 u=f$ holds
-        \item \emph{active} or \emph{contact set} \\ $C_u=\Omega\setminus E_u$: $u=\psi$
-        \item \emph{free boundary} $\Gamma_u=\Omega\cap\partial E_u$
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.53\textwidth}
-      \centering
-      \includegraphics[width=\textwidth]{figs/viamr-obstacle.png}
-    \end{column}
-  \end{columns}
+
+\begin{frame}{the classical obstacle problem (naive form)}
+
+\begin{itemize}
+\item $\Omega \subset \RR^2$ with $C^1$ or polygonal boundary
+\item elastic membrane, with vertical displacement $u$, over $\Omega$
+    \begin{itemize}
+    \item[$\circ$] suppose small vertical displacements $u$ \dots\, we will use the Laplacian $\grad^2$
+    \end{itemize}
+\item fixed at $u=g$ on $\partial\Omega$ and subjected to a vertical force $f$
+\item constrained to be on or above an \alert{obstacle} $\psi$
+
+\medskip
+\item<2> then:
+\begin{align*}
+-\grad^2 u &= f \text{\, where $u>\psi$} && \gcomm{black mesh} && \hspace{50mm} \\\
+         u &= \psi \text{\, otherwise} && \gcomm{white mesh}
+\end{align*}
+\item<2> but \emph{where} will $u=\psi$ hold?
+\end{itemize}
+
+\vspace{-16mm}
+\hfill \includegraphics[width=0.5\textwidth]{figs/viamr-obstacle.png}
+
+\hfill {\footnotesize \grey{$\psi =$ upper hemisphere in red}}
 \end{frame}
+
+
+\begin{frame}{obstacle problem in one dimension}
+  \centering
+  \input{tikz/obstacle1d.tex}
+
+  \raggedright
+FIXME  with $f=0$: \, $u''=0$ on $E_u$, \, $u=\psi$ on $C_u=[-a,a]$, \,
+  free boundary $\Gamma_u=\{\pm a\}$ where $u$ meets $\psi$ tangentially
+\end{frame}
+
+
+\begin{frame}{the classical obstacle problem (strong form)}
+
+\begin{itemize}
+\item consider the obstacle problem as a \alert{complementarity problem}:
+\begin{align*}
+         u - \psi &\ge 0 \\
+-\nabla^2 u - f & \ge 0 \\
+(u-\psi)(-\nabla^2 u - f) &= 0
+\end{align*}
+
+    \begin{itemize}
+    \item[$\circ$] all parts intended to hold a.e.~over $\Omega$
+    \item[$\circ$] analogous to a PDE strong form
+    \end{itemize}
+
+\pause
+\medskip
+\item the solution $u$ defines subsets of $\Omega$:
+\begin{align*}
+\text{\emph{inactive set} } E_u &= \{x\,:\,u(x)>\psi(x)\} && \gcomm{the Poisson equation holds} && \\
+\text{\emph{active} or \emph{contact set} } C_u &= \Omega \setminus E_u && \gcomm{the constraint $u\ge\psi$ is active} \\
+\text{\emph{free boundary} } \Gamma_u &= \Omega\cap\partial E_u && \gcomm{both $u=\psi$ and $\grad u=\grad \psi$ here}
+\end{align*}
+\end{itemize}
+
+\mbox{\input{tikz/obstaclesets.tex} \hfill \includegraphics[width=0.5\textwidth]{figs/viamr-obstacle.png}}
+\end{frame}
+
 
 \begin{frame}{obstacle problem: weak form}
   let $\cK = \{v\in H^1(\Omega) : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$, a closed, convex set
@@ -422,14 +466,6 @@ This is the \alert{variational inequality} problem for the data $K$ \& $F$, deno
   \end{itemize}
 \end{frame}
 
-\begin{frame}{obstacle problem in one dimension}
-  \centering
-  \input{tikz/obstacle1d.tex}
-
-  \raggedright
-  with $f=0$: \, $u''=0$ on $E_u$, \, $u=\psi$ on $C_u=[-a,a]$, \,
-  free boundary $\Gamma_u=\{\pm a\}$ where $u$ meets $\psi$ tangentially
-\end{frame}
 
 \begin{frame}{Signorini problem: elastic contact}
   \begin{columns}[T]
@@ -597,18 +633,6 @@ This is the \alert{variational inequality} problem for the data $K$ \& $F$, deno
 \end{frame}
 
 
-\section[FE solutions]{finite element solutions}
-
-\begin{frame}{foo}
-
-  \begin{itemize}
-    \item bar
-  \end{itemize}
-\end{frame}
-
-
-\section[theory]{theory: well-posedness and an \emph{a priori} error estimate}
-
 \begin{frame}{existence and uniqueness}
   \begin{theorem}[Stampacchia 1964]
     let $a(\cdot,\cdot)$ be bounded and coercive on a Hilbert space $V$, and
@@ -622,6 +646,16 @@ This is the \alert{variational inequality} problem for the data $K$ \& $F$, deno
     \item generalizes Lax--Milgram, which is the case $\cK=V$
   \end{itemize}
 \end{frame}
+
+\section[FE solutions]{finite element solutions}
+
+\begin{frame}{foo}
+
+  \begin{itemize}
+    \item bar
+  \end{itemize}
+\end{frame}
+
 
 \begin{frame}{Falk's a priori estimate}
   for $P_1$ elements on a quasi-uniform mesh, with $\cK_h\not\subset\cK$ in general,
