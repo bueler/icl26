@@ -413,18 +413,18 @@ This is the \alert{variational inequality} problem for the data $K$ \& $F$, deno
 \begin{frame}{classical obstacle problem (naive form)}
 
 \begin{itemize}
-\item suppose the bounded domain $\Omega \subset \RR^d$ has a Lipschitz boundary
+\item bounded domain $\Omega \subset \RR^d$ with Lipschitz boundary
 \item consider an elastic membrane, with vertical displacement $u$ over $\Omega$
     \begin{itemize}
-    \item[$\lc$] suppose small vertical displacements $u$ \,\grey{(we will use the Laplacian $\grad^2$)}
+    \item[$\lc$] suppose small displacements $u$ \,\grey{(we will use the Laplacian $\grad^2$)}
     \end{itemize}
-\item fix $u=g$ on $\partial\Omega$
-\item subject the membrane to a vertical force $f$
+\item $u=g$ on $\partial\Omega$ \,\grey{(fixed boundary condition)}
+\item subject to a vertical force $f$
 
 \hfill \input{tikz/justomega.tex}
 
 \vspace{-16mm}
-\item constrain it to be on or above an \alert{obstacle} $\psi$
+\item constrained to be on or above an \alert{obstacle} $\psi$
 
 \medskip
 \item<2> then:
@@ -445,18 +445,20 @@ This is the \alert{variational inequality} problem for the data $K$ \& $F$, deno
 \begin{frame}{example in 1d}
 
 \begin{columns}
-\begin{column}{0.54\textwidth}
+\begin{column}{0.5\textwidth}
 \begin{itemize}
-\item $\Omega=(-2,2)\subset \RR^1$, $f=0$, $g=0$
-\item obstacle $\psi(x) = 1-x^2$
-\item seek $u \in K=\{v \in C^1\,:\, v(\pm 2)=0 \text{ and } v \ge \psi\}$
+\item suppose $\Omega=(-2,2)\subset \RR^1$, $f=0$, $g=0$
+\item choose obstacle $\psi(x) = 1-x^2$
+\item define $K=\{v \,:\, v(\pm 2)=0 \text{ and } v \ge \psi\}$
     \begin{itemize}
-    \item[$\lc$] ignore norm and completeness issues
+    \item[$\lc$] ignoring regularity for now
     \end{itemize}
-\item solves $-u''=0$ if $u>\psi$, and $u=\psi$ otherwise
+\item seek $u\in K$ solving $-u''=0$ if $u>\psi$,
+
+and $u=\psi$ otherwise
 \end{itemize}
 \end{column}
-\begin{column}{0.46\textwidth}
+\begin{column}{0.5\textwidth}
 \hfill \input{tikz/obstacle1d.tex}
 \end{column}
 \end{columns}
@@ -465,20 +467,21 @@ This is the \alert{variational inequality} problem for the data $K$ \& $F$, deno
 \medskip
 result:
 \begin{itemize}
-\item $a=2 - \sqrt{3}\approx 0.2679$ gives location of the \alert{free boundary}, and
-    $$u(x) = \begin{cases} 1-x^2, & 0 \le |x| \le a, \\
-                           2a(2-|x|), & a \le |x| \le 2, \end{cases}$$
-\item \alert{Dirichlet \& Neumann conditions hold} at free boundaries:\, $u(a)=\psi(a)$ \,\&\, $u'(a)=\psi'(a)$
+\item $a=2 - \sqrt{3}\approx 0.2679$ is location of the \alert{free boundary}
+\item \alert{Dirichlet \underline{and} Neumann conditions} hold there:\, $u(a)=\psi(a)$ \,\&\, $u'(a)=\psi'(a)$
+\item $\displaystyle u(x) = \begin{cases} 1-x^2, & 0 \le |x| \le a, \\
+                           2a(2-|x|), & a \le |x| \le 2, \end{cases}$
 \item $u\in C^1 \setminus C^2$, despite $C^\infty$ data and Laplacian operator
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{classical obstacle problem (strong form)}
+\begin{frame}{classical obstacle problem (strong form and subsets)}
 
 \begin{columns}[T]
 \begin{column}{0.5\textwidth}
 \begin{itemize}
+\item previous problem statement too naive
 \item the obstacle problem can be stated as a \alert{complementarity problem}:
 \begin{align*}
          u - \psi &\ge 0 \\
@@ -486,8 +489,8 @@ result:
 (u-\psi)(-\nabla^2 u - f) &= 0
 \end{align*}
 
-\item each statement holds a.e.~over $\Omega$
     \begin{itemize}
+    \item[$\lc$] each holds a.e.~over $\Omega$
     \item[$\lc$] analogous to a PDE strong form
     \end{itemize}
 \end{itemize}
@@ -508,7 +511,8 @@ result:
 
     \begin{itemize}
     \item[$\lc$] Poisson equation $-\grad^2 u=f$ holds in $E_u$
-    \item[$\lc$] both Dirichlet \& Neumann conditions will hold along $\Gamma_u$, compensating for its unknown location
+    \item[$\lc$] both Dirichlet \& Neumann conditions will hold along $\Gamma_u$
+    \item[$\lc$] (compensating for unknown location?)
     \end{itemize}
 \end{itemize}
 
@@ -520,17 +524,69 @@ result:
 \end{frame}
 
 
-\begin{frame}{classical obstacle problem: optimization and VI weak forms}
+\begin{frame}{classical obstacle problem (weak forms)}
+
+\begin{itemize}
+\item for theoretical and finite-element purposes, rewrite in \alert{weak form}
+    \begin{itemize}
+    \item[$\lc$] in applications, this step is not as obvious as for the equality-constrained case?
+    \end{itemize}
+\item let $K = \{v\in H^1(\Omega) : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$, a closed, convex set but \alert{not} a subspace
+\end{itemize}
+
+\begin{block}{weak forms}
+the problem can be stated as
+
+\begin{columns}[T]
+\begin{column}{0.45\textwidth}
+\begin{itemize}
+\item a \alert{minimization problem}:
+    $$u \leftarrow \min_{v\in K} \int_\Omega \tfrac12|\nabla v|^2 - fv$$
+\end{itemize}
+\end{column}
+\begin{column}{0.55\textwidth}
+\begin{itemize}
+\item a \alert{variational inequality} (VI):
+    $$\int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u) \quad \forall v\in K$$
+\end{itemize}
+\end{column}
+\end{columns}
+\end{block}
+
+\pause
+\begin{proposition}
+\begin{itemize}
+\item the problems are equivalent, and well-posed
+\item if $u\in K$ is regular enough to solve the complementarity problem (strong form) then it solves these weak forms
+\end{itemize}
+\end{proposition}
+\end{frame}
+
+
+\begin{frame}{theory interruption}
+
+\begin{definition}
+A bilinear form $a(\cdot,\cdot)$ is \alert{coercive} if there is $\alpha>0$ so that
+	$$a(v,v) \ge \alpha \|v\|^2 \quad \text{for all } v\in H.$$
+\end{definition}
+
+\begin{itemize}
+\item the bilinear form in the obstacle problem, $a(u,v) = \int_\Omega \nabla u \cdot \nabla v$, is coercive on $H_0^1(\Omega)$, by the Poincar\'e inequality
+\end{itemize}
+
+\begin{theorem}[Stampacchia 1964; generalizes Lax--Milgram (1954) to $K\subset H$]
+Suppose $a(\cdot,\cdot)$ is bilinear, bounded, and coercive on a Hilbert space $H$, and $K \subset H$ is nonempty, closed, and convex.  Then for each $\ell\in H'$ there is a unique $u\in K$ with
+    $$a(u,v-u)\ge \ip{\ell}{v-u} \quad\forall v\in K.$$
+\end{theorem}
+
+%{\small \emph{proof:}\, Apply parallelogram law and completeness argument for the symmetric part, and use the Banach fixed-point theorem incrementally to add-back the antisymmetric part.  \qed}
+\end{frame}
+
+
+\begin{frame}{classical obstacle problem (more)}
 
 FIXME
-  let $K = \{v\in H^1(\Omega) : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$, a closed, convex set
-  but \alert{not} a subspace; find $u\in\cK$ so that
-  $$
-    \int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u)
-    \qquad \text{for all } v\in\cK
-  $$
   \begin{itemize}
-    \item equivalent to minimizing $J(v)=\int_\Omega \tfrac12|\nabla v|^2 - fv$ over $\cK$
     \item integrate by parts: $\ip{\sigma}{v-u}\ge 0$ for the residual $\sigma=-\nabla^2u-f$
     \begin{itemize}
       \item[$\lc$] if $u$ is in the interior of $\cK$ then $\sigma=0$: the VI generalizes Poisson
@@ -543,27 +599,6 @@ FIXME
       \item[$\lc$] elastic-plastic torsion \grey{($u\le\psi$; which part has failed?)}
     \end{itemize}
   \end{itemize}
-\end{frame}
-
-
-\begin{frame}{theory interruption}
-
-\begin{itemize}
-\item the obstacle problem uses a closed \& convex subset $K$ of a Hilbert space $H^1(\Omega)$, and a bilinear form $a(u,v) = \int_\Omega \nabla u \cdot \nabla v$
-\end{itemize}
-
-\begin{definition}
-A bilinear form $a(\cdot,\cdot)$ is \alert{coercive} if there is $\alpha>0$ so that
-	$$a(v,v) \ge \alpha \|v\|^2 \quad \text{for all } v\in H.$$
-\end{definition}
-
-\pause
-\begin{theorem}[Stampacchia 1964; generalizes Lax--Milgram to $K\subset H$]
-Suppose $a(\cdot,\cdot)$ is bilinear, bounded, and coercive on a Hilbert space $H$, and $K \subset H$ is nonempty, closed, and convex.  Then for each $\ell\in H'$ there is a unique $u\in K$ with
-    $$a(u,v-u)\ge \ip{\ell}{v-u} \quad\forall v\in K.$$
-\end{theorem}
-
-{\small \emph{proof:}\, Apply parallelogram law and completeness argument for the symmetric part, and use the Banach fixed-point theorem incrementally to add-back the antisymmetric part.  \qed}
 \end{frame}
 
 
