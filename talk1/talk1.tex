@@ -25,6 +25,7 @@
 
 \newcommand{\gcomm}[1]{\ensuremath{\text{\footnotesize \grey{$\leftarrow$ #1}}}}
 
+\newcommand{\lc}{{\text{\large $\circ$}}}
 
 
 \title{Variational inequalities and their finite element solutions}
@@ -45,6 +46,13 @@
 
 \begin{frame}{outline}
   \tableofcontents
+\end{frame}
+
+\begin{frame}[standout]
+\begin{itemize}
+\item I welcome questions at any time!
+\item they are a \emph{good} use of time
+\end{itemize}
 \end{frame}
 
 
@@ -90,10 +98,12 @@
 \raggedright
 
 \bigskip
-\item all are captured by a \alert{variational inequality} (VI):
+\item all are captured by a single \alert{variational inequality} (VI):
   $$u \text{ locally minimizes } f \implies \quad \boxed{\alert{f'(u)\,(x-u) \ge 0}} \qquad \text{for all } x\in[a,b]$$
 
-\grey{traveling infinitesimally from $u$ into $[a,b]$, $f$ \strikeThrough{increases} does not decrease}
+\pause
+\medskip
+\grey{viewpoint: traveling infinitesimally from $u$ into $[a,b]$, $f$ \strikeThrough{increases} does not decrease}
 \end{itemize}
 \end{frame}
 
@@ -101,46 +111,60 @@
 \begin{frame}{projection onto a closed, convex set}
 
 \begin{itemize}
-\item suppose $H$ is a Hilbert space \grey{(e.g.~$\mathbb{R}^n$)}
-\item let $K\subset H$ be a nonempty, closed, and convex subset
+\item suppose $H$ is a real Hilbert space \grey{(e.g.~$\mathbb{R}^n$)}
+\item let $K\subset H$ be nonempty, closed, and convex
+\item a parallelogram \& completeness argument shows that a unique minimizer exists for the following problem, so it makes a good definition
 
+\begin{columns}
+\begin{column}{0.55\textwidth}
 \begin{definition}
 For $x\in H$, define the \emph{projection of $x$ onto $K$}:
-  $$u = \operatorname*{argmin}_{y\in K}\, \|y-x\|. \hspace{50mm}$$
+  $$\qquad u \leftarrow \min_{y\in K}\, \|y-x\|. \hspace{50mm}$$
+\end{definition}
+\end{column}
+\begin{column}{0.4\textwidth}
 
-\vspace{-15mm}
-\hfill \input{tikz/projection.tex}
+\bigskip
+\input{tikz/projection.tex}
+\end{column}
+\end{columns}
 
 \medskip
-\end{definition}
 
 \item notation: $u=\Pi_K x$
-\item a parallelogram \& completeness argument shows $u$ exists and is unique
-\item $\Pi_K:H \to K$ is (Lipschitz) continuous
+\item $\Pi_K:H \to K$ is Lipschitz continuous
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{projection onto a closed, convex set}
 
+{\small
+\begin{columns}
+\begin{column}{0.55\textwidth}
 \begin{definition}
-For $x\in H$, define the \emph{projection of $x$ onto $K$}:
-  $$u = \Pi_K x = \operatorname*{argmin}_{y\in K}\, \|y-x\|. \hspace{50mm}$$
-
-\vspace{-15mm}
-\hfill \input{tikz/projection.tex}
-
-\medskip
+For $K\subset H$ nonempty, closed, and convex, in a Hilbert space $H$, define the \emph{projection of $x\in H$ onto $K$}:
+  $$\qquad \Pi_K x = u \leftarrow \min_{y\in K}\, \|y-x\|. \hspace{50mm}$$
 \end{definition}
 
+\bigskip
+\end{column}
+\begin{column}{0.4\textwidth}
+
+\bigskip
+\input{tikz/projection.tex}
+\end{column}
+\end{columns}
+}
+
 \begin{itemize}
-\item how do we characterize $u=\Pi_K x$ using inner products?
-\pause
+\item question: how do we characterize the projection $u=\Pi_K x$ using inner products?
 \item answer: $u=\Pi_K x$ if and only if $u\in K$ and
 
 $$\boxed{\alert{\ip{u-x}{y-u}\ge 0}} \quad \text{for all } y\in K$$
 
-\grey{angle between $u-x$ and $y-u$ is at most $90^\circ$}
+\medskip
+\grey{idea: angle between $u-x$ and $y-u$ is at most $90^\lc$}
 \end{itemize}
 \end{frame}
 
@@ -172,7 +196,7 @@ We know that $t=0$ locally minimizes $g(t)=f(u+t(v-u))$ on $[0,1]$.
 By the calculus I problem, $0\le g'(0)=\ip{\nabla f(u)}{v-u}$. \qed
 
 \medskip
-\grey{$\grad f(u)\ne 0$ is possible, but $f$ does not decrease as we start from $u$ and head into $K$}
+\grey{idea: $\grad f(u)\ne 0$ is possible, but $f$ does not decrease as we start from $u$ and head into $K$}
 \end{frame}
 
 
@@ -200,8 +224,8 @@ Then $u\in K$ is a minimizer \alert{if and only if}
 \begin{itemize}
 \item $u$ exists if $K\ne \emptyset$ and
     \begin{itemize}
-    \item[$\circ$] $K$ is compact, or
-    \item[$\circ$] $K$ is closed and $f$ is \emph{coercive}: $f\to \infty$ as $\|v\|\to \infty$ for $v\in K$
+    \item[$\lc$] $K$ is compact, or
+    \item[$\lc$] $K$ is closed and $f$ is \emph{coercive}: $f\to \infty$ as $\|v\|\to \infty$ for $v\in K$
     \end{itemize}
 \item $u$ is unique if $f$ strictly convex
 \end{itemize}
@@ -211,11 +235,11 @@ Then $u\in K$ is a minimizer \alert{if and only if}
 \begin{frame}{nonlinear equations with inequality constraints?}
 
 \begin{itemize}
-\item maybe variational inequalities are just convenience notation in smooth and convex optimization?
+\item maybe variational inequalities are just convenience notation in optimization?
 \item in fact, \alert{not all variational inequalities come from optimization}
 
 \pause
-\item consider the following \dots
+\item let's consider the following \dots
 \begin{block}{folk theorem}
 \begin{minipage}{0.05\linewidth}
 \vspace{18mm}
@@ -236,8 +260,13 @@ Then $u\in K$ is a minimizer \alert{if and only if}
 \end{minipage}
 \end{block}
 
-\item<5> no general existence theorem for ``$F(x)=0$,'' even on compact \& convex input $K \subset \RR^n$
-\item<5> but we are now close to the Brouwer fixed point theorem \dots
+\item<5-> no general existence theorem for ``$F(x)=0$,'' even on compact \& convex input $K \subset \RR^n$
+
+\smallskip
+\grey{advice to numerical users: Newton's method with line search is powerful, but \dots}
+
+\smallskip
+\item<6> but we are now close to the Brouwer fixed point theorem \dots
 \end{itemize}
 \end{frame}
 
@@ -267,7 +296,7 @@ Let $z = u - F(u)$ so $u=\Pi_K z$.  By the projection theorem, for all $v\in K$,
 \begin{frame}{constrained nonlinear equations}
 
 \medskip
-{\footnotesize
+{\small
 \begin{theorem}
 If $K\subset\mathbb{R}^n$ is nonempty, compact, and convex, and if $F:K \to\RR^n$ is continuous, then there exists $u\in K$ so that
     $$\boxed{\alert{\ip{F(u)}{v-u} \ge 0}} \qquad\text{for all } v\in K.$$
@@ -307,13 +336,13 @@ If $K\subset\mathbb{R}^n$ is nonempty, compact, and convex, and if $F:K \to\RR^n
 
 \medskip
 \begin{itemize}
-\item what about uniqueness? what hypothesis on $F$ would imply uniqueness?
+\item what about uniqueness? what hypothesis on $F$ would give it?
 
 \pause
 \bigskip
 \item suppose for $u_1,u_2\in K$: \, $\ip{F(u_i)}{v-u_i} \ge 0$ for all $v\in K$
 \item substitute $v=u_2$ and then $v=u_1$, then add, and then negate:
-	$$\ip{F(u_1) - F(u_2)}{u_1-u_2} \le 0 \hspace{20mm} \alert{\leftarrow \text{\small let's \underline{block} this when $u_1\ne u_2$}}$$
+	$$\ip{F(u_1) - F(u_2)}{u_1-u_2} \le 0 \hspace{20mm} \leftarrow \text{\small let's \alert{block this} when $u_1\ne u_2$}$$
 \end{itemize}
 \end{frame}
 
@@ -331,22 +360,22 @@ for all $v\ne w$, then there exists a unique $u\in K$ so that\, $\alert{\ip{F(u)
 
 \pause
 \medskip
-\item yes, in the optimization case
+\item in the optimization case, it coincides with strict convexity of the objective function
 \end{itemize}
 
 \begin{proposition}
-If $f:\RR^n \to \RR$ is $C^1$ and strictly convex then $F=\grad f$ is strictly monotone.
+Suppose $f:\RR^n \to \RR$ is $C^1$.  Then $f$ is strictly convex if and only if $F=\grad f$ is strictly monotone.
 \end{proposition}
 \end{frame}
 
 
 \begin{frame}{variational inequalities}
 
-\begin{definition}
+\begin{definitions}
 Given a normed vector space $X$, a closed and convex \alert{admissible subset} $K\subset X$, and $F: K\to X'$ continuous but generally nonlinear, find $u\in K$ so that
   $$\boxed{\alert{\ip{F(u)}{v-u} \ge 0}} \qquad \text{for all } v\in K.$$
 This is the \alert{variational inequality} problem for the data $K$ \& $F$, denoted $\operatorname{VI}(K,F)$.
-\end{definition}
+\end{definitions}
 
 \bigskip
   {\centering\small
@@ -362,7 +391,7 @@ This is the \alert{variational inequality} problem for the data $K$ \& $F$, deno
   \par}
 
 \bigskip
-{\small \grey{perspective: VIs generalize systems of equations $F(u)=0$ to apply over $K$ convex}}
+{\small \grey{perspective: VIs generalize equations $F(u)=0$ to convex input sets}}
 \end{frame}
 
 
@@ -373,20 +402,20 @@ This is the \alert{variational inequality} problem for the data $K$ \& $F$, deno
   \end{frame}
 }
 
-
 \section[infinite-dimensional examples]{infinite-dimensional examples \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{some applications of VIs}}}
 
 
 \begin{frame}{the classical obstacle problem (naive form)}
 
 \begin{itemize}
-\item $\Omega \subset \RR^2$ with $C^1$ or polygonal boundary
-\item elastic membrane, with vertical displacement $u$, over $\Omega$
+\item suppose domain $\Omega \subset \RR^2$ has a decent boundary \,\grey{($\partial \Omega$ is Lipschitz)}
+\item consider an elastic membrane, with vertical displacement $u$, over $\Omega$
     \begin{itemize}
-    \item[$\circ$] suppose small vertical displacements $u$ \dots\, we will use the Laplacian $\grad^2$
+    \item[$\lc$] suppose small vertical displacements $u$ \,\grey{(we will use the Laplacian $\grad^2$)}
     \end{itemize}
-\item fixed at $u=g$ on $\partial\Omega$ and subjected to a vertical force $f$
-\item constrained to be on or above an \alert{obstacle} $\psi$
+\item fix $u=g$ on $\partial\Omega$
+\item subject the membrane to a vertical force $f$
+\item constrain it to be on or above an \alert{obstacle} $\psi$
 
 \medskip
 \item<2> then:
@@ -404,7 +433,7 @@ This is the \alert{variational inequality} problem for the data $K$ \& $F$, deno
 \end{frame}
 
 
-\begin{frame}{obstacle problem in one dimension}
+\begin{frame}{example in 1d}
   \centering
   \input{tikz/obstacle1d.tex}
 
@@ -417,7 +446,7 @@ FIXME  with $f=0$: \, $u''=0$ on $E_u$, \, $u=\psi$ on $C_u=[-a,a]$, \,
 \begin{frame}{the classical obstacle problem (strong form)}
 
 \begin{itemize}
-\item consider the obstacle problem as a \alert{complementarity problem}:
+\item the obstacle problem can be stated as a \alert{complementarity problem}:
 \begin{align*}
          u - \psi &\ge 0 \\
 -\nabla^2 u - f & \ge 0 \\
@@ -425,8 +454,8 @@ FIXME  with $f=0$: \, $u''=0$ on $E_u$, \, $u=\psi$ on $C_u=[-a,a]$, \,
 \end{align*}
 
     \begin{itemize}
-    \item[$\circ$] all parts intended to hold a.e.~over $\Omega$
-    \item[$\circ$] analogous to a PDE strong form
+    \item[$\lc$] all parts hold a.e.~over $\Omega$
+    \item[$\lc$] analogous to a PDE strong form
     \end{itemize}
 
 \pause
@@ -454,14 +483,14 @@ FIXME  with $f=0$: \, $u''=0$ on $E_u$, \, $u=\psi$ on $C_u=[-a,a]$, \,
     \item equivalent to minimizing $J(v)=\int_\Omega \tfrac12|\nabla v|^2 - fv$ over $\cK$
     \item integrate by parts: $\ip{\sigma}{v-u}\ge 0$ for the residual $\sigma=-\nabla^2u-f$
     \begin{itemize}
-      \item[$\circ$] if $u$ is in the interior of $\cK$ then $\sigma=0$: the VI generalizes Poisson
+      \item[$\lc$] if $u$ is in the interior of $\cK$ then $\sigma=0$: the VI generalizes Poisson
     \end{itemize}
     \item both $u=\psi$ \emph{and} $\partial(u-\psi)/\partial n=0$ hold along $\Gamma_u$
           \grey{(compensates for its unknown location)}
     \item other interpretations:
     \begin{itemize}
-      \item[$\circ$] pressure in a porous dam \grey{($u\ge 0$; which part is saturated?)}
-      \item[$\circ$] elastic-plastic torsion \grey{($u\le\psi$; which part has failed?)}
+      \item[$\lc$] pressure in a porous dam \grey{($u\ge 0$; which part is saturated?)}
+      \item[$\lc$] elastic-plastic torsion \grey{($u\le\psi$; which part has failed?)}
     \end{itemize}
   \end{itemize}
 \end{frame}
