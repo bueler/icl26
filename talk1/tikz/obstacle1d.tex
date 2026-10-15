@@ -1,16 +1,25 @@
 \begin{tikzpicture}
-  % obstacle psi = 0.3 - x^2; u = psi on contact set |x| <= a, linear tangent to 0 at x = +-1
-  \pgfmathsetmacro{\a}{1-sqrt(0.7)}
-  \begin{axis}[width=0.8\linewidth, height=0.5\linewidth,
-               axis lines=none, xmin=-1.1, xmax=1.1, ymin=-0.75, ymax=0.4,
+  % obstacle psi = 1 - x^2 on (-2,2); u = psi on contact set |x| <= a, linear tangent to 0 at x = +-2
+  \pgfmathsetmacro{\a}{2-sqrt(3)}
+  \begin{axis}[width=\linewidth, height=0.75\linewidth,
+               axis lines=none, xmin=-2.2, xmax=2.2, ymin=-0.75, ymax=1.35,
                xtick=\empty, ytick=\empty, samples=100]
-    \draw[icNavy] (axis cs:-1.05,0) -- (axis cs:1.05,0);
-    \addplot[icGrey, thick, domain=-1:1] {0.3 - x^2};
-    \addplot[icBlue, very thick, domain=-1:-\a] {(0.3-\a^2)*(x+1)/(1-\a)};
-    \addplot[icBlue, very thick, domain=\a:1]   {(0.3-\a^2)*(1-x)/(1-\a)};
-    \addplot[icAccent, ultra thick, domain=-\a:\a] {0.3 - x^2};
-    \node[icGrey, right] at (axis cs:0.75,-0.3) {$\psi$};
-    \node[icBlue, above] at (axis cs:-0.6,0.15) {$u$};
-    \node[icAccent, above] at (axis cs:0,0.3) {contact set $u=\psi$};
+    \draw[icNavy] (axis cs:-2.15,0) -- (axis cs:2.15,0);
+    \addplot[icGrey, thick, domain=-2:2] {1 - x^2};
+    \addplot[icBlue, very thick, domain=-2:-\a] {2*\a*(2+x)};
+    \addplot[icBlue, very thick, domain=\a:2]   {2*\a*(2-x)};
+    \addplot[icAccent, ultra thick, domain=-\a:\a] {1 - x^2};
+    \draw[icGrey, densely dashed] (axis cs:-\a,0) -- (axis cs:-\a,1-\a*\a);
+    \draw[icGrey, densely dashed] (axis cs:\a,0) -- (axis cs:\a,1-\a*\a);
+    \draw[icNavy] (axis cs:-2,-0.05) -- (axis cs:-2,0.05);
+    \draw[icNavy] (axis cs:-\a,-0.05) -- (axis cs:-\a,0.05);
+    \draw[icNavy] (axis cs:\a,-0.05) -- (axis cs:\a,0.05);
+    \draw[icNavy] (axis cs:2,-0.05) -- (axis cs:2,0.05);
+    \node[icNavy, below] at (axis cs:-2,0) {\small $-2$};
+    \node[icNavy, below left, inner xsep=0pt] at (axis cs:-\a,0) {\small $-a$};
+    \node[icNavy, below right, inner xsep=0pt] at (axis cs:\a,0) {\small $a$};
+    \node[icNavy, below] at (axis cs:2,0) {\small $2$};
+    \node[icGrey, right] at (axis cs:1.15,-0.4) {$\psi$};
+    \node[icBlue, above] at (axis cs:-1.1,0.5) {$u$};
   \end{axis}
 \end{tikzpicture}
