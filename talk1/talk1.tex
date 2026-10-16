@@ -577,6 +577,7 @@ Suppose $a(\cdot,\cdot)$ is bilinear, bounded, and coercive on a Hilbert space $
 \end{frame}
 
 
+% COMMENTED OUT %%%%%%%%
 \begin{comment}
 \begin{frame}{classical obstacle problem (more)}
 
@@ -591,171 +592,177 @@ FIXME
   \end{itemize}
 \end{frame}
 \end{comment}
+%%%%%%%%%%%%%
 
 
-\begin{frame}{Signorini problem: elastic contact}
-  \begin{columns}[T]
-    \begin{column}{0.5\textwidth}
-      linear elasticity on $\Omega\subset\mathbb{R}^2$, displacement $u:\Omega\to\mathbb{R}^2$:
-      \begin{align*}
-        \epsilon(u) &= \tfrac12\left(\nabla u+\nabla u^\top\right) \\
-        \sigma(u)   &= \lambda\, (\operatorname{tr}\epsilon)\, I + 2\mu\, \epsilon \\
-        -\nabla\cdot\sigma(u) &= f \quad \text{in } \Omega
-      \end{align*}
-      \begin{itemize}
-        \item $\Gamma_D$: pressed down, $u=u_D$
-        \item $\Gamma_N$: traction-free
-        \item $\Gamma_C$: \alert{possible contact}, gap $g\ge 0$
-      \end{itemize}
-      non-penetration: \, $u\cdot n \le g$ on $\Gamma_C$
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \centering
-      \input{tikz/signorini.tex}
-    \end{column}
-  \end{columns}
-  \grey{\scriptsize Signorini 1933; Fichera 1964; Kikuchi \& Oden, \emph{Contact Problems in Elasticity}, 1988}
+\begin{frame}{elastic contact (Signorini problem)}
+\begin{columns}[T]
+\begin{column}{0.5\textwidth}
+linear elasticity on $\Omega\subset\mathbb{R}^2$, displacement $u:\Omega\to\mathbb{R}^2$:
+\begin{align*}
+  \epsilon(u) &= \tfrac12\left(\nabla u+\nabla u^\top\right) \\
+  \sigma(u)   &= \lambda\, (\operatorname{tr}\epsilon)\, I + 2\mu\, \epsilon \\
+  -\nabla\cdot\sigma(u) &= f \quad \text{in } \Omega
+\end{align*}
+\begin{itemize}
+  \item $\Gamma_D$: pressed down, $u=u_D$
+  \item $\Gamma_N$: traction-free
+  \item $\Gamma_C$: \alert{possible contact}, gap $g\ge 0$
+\end{itemize}
+non-penetration: \, $u\cdot n \le g$ on $\Gamma_C$
+\end{column}
+\begin{column}{0.48\textwidth}
+\centering
+\input{tikz/signorini.tex}
+\end{column}
+\end{columns}
+\grey{\scriptsize Signorini 1933; Fichera 1964; Kikuchi \& Oden, \emph{Contact Problems in Elasticity}, 1988}
 \end{frame}
 
+
 \begin{frame}{Signorini problem: VI and complementarity}
-  let $\cK = \{v\in H^1(\Omega;\mathbb{R}^2) : v=u_D \text{ on } \Gamma_D \text{ and }
-  v\cdot n\le g \text{ on } \Gamma_C\}$; find $u\in\cK$ so that
-  $$
-    \int_\Omega \sigma(u):\epsilon(v-u) \ge \int_\Omega f\cdot(v-u)
-    \qquad\text{for all } v\in\cK
-  $$
-  \begin{itemize}
-    \item equivalent to minimizing the elastic energy
-          $J(v)=\int_\Omega \tfrac12\sigma(v):\epsilon(v) - f\cdot v$ over $\cK$
-    \item convex, and coercive by Korn's inequality, so a \emph{unique} solution
-    \item on $\Gamma_C$, with normal stress $\sigma_n=n\cdot\sigma(u)\,n$:
-          $$
-            u\cdot n - g\le 0, \qquad \sigma_n\le 0, \qquad \sigma_n\,(u\cdot n - g)=0,
-            \qquad \sigma_t = 0
-          $$
-    \item the constraint is only on the boundary, so the free boundary is a \alert{subset of $\Gamma_C$}
-  \end{itemize}
+let $\cK = \{v\in H^1(\Omega;\mathbb{R}^2) : v=u_D \text{ on } \Gamma_D \text{ and }
+v\cdot n\le g \text{ on } \Gamma_C\}$; find $u\in\cK$ so that
+$$
+\int_\Omega \sigma(u):\epsilon(v-u) \ge \int_\Omega f\cdot(v-u)
+\qquad\text{for all } v\in\cK
+$$
+\begin{itemize}
+\item equivalent to minimizing the elastic energy
+      $J(v)=\int_\Omega \tfrac12\sigma(v):\epsilon(v) - f\cdot v$ over $\cK$
+\item convex, and coercive by Korn's inequality, so a \emph{unique} solution
+\item on $\Gamma_C$, with normal stress $\sigma_n=n\cdot\sigma(u)\,n$:
+      $$
+        u\cdot n - g\le 0, \qquad \sigma_n\le 0, \qquad \sigma_n\,(u\cdot n - g)=0,
+        \qquad \sigma_t = 0
+      $$
+\item the constraint is only on the boundary, so the free boundary is a \alert{subset of $\Gamma_C$}
+\end{itemize}
 \end{frame}
 
 \begin{frame}{contact in nonlinear hyperelasticity}
-  large deformations: $x\mapsto x+u(x)$, deformation gradient $F=I+\nabla u$, $J=\det F>0$
-  \begin{itemize}
-    \item hyperelastic: stored energy density $W(F)$, e.g.~compressible neo-Hookean
-          $$
-            W(F) = \tfrac{\mu}{2}\left(|F|^2-2\right) - \mu\ln J + \tfrac{\lambda}{2}(\ln J)^2
-          $$
-    \item minimize $\displaystyle \Pi(v) = \int_\Omega W(I+\nabla v) - B\cdot v$
-          \; over the same kind of $\cK$
-    \item a minimizer solves the VI
-          $$
-            \ip{\Pi'(u)}{v-u}\ge 0 \qquad\text{for all } v\in\cK
-          $$
-  \end{itemize}
-  \pause
-  \begin{itemize}
-    \item linearizing $W$ at $F=I$ recovers the Signorini problem
-    \item but $W$ is \alert{not convex} \grey{(Ciarlet 1988)}, so the VI is only a
-          \emph{necessary} condition, and solutions need not be unique
-  \end{itemize}
+large deformations: $x\mapsto x+u(x)$, deformation gradient $F=I+\nabla u$, $J=\det F>0$
+\begin{itemize}
+\item hyperelastic: stored energy density $W(F)$, e.g.~compressible neo-Hookean
+      $$
+        W(F) = \tfrac{\mu}{2}\left(|F|^2-2\right) - \mu\ln J + \tfrac{\lambda}{2}(\ln J)^2
+      $$
+\item minimize $\displaystyle \Pi(v) = \int_\Omega W(I+\nabla v) - B\cdot v$
+      \; over the same kind of $\cK$
+\item a minimizer solves the VI
+      $$
+        \ip{\Pi'(u)}{v-u}\ge 0 \qquad\text{for all } v\in\cK
+      $$
+\end{itemize}
+\pause
+\begin{itemize}
+\item linearizing $W$ at $F=I$ recovers the Signorini problem
+\item but $W$ is \alert{not convex} \grey{(Ciarlet 1988)}, so the VI is only a
+      \emph{necessary} condition, and solutions need not be unique
+\end{itemize}
 \end{frame}
+
 
 \begin{frame}{multiple solutions}
-  \begin{columns}[T]
-    \begin{column}{0.6\textwidth}
-      a neo-Hookean beam $(0,1)\times(0,\tfrac{1}{10})$:
-      \begin{itemize}
-        \item clamped at left, compressed axially at right, with gravity
-        \item obstacles: $u_2\le \alpha$ on top, $u_2\ge-\alpha$ on bottom
-      \end{itemize}
-      \medskip
-      \alert{seven} solutions: three never touch the obstacles, four (right) are in contact
+\begin{columns}[T]
+\begin{column}{0.6\textwidth}
+  a neo-Hookean beam $(0,1)\times(0,\tfrac{1}{10})$:
+  \begin{itemize}
+    \item clamped at left, compressed axially at right, with gravity
+    \item obstacles: $u_2\le \alpha$ on top, $u_2\ge-\alpha$ on bottom
+  \end{itemize}
+  \medskip
+  \alert{seven} solutions: three never touch the obstacles, four (right) are in contact
 
-      \medskip
-      found by \emph{deflation}: modify the semismooth Newton residual so known solutions
-      are no longer roots, then re-solve from the same initial guess
+  \medskip
+  found by \emph{deflation}: modify the semismooth Newton residual so known solutions
+  are no longer roots, then re-solve from the same initial guess
 
-      \medskip
-      {\scriptsize \grey{Farrell, Croci \& Surowiec, \emph{Deflation for semismooth
-      equations}, Optim.~Methods Softw.~2020, Fig.~2 (CC BY 4.0)}}
-    \end{column}
-    \begin{column}{0.38\textwidth}
-      \centering
-      \includegraphics[height=0.8\textheight]{figs/farrell2020-fig2.jpg}
-    \end{column}
-  \end{columns}
+  \medskip
+  {\scriptsize \grey{Farrell, Croci \& Surowiec, \emph{Deflation for semismooth
+  equations}, Optim.~Methods Softw.~2020, Fig.~2 (CC BY 4.0)}}
+\end{column}
+\begin{column}{0.38\textwidth}
+  \centering
+  \includegraphics[height=0.8\textheight]{figs/farrell2020-fig2.jpg}
+\end{column}
+\end{columns}
 \end{frame}
+
 
 \begin{frame}{a fluid layer in a climate}
-  a thin fluid layer moves on a substrate, with mass added (precipitation, accumulation)
-  or removed (evaporation, ablation) by a signed source $f$, the \emph{climate}
-  \begin{center}
-    \includegraphics[width=0.45\textwidth]{figs/bueler2021-fig1.png}
-  \end{center}
-  thickness $u(x,t)\ge 0$, flux $q=q(\nabla u,u,x,t)$, e.g.~$q=-D\nabla u+Xu$:
-  $$
-    u_t+\nabla\cdot q = f \quad \text{where } u>0, \qquad\qquad u\ge 0 \quad\text{everywhere}
-  $$
-  \vspace{-2mm}
-  \begin{itemize}
-    \item glaciers and ice sheets, sea ice, subglacial water, rain on a windshield
-    \item the fluid-covered area is a \alert{leading-order} modeling goal \grey{(e.g.~albedo)}
-  \end{itemize}
-  {\scriptsize \grey{Bueler, \emph{Conservation laws for free-boundary fluid layers}, SIAM J.~Appl.~Math.~2021}}
+a thin fluid layer moves on a substrate, with mass added (precipitation, accumulation)
+or removed (evaporation, ablation) by a signed source $f$, the \emph{climate}
+\begin{center}
+  \includegraphics[width=0.45\textwidth]{figs/bueler2021-fig1.png}
+\end{center}
+thickness $u(x,t)\ge 0$, flux $q=q(\nabla u,u,x,t)$, e.g.~$q=-D\nabla u+Xu$:
+$$
+  u_t+\nabla\cdot q = f \quad \text{where } u>0, \qquad\qquad u\ge 0 \quad\text{everywhere}
+$$
+\vspace{-2mm}
+\begin{itemize}
+  \item glaciers and ice sheets, sea ice, subglacial water, rain on a windshield
+  \item the fluid-covered area is a \alert{leading-order} modeling goal \grey{(e.g.~albedo)}
+\end{itemize}
+{\scriptsize \grey{Bueler, \emph{Conservation laws for free-boundary fluid layers}, SIAM J.~Appl.~Math.~2021}}
 \end{frame}
+
 
 \begin{frame}{fluid layer: one implicit time step}
-  \begin{columns}[T]
-    \begin{column}{0.6\textwidth}
-      given $u_{n-1}\ge0$, find $u_n\ge0$ so that
-      $$
-        \frac{u_n-u_{n-1}}{\Delta t}+\nabla\cdot Q_n = F_n \quad \text{where } u_n>0
-      $$
-      this decomposes $\Omega$ into disjoint sets:
-      \begin{align*}
-        \Omega_n         &= \{u_n>0\} \\
-        \Omega_n^r       &= \{u_n=0 \text{ and } u_{n-1}>0\} \quad \grey{\text{retreat}} \\
-        \Omega_n^{00}    &= \{u_n=0 \text{ and } u_{n-1}=0\}
-      \end{align*}
-      \vspace{-2mm}
-      \uncover<2->{
-      VI on $\cK=\{v\in W^{1,p}(\Omega) : v\ge 0\}$: for all $v\in\cK$,
-      $$
-        \int_\Omega \frac{u_n-u_{n-1}}{\Delta t}(v-u_n) - Q_n\cdot\nabla(v-u_n)
-        \ge \int_\Omega F_n\,(v-u_n)
-      $$}
-    \end{column}
-    \begin{column}{0.38\textwidth}
-      \centering
-      \includegraphics[width=0.85\textwidth]{figs/bueler2021-fig3.png}
+\begin{columns}[T]
+\begin{column}{0.6\textwidth}
+  given $u_{n-1}\ge0$, find $u_n\ge0$ so that
+  $$
+    \frac{u_n-u_{n-1}}{\Delta t}+\nabla\cdot Q_n = F_n \quad \text{where } u_n>0
+  $$
+  this decomposes $\Omega$ into disjoint sets:
+  \begin{align*}
+    \Omega_n         &= \{u_n>0\} \\
+    \Omega_n^r       &= \{u_n=0 \text{ and } u_{n-1}>0\} \quad \grey{\text{retreat}} \\
+    \Omega_n^{00}    &= \{u_n=0 \text{ and } u_{n-1}=0\}
+  \end{align*}
+  \vspace{-2mm}
+  \uncover<2->{
+  VI on $\cK=\{v\in W^{1,p}(\Omega) : v\ge 0\}$: for all $v\in\cK$,
+  $$
+    \int_\Omega \frac{u_n-u_{n-1}}{\Delta t}(v-u_n) - Q_n\cdot\nabla(v-u_n)
+    \ge \int_\Omega F_n\,(v-u_n)
+  $$}
+\end{column}
+\begin{column}{0.38\textwidth}
+  \centering
+  \includegraphics[width=0.85\textwidth]{figs/bueler2021-fig3.png}
 
-      \medskip
-      \raggedright
-      {\small on $\Omega_n^r\cup\Omega_n^{00}$: \, $u_{n-1}+\Delta t\,F_n\le 0$}
+  \medskip
+  \raggedright
+  {\small on $\Omega_n^r\cup\Omega_n^{00}$: \, $u_{n-1}+\Delta t\,F_n\le 0$}
 
-      \smallskip
-      {\small \grey{mass is \emph{not} exactly conserved on the retreat set}}
-    \end{column}
-  \end{columns}
+  \smallskip
+  {\small \grey{mass is \emph{not} exactly conserved on the retreat set}}
+\end{column}
+\end{columns}
 \end{frame}
 
+
 \begin{frame}{examples so far}
-  \begin{center}
-    \begin{tabular}{llll}
-      \toprule
-      problem                & unknown          & constraint in $\cK$     & minimization? \\
-      \midrule
-      obstacle               & $u\in H^1$       & $u\ge\psi$              & convex \\
-      Signorini              & $u\in H^1(\Omega;\mathbb{R}^2)$ & $u\cdot n\le g$ on $\Gamma_C$ & convex \\
-      hyperelastic contact   & $u\in W^{1,p}(\Omega;\mathbb{R}^2)$ & $u\cdot n\le g$ on $\Gamma_C$ & nonconvex \\
-      fluid layer time step  & $u_n\in W^{1,p}$ & $u_n\ge 0$              & generally not \\
-      \bottomrule
-    \end{tabular}
-  \end{center}
-  \begin{itemize}
-    \item in each, a PDE holds on an \emph{unknown} subset, and the constraint holds on the rest
-    \item the VI is posed on all of $\Omega$, with no reference to the free boundary
-    \item \emph{next:} when does such a VI have a unique solution?
-  \end{itemize}
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+problem                & unknown          & constraint in $\cK$     & minimization? \\
+\midrule
+obstacle               & $u\in H^1$       & $u\ge\psi$              & convex \\
+Signorini              & $u\in H^1(\Omega;\mathbb{R}^2)$ & $u\cdot n\le g$ on $\Gamma_C$ & convex \\
+hyperelastic contact   & $u\in W^{1,p}(\Omega;\mathbb{R}^2)$ & $u\cdot n\le g$ on $\Gamma_C$ & nonconvex \\
+fluid layer time step  & $u_n\in W^{1,p}$ & $u_n\ge 0$              & generally not \\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{itemize}
+\item in each, a PDE holds on an \emph{unknown} subset, and the constraint holds on the rest
+\item the VI is posed on all of $\Omega$, with no reference to the free boundary
+\item \emph{next:} when does such a VI have a unique solution?
+\end{itemize}
 \end{frame}
 
 
@@ -763,9 +770,9 @@ FIXME
 
 \begin{frame}{foo}
 
-  \begin{itemize}
-    \item bar
-  \end{itemize}
+\begin{itemize}
+\item bar
+\end{itemize}
 \end{frame}
 
 
