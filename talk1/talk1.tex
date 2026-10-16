@@ -610,9 +610,9 @@ FIXME
 \grey{\small \,(with \emph{Lam\'e consts} $\lambda,\mu$)}
 \item partition $\partial \Omega$:
     \begin{itemize}
-    \item[$\lc$] on $\Gamma_D$, a given displacement $u=u_D$,
-    \item[$\lc$] on $\Gamma_N$, zero traction, and
-    \item<2->[$\lc$] on $\Gamma_C$, allow frictionless \alert{contact}
+    \item[] on $\Gamma_D$, a given displacement $u=u_D$,
+    \item[] on $\Gamma_N$, zero traction, and
+    \item<2->[] on $\Gamma_C$, allow frictionless \alert{contact}
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -624,15 +624,12 @@ FIXME
 
 \onslide<2->
 \begin{itemize}
+\item a \emph{gap function} $g$ is given on $\Gamma_C$ \, \grey{\small ($g=$ normal distance from ref.~config.~to obstacle)}
 \item equations of equilibrium:
 \begin{align*}
   -\nabla\cdot\sigma(u) &= f \quad \text{in } \Omega && \text{stress balance \, \grey{\small ($f$ is body force)}} \\
   u\cdot n &\le g \quad \text{on } \Gamma_C && \text{\alert{non-penetration constraint}}
 \end{align*}
-
-    \begin{itemize}
-    \item[$\lc$] the \emph{gap function} $g$ is given on $\Gamma_C$ \, \grey{\small ($g=$ normal distance from ref.~config.~to obstacle)}
-    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -646,7 +643,7 @@ FIXME
     $$\alert{\int_\Omega \sigma(u):E(v-u) \ge \int_\Omega f\cdot(v-u) \qquad\text{for all } v\in K}$$
 
 \pause
-\item key: bilinear form $a(v,w)=\int_\Omega \sigma(v):E(w)$ is coercive on $H_0^1(\Omega;\mathbb{R}^d)$ by Korn's inequality
+\item key idea: \, $a(v,w)=\int_\Omega \sigma(v):E(w)$ is coercive on $H_0^1(\Omega;\mathbb{R}^d)$ by Korn's inequality
 
 \begin{theorem}[Fichera 1964]
 The Signorini problem is well-posed; there exists a unique solution.
@@ -777,19 +774,18 @@ $$
 \begin{center}
 \begin{tabular}{llll}
 \toprule
-problem                & unknown          & constraint in $\cK$     & minimization? \\
+problem                & unknown                         & constraint              & minimization? \\
 \midrule
-obstacle               & $u\in H^1$       & $u\ge\psi$              & convex \\
-Signorini              & $u\in H^1(\Omega;\mathbb{R}^2)$ & $u\cdot n\le g$ on $\Gamma_C$ & convex \\
-hyperelastic contact   & $u\in W^{1,p}(\Omega;\mathbb{R}^2)$ & $u\cdot n\le g$ on $\Gamma_C$ & nonconvex \\
-fluid layer time step  & $u_n\in W^{1,p}$ & $u_n\ge 0$              & generally not \\
+obstacle               & $u\in H^1(\Omega)$              & $u\ge\psi$              & yes (convex) \\
+Signorini              & $u\in H^1(\Omega;\mathbb{R}^d)$ & $u\cdot n\le g$ on $\Gamma_C$ & yes (convex) \\
+hyperelastic contact   & $u\in W^{1,p}(\Omega;\mathbb{R}^d)$ & $u\cdot n\le g$ on $\Gamma_C$ & yes \\
+fluid layer time step  & $u\in W^{1,p}(\Omega)$        & $u\ge 0$                  & no \\
 \bottomrule
 \end{tabular}
 \end{center}
 \begin{itemize}
 \item in each, a PDE holds on an \emph{unknown} subset, and the constraint holds on the rest
 \item the VI is posed on all of $\Omega$, with no reference to the free boundary
-\item \emph{next:} when does such a VI have a unique solution?
 \end{itemize}
 \end{frame}
 
