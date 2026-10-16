@@ -595,50 +595,82 @@ FIXME
 %%%%%%%%%%%%%
 
 
-\begin{frame}{elastic contact (Signorini problem)}
-\begin{columns}[T]
-\begin{column}{0.5\textwidth}
-linear elasticity on $\Omega\subset\mathbb{R}^2$, displacement $u:\Omega\to\mathbb{R}^2$:
-\begin{align*}
-  \epsilon(u) &= \tfrac12\left(\nabla u+\nabla u^\top\right) \\
-  \sigma(u)   &= \lambda\, (\operatorname{tr}\epsilon)\, I + 2\mu\, \epsilon \\
-  -\nabla\cdot\sigma(u) &= f \quad \text{in } \Omega
-\end{align*}
+\begin{frame}{elastic contact problem (Signorini, 1933)}
+
+\begin{columns}[T,onlytextwidth]
+
+\begin{column}{0.65\textwidth}
 \begin{itemize}
-  \item $\Gamma_D$: pressed down, $u=u_D$
-  \item $\Gamma_N$: traction-free
-  \item $\Gamma_C$: \alert{possible contact}, gap $g\ge 0$
+\item see textbook Ciarlet (2022) for elasticity generally
+\item consider a linear elastic solid on $\Omega\subset\RR^d$ \, \grey{($d=2,3$)}
+\item $u:\Omega\to\RR^d$ is \emph{displacement} from ref.~config.
+\item $E(u) = \tfrac12\left(\nabla u+\nabla u^\top\right)$ is \emph{strain tensor}
+\item $\sigma(u) = \lambda\, (\operatorname{tr}E(u))\, I + 2\mu\, E(u)$ is \emph{stress tensor}
+
+\grey{\small \,(with \emph{Lam\'e consts} $\lambda,\mu$)}
+\item partition $\partial \Omega$:
+    \begin{itemize}
+    \item[$\lc$] on $\Gamma_D$, a given displacement $u=u_D$,
+    \item[$\lc$] on $\Gamma_N$, zero traction, and
+    \item<2->[$\lc$] on $\Gamma_C$, allow frictionless \alert{contact}
+    \end{itemize}
 \end{itemize}
-non-penetration: \, $u\cdot n \le g$ on $\Gamma_C$
 \end{column}
-\begin{column}{0.48\textwidth}
-\centering
+
+\begin{column}{0.35\textwidth}
 \input{tikz/signorini.tex}
 \end{column}
 \end{columns}
-\grey{\scriptsize Signorini 1933; Fichera 1964; Kikuchi \& Oden, \emph{Contact Problems in Elasticity}, 1988}
-\end{frame}
 
-
-\begin{frame}{Signorini problem: VI and complementarity}
-let $\cK = \{v\in H^1(\Omega;\mathbb{R}^2) : v=u_D \text{ on } \Gamma_D \text{ and }
-v\cdot n\le g \text{ on } \Gamma_C\}$; find $u\in\cK$ so that
-$$
-\int_\Omega \sigma(u):\epsilon(v-u) \ge \int_\Omega f\cdot(v-u)
-\qquad\text{for all } v\in\cK
-$$
+\onslide<2->
 \begin{itemize}
-\item equivalent to minimizing the elastic energy
-      $J(v)=\int_\Omega \tfrac12\sigma(v):\epsilon(v) - f\cdot v$ over $\cK$
-\item convex, and coercive by Korn's inequality, so a \emph{unique} solution
-\item on $\Gamma_C$, with normal stress $\sigma_n=n\cdot\sigma(u)\,n$:
-      $$
-        u\cdot n - g\le 0, \qquad \sigma_n\le 0, \qquad \sigma_n\,(u\cdot n - g)=0,
-        \qquad \sigma_t = 0
-      $$
-\item the constraint is only on the boundary, so the free boundary is a \alert{subset of $\Gamma_C$}
+\item equations of equilibrium:
+\begin{align*}
+  -\nabla\cdot\sigma(u) &= f \quad \text{in } \Omega && \text{stress balance \, \grey{\small ($f$ is body force)}} \\
+  u\cdot n &\le g \quad \text{on } \Gamma_C && \text{\alert{non-penetration constraint}}
+\end{align*}
+
+    \begin{itemize}
+    \item[$\lc$] the \emph{gap function} $g$ is given on $\Gamma_C$ \, \grey{\small ($g=$ normal distance from ref.~config.~to obstacle)}
+    \end{itemize}
 \end{itemize}
 \end{frame}
+
+
+\begin{frame}{Signorini contact problem (VI form)}
+
+\begin{itemize}
+\item define convex and closed admissible set:
+    $$\alert{K = \{v\in H^1(\Omega;\mathbb{R}^d) : v=u_D \text{ on } \Gamma_D \text{ and } v\cdot n\le g \text{ on } \Gamma_C\}}$$
+\item VI problem is to find \alert{$u\in K$} so that
+    $$\alert{\int_\Omega \sigma(u):E(v-u) \ge \int_\Omega f\cdot(v-u) \qquad\text{for all } v\in K}$$
+
+\pause
+\item key: bilinear form $a(v,w)=\int_\Omega \sigma(v):E(w)$ is coercive on $H_0^1(\Omega;\mathbb{R}^d)$ by Korn's inequality
+
+\begin{theorem}[Fichera 1964]
+The Signorini problem is well-posed; there exists a unique solution.
+\end{theorem}
+
+\item equivalent to minimizing the elastic energy over admissible displacements:
+    $$u \leftarrow \min_{v\in K} \int_\Omega \tfrac12\sigma(v):E(v) - f\cdot v$$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Signorini contact problem (complementarity)}
+
+FIXME figure?
+
+\begin{itemize}
+\item on $\Gamma_C$, with normal stress $\sigma_n=n\cdot\sigma(u)\,n$:
+    $$u\cdot n - g\le 0, \qquad \sigma_n\le 0, \qquad \sigma_n\,(u\cdot n - g)=0, \qquad \sigma_t = 0$$
+\item the constraint is only on the boundary, so the free boundary is a \alert{subset of $\Gamma_C$}
+\end{itemize}
+
+textbook Kikuchi \& Oden (1988) covers elastic contact
+\end{frame}
+
 
 \begin{frame}{contact in nonlinear hyperelasticity}
 large deformations: $x\mapsto x+u(x)$, deformation gradient $F=I+\nabla u$, $J=\det F>0$
@@ -653,11 +685,8 @@ large deformations: $x\mapsto x+u(x)$, deformation gradient $F=I+\nabla u$, $J=\
       $$
         \ip{\Pi'(u)}{v-u}\ge 0 \qquad\text{for all } v\in\cK
       $$
-\end{itemize}
-\pause
-\begin{itemize}
 \item linearizing $W$ at $F=I$ recovers the Signorini problem
-\item but $W$ is \alert{not convex} \grey{(Ciarlet 1988)}, so the VI is only a
+\item but $W$ is \alert{not convex} \grey{(Ciarlet 2022)}, so the VI is only a
       \emph{necessary} condition, and solutions need not be unique
 \end{itemize}
 \end{frame}
@@ -679,8 +708,7 @@ large deformations: $x\mapsto x+u(x)$, deformation gradient $F=I+\nabla u$, $J=\
   are no longer roots, then re-solve from the same initial guess
 
   \medskip
-  {\scriptsize \grey{Farrell, Croci \& Surowiec, \emph{Deflation for semismooth
-  equations}, Optim.~Methods Softw.~2020, Fig.~2 (CC BY 4.0)}}
+  {\scriptsize \grey{Farrell, Croci \& Surowiec (2020), Fig.~2}}
 \end{column}
 \begin{column}{0.38\textwidth}
   \centering
@@ -794,18 +822,16 @@ fluid layer time step  & $u_n\in W^{1,p}$ & $u_n\ge 0$              & generally 
 
 
 \begin{frame}[standout]
-  Questions?
+Questions?
 \end{frame}
 
 
 \begin{frame}{references}
-%\fontsize{7}{8.2}\selectfont
 \input{references.tex}
 \end{frame}
 
 
 %\appendix
-
 %\begin{frame}{backup: foo}
 %bar
 %\end{frame}
