@@ -577,24 +577,6 @@ Suppose $a(\cdot,\cdot)$ is bilinear, bounded, and coercive on a Hilbert space $
 \end{frame}
 
 
-% COMMENTED OUT %%%%%%%%
-\begin{comment}
-\begin{frame}{classical obstacle problem (more)}
-
-FIXME
-  \begin{itemize}
-    \item dual perspective: define $\sigma=-\nabla^2u-f$; then $\ip{\sigma}{v-u}\ge 0$ and $w \perp \sigma$ complementarity
-    \item other interpretations:
-    \begin{itemize}
-      \item[$\lc$] pressure in a porous dam \grey{($u\ge 0$; which part is saturated?)}
-      \item[$\lc$] elastic-plastic torsion \grey{($u\le\psi$; which part has failed?)}
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-\end{comment}
-%%%%%%%%%%%%%
-
-
 \begin{frame}{elastic contact problem (Signorini, 1933)}
 
 \begin{columns}[T,onlytextwidth]
@@ -657,19 +639,39 @@ The Signorini problem is well-posed; there exists a unique solution.
 
 \begin{frame}{Signorini contact problem (complementarity)}
 
-FIXME figure?
+\begin{columns}[T]
 
+\begin{column}{0.55\textwidth}
 \begin{itemize}
-\item on $\Gamma_C$, with normal stress $\sigma_n=n\cdot\sigma(u)\,n$:
-    $$u\cdot n - g\le 0, \qquad \sigma_n\le 0, \qquad \sigma_n\,(u\cdot n - g)=0, \qquad \sigma_t = 0$$
-\item the constraint is only on the boundary, so the free boundary is a \alert{subset of $\Gamma_C$}
+\item the solution displacement $u$ warps the ref.~config.~$\Omega$ to new state $\Omega' = (I+u)(\Omega)$ \, \grey{\small $\to$}
+
+\medskip
+\item $\sigma_n=n\cdot\sigma(u)\,n$ is the \emph{normal stress}
+\item \alert{complementarity applies along $\Gamma_C$}:
+\begin{align*}
+g - u\cdot n &\ge 0 && \text{\small gap exceeds displacement}\\
+-\sigma_n &\ge 0 && \text{\small inward normal stress} \\
+(g-u\cdot n) \, \sigma_n &= 0 && \text{\small not both}
+\end{align*}
+\item the free boundary is a \alert{subset of $\Gamma_C$}
+\item frictionless: $\sigma_t=0$ on all of $\Gamma_C$
 \end{itemize}
 
-textbook Kikuchi \& Oden (1988) covers elastic contact
+\bigskip
+\qquad \grey{\small see textbook Kikuchi \& Oden (1988) for contact}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\hfill \input{tikz/signorinideformed.tex}  % FIXME new figure showing deformed state
+\end{column}
+\end{columns}
+
 \end{frame}
 
 
-\begin{frame}{contact in nonlinear hyperelasticity}
+\begin{frame}{contact in nonlinear hyperelasticity (multiple solutions)}
+
+FIXME
 large deformations: $x\mapsto x+u(x)$, deformation gradient $F=I+\nabla u$, $J=\det F>0$
 \begin{itemize}
 \item hyperelastic: stored energy density $W(F)$, e.g.~compressible neo-Hookean
@@ -686,10 +688,7 @@ large deformations: $x\mapsto x+u(x)$, deformation gradient $F=I+\nabla u$, $J=\
 \item but $W$ is \alert{not convex} \grey{(Ciarlet 2022)}, so the VI is only a
       \emph{necessary} condition, and solutions need not be unique
 \end{itemize}
-\end{frame}
 
-
-\begin{frame}{multiple solutions}
 \begin{columns}[T]
 \begin{column}{0.6\textwidth}
   a neo-Hookean beam $(0,1)\times(0,\tfrac{1}{10})$:
