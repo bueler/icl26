@@ -6,7 +6,9 @@
 \providecommand*{\input@path}{}
 \edef\input@path{\input@path{../theme/}{../theme/moloch/}}
 \makeatother
+
 \usepackage{icl26}
+\usepackage{verbatim,fancyvrb}
 
 \newtheorem{proposition}[theorem]{Proposition}
 
@@ -102,6 +104,9 @@
   $$u \text{ locally minimizes } f \implies \quad \boxed{\alert{f'(u)\,(x-u) \ge 0}} \qquad \text{for all } x\in[a,b]$$
 
 \pause
+\smallskip
+\item same product is 1st-order term in Taylor expansion: \, $f(x) = f(u) + \alert{f'(u) (x-u)} + \dots$
+
 \medskip
 \grey{viewpoint: traveling infinitesimally from $u$ into $[a,b]$, $f$ \strikeThrough{increases} does not decrease}
 \end{itemize}
@@ -132,7 +137,7 @@ For $x\in H$, define the \emph{projection of $x$ onto $K$}:
 \medskip
 
 \item notation: $u=\Pi_K x$
-\item $\Pi_K:H \to K$ is Lipschitz continuous
+\item observation: $\Pi_K:H \to K$ is Lipschitz continuous
 \end{itemize}
 \end{frame}
 
@@ -207,7 +212,7 @@ By the calculus I problem, $0\le g'(0)=\ip{\nabla f(u)}{v-u}$. \qed
 Suppose:
 \begin{itemize}
 \item $K\subset\RR^n$ is convex, and
-\item $f : K \to \RR$ is in $C^1$ \alert{and is convex}.
+\item $f : K \to \RR$ is in $C^1$ \alert{and convex}.
 \end{itemize}
 Then $u\in K$ is a minimizer \alert{if and only if}
   $$\boxed{\alert{\ip{\nabla f(u)}{v-u} \ge 0}} \qquad\text{for all } v\in K.$$
@@ -219,8 +224,6 @@ Then $u\in K$ is a minimizer \alert{if and only if}
 \end{minipage}
 \end{theorem}
 
-
-\pause
 \begin{itemize}
 \item $u$ exists if $K\ne \emptyset$ and
     \begin{itemize}
@@ -237,11 +240,11 @@ Then $u\in K$ is a minimizer \alert{if and only if}
 
 \begin{itemize}
 \item maybe variational inequalities are just convenience notation in optimization?
-\item in fact, they \alert{need not come from optimization}
 
 \pause
+\item in fact, they \alert{need not come from optimization}
 \item to put us in the right frame of mind, recall this \dots
-\begin{block}{\only<1-4>{folk theorem?}\only<5-6>{\strikeThrough{folk theorem}}}
+\begin{block}{\only<1-4>{folk theorem?}\only<5->{\strikeThrough{folk theorem}}}
 \begin{minipage}{0.05\linewidth}
 \vspace{18mm}
 \end{minipage}
@@ -267,7 +270,7 @@ Then $u\in K$ is a minimizer \alert{if and only if}
 \grey{advice to numerical users: Newton's method with line search is powerful, but \dots}
 
 \smallskip
-\item<6> but we are now close to the Brouwer fixed point theorem \dots
+\item<5-> but we are now close to the Brouwer fixed point theorem \dots
 \end{itemize}
 \end{frame}
 
@@ -284,8 +287,6 @@ If $K\subset\mathbb{R}^n$ is nonempty, compact, and convex, and if $F:K \to\RR^n
     $$\boxed{\alert{\ip{F(u)}{v-u} \ge 0}} \qquad\text{for all } v\in K.$$
 \end{theorem}
 
-\pause
-\medskip
 \emph{proof:}\, The map $v\mapsto \Pi_K\big(v-F(v)\big)$ is continuous from $K$ to $K$.  By
 Brouwer it has a fixed point:
       $$u = \Pi_K \big(u - F(u)\big).$$
@@ -296,26 +297,19 @@ Let $z = u - F(u)$ so $u=\Pi_K z$.  By the projection theorem, for all $v\in K$,
 
 \begin{frame}{constrained nonlinear equations}
 
-\medskip
-{\small
 \begin{theorem}[Hartman \& Stampacchia, 1964]
 If $K\subset\mathbb{R}^n$ is nonempty, compact, and convex, and if $F:K \to\RR^n$ is continuous, then there exists $u\in K$ so that
     $$\boxed{\alert{\ip{F(u)}{v-u} \ge 0}} \qquad\text{for all } v\in K.$$
-Furthermore, \alert{if $u$ is in the interior of $K$ then $F(u)=0$}.
+\alert{Furthermore, if $u$ is in the interior of $K$ then $F(u)=0$}.
 \end{theorem}
-}
 
-\medskip
 \emph{proof of ``Furthermore'':}\, Take $v = u+\eps w$ for $w\in \RR^n$. \qed
 
-\pause
 \bigskip
 \begin{itemize}
-\item we have exactly 2 cases
+\item exactly 2 cases here:
 
-from solving the boxed VI:
-
-\vspace{-12mm}
+\vspace{-10mm}
 
 \hfill \mbox{\input{tikz/solninterior.tex} \hspace{25mm} \input{tikz/solnsupport.tex} \hspace{15mm}}
 
@@ -323,8 +317,7 @@ from solving the boxed VI:
 
 \pause
 \medskip
-\item $F$ here plays the role of $\grad f$ in optimization
-\item but the Jacobian of $F$ need not be symmetric
+\item $F$ here plays the role of $\grad f$ in optimization, but its Jacobian need not be symmetric
 \end{itemize}
 \end{frame}
 
@@ -341,7 +334,7 @@ Furthermore, if $u$ is in the interior of $K$ then $F(u)=0$.
 
 \medskip
 \begin{itemize}
-\item what about uniqueness? what hypothesis on $F$ would give it?
+\item what about uniqueness here? what hypothesis on $F$ would give it?
 
 \pause
 \bigskip
@@ -354,18 +347,20 @@ Furthermore, if $u$ is in the interior of $K$ then $F(u)=0$.
 
 \begin{frame}{a well-posed problem}
 
+\begin{definition}
+$F$ is \alert{monotone} on $K$ if
+    $$\ip{F(v)-F(w)}{v-w} \ge 0$$
+for all $v,w\in K$, and \alert{strictly monotone} if equality implies $v=w$.
+\end{definition}
+
 \begin{corollary}
-If additionally $F$ is \alert{strictly monotone}, so that
-    $$\ip{F(v)-F(w)}{v-w} > 0$$
-for all $v\ne w$, then $u\in K$ satisfying the variational inequality is \alert{unique}.
+If additionally $F$ is strictly monotone then $u\in K$ is unique.
 \end{corollary}
 
-\begin{itemize}
-\item but is this hypothesis reasonable?
-
 \pause
-\medskip
-\item in the optimization case, it is strict convexity of the objective function
+\begin{itemize}
+\item is this hypothesis reasonable?
+\item in optimization case, it matches strict convexity of the objective function
 \end{itemize}
 
 \begin{proposition}
@@ -376,10 +371,10 @@ Suppose $f:\RR^n \to \RR$ is $C^1$.  Then $f$ is strictly convex if and only if 
 
 \begin{frame}{variational inequalities}
 
-\begin{definitions}
-Given a normed vector space $X$, a closed and convex \alert{admissible subset} $K\subset X$, and $F: K\to X'$ continuous but generally nonlinear, find $u\in K$ so that
+\begin{definitions}[made official!]
+Given a normed vector space $X$, a closed and convex \alert{admissible subset} $K\subset X$, and $F: K\to X'$ continuous, but generally nonlinear, find $u\in K$ so that
   $$\boxed{\alert{\ip{F(u)}{v-u} \ge 0}} \qquad \text{for all } v\in K.$$
-This is the \alert{variational inequality} problem for the data $K$ \& $F$, denoted $\operatorname{VI}(K,F)$.
+This is the \alert{variational inequality} problem for the data $K$ and $F$, denoted $\operatorname{VI}(K,F)$.
 \end{definitions}
 
 \bigskip
@@ -396,7 +391,7 @@ This is the \alert{variational inequality} problem for the data $K$ \& $F$, deno
   \par}
 
 \bigskip
-{\small \grey{perspective: VIs generalize equations $F(u)=0$ to convex input sets, enabling existence}}
+{\small \grey{perspective: \, VIs generalize equations $F(u)=0$ to convex input sets, enabling existence}}
 \end{frame}
 
 
@@ -427,12 +422,12 @@ This is the \alert{variational inequality} problem for the data $K$ \& $F$, deno
 \item constrained to be on or above an \alert{obstacle} $\psi$
 
 \medskip
-\item<2> then:
+\item then:
 \begin{align*}
 -\grad^2 u &= f \text{\, where $u>\psi$} && \gcomm{black mesh} && \hspace{50mm} \\\
          u &= \psi \text{\, otherwise} && \gcomm{white mesh}
 \end{align*}
-\item<2> but \emph{where} will $u=\psi$ hold?
+\item but \emph{where} will $u=\psi$ hold?
 \end{itemize}
 
 \vspace{-16mm}
@@ -467,8 +462,8 @@ and $u=\psi$ otherwise
 \medskip
 result:
 \begin{itemize}
-\item $a=2 - \sqrt{3}\approx 0.2679$ is location of the \alert{free boundary}
-\item \alert{Dirichlet \underline{and} Neumann conditions} hold there:\, $u(a)=\psi(a)$ \,\&\, $u'(a)=\psi'(a)$
+\item $a=2 - \sqrt{3}\approx 0.2679$ \, locates the \alert{free boundary}
+\item both \alert{Dirichlet and Neumann conditions} hold there:\, $u(a)=\psi(a)$ \,\&\, $u'(a)=\psi'(a)$
 \item $\displaystyle u(x) = \begin{cases} 1-x^2, & 0 \le |x| \le a, \\
                            2a(2-|x|), & a \le |x| \le 2, \end{cases}$
 \item $u\in C^1 \setminus C^2$, despite $C^\infty$ data and Laplacian operator
@@ -511,8 +506,7 @@ result:
 
     \begin{itemize}
     \item[$\lc$] Poisson equation $-\grad^2 u=f$ holds in $E_u$
-    \item[$\lc$] both Dirichlet \& Neumann conditions will hold along $\Gamma_u$
-    \item[$\lc$] (compensating for unknown location?)
+    \item[$\lc$] both Dirichlet \& Neumann conditions will hold along $\Gamma_u$ \, \grey{(which compensates for unknown location of $\Gamma_u$?)}
     \end{itemize}
 \end{itemize}
 
@@ -527,15 +521,15 @@ result:
 \begin{frame}{classical obstacle problem (weak forms)}
 
 \begin{itemize}
-\item for theoretical and finite-element purposes, rewrite in \alert{weak form}
+\item for theoretical and finite-element purposes, we want to rewrite in \alert{weak form}
     \begin{itemize}
     \item[$\lc$] in applications, this step is not as obvious as for the equality-constrained case?
     \end{itemize}
-\item let $K = \{v\in H^1(\Omega) : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$, a closed, convex set but \alert{not} a subspace
+\item let \alert{$K = \{v\in H^1(\Omega) : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$}, a closed, convex subset \,\grey{(not a subspace)}
 \end{itemize}
 
 \begin{block}{weak forms}
-the problem can be stated as
+the classical obstacle problem can be stated as
 
 \begin{columns}[T]
 \begin{column}{0.45\textwidth}
@@ -553,7 +547,6 @@ the problem can be stated as
 \end{columns}
 \end{block}
 
-\pause
 \begin{proposition}
 \begin{itemize}
 \item the problems are equivalent, and well-posed
@@ -572,6 +565,7 @@ A bilinear form $a(\cdot,\cdot)$ is \alert{coercive} if there is $\alpha>0$ so t
 
 \begin{itemize}
 \item the bilinear form in the obstacle problem, $a(u,v) = \int_\Omega \nabla u \cdot \nabla v$, is coercive on $H_0^1(\Omega)$, by the Poincar\'e inequality
+\item coercive $\implies$ strictly monotone
 \end{itemize}
 
 \begin{theorem}[Stampacchia 1964; generalizes Lax--Milgram (1954) to $K\subset H$]
@@ -583,16 +577,12 @@ Suppose $a(\cdot,\cdot)$ is bilinear, bounded, and coercive on a Hilbert space $
 \end{frame}
 
 
+\begin{comment}
 \begin{frame}{classical obstacle problem (more)}
 
 FIXME
   \begin{itemize}
-    \item integrate by parts: $\ip{\sigma}{v-u}\ge 0$ for the residual $\sigma=-\nabla^2u-f$
-    \begin{itemize}
-      \item[$\lc$] if $u$ is in the interior of $\cK$ then $\sigma=0$: the VI generalizes Poisson
-    \end{itemize}
-    \item both $u=\psi$ \emph{and} $\partial(u-\psi)/\partial n=0$ hold along $\Gamma_u$
-          \grey{(compensates for its unknown location)}
+    \item dual perspective: define $\sigma=-\nabla^2u-f$; then $\ip{\sigma}{v-u}\ge 0$ and $w \perp \sigma$ complementarity
     \item other interpretations:
     \begin{itemize}
       \item[$\lc$] pressure in a porous dam \grey{($u\ge 0$; which part is saturated?)}
@@ -600,6 +590,7 @@ FIXME
     \end{itemize}
   \end{itemize}
 \end{frame}
+\end{comment}
 
 
 \begin{frame}{Signorini problem: elastic contact}
@@ -801,14 +792,15 @@ FIXME
 
 
 \begin{frame}{references}
-  \fontsize{7}{8.2}\selectfont \input{references.tex}
+%\fontsize{7}{8.2}\selectfont
+\input{references.tex}
 \end{frame}
 
 
-\appendix
+%\appendix
 
-\begin{frame}{backup: projection onto a convex set}
-  $P_\cK v$ is the unique $w\in\cK$ with $\ip{v-w}{z-w}\le 0$ for all $z\in\cK$
-\end{frame}
+%\begin{frame}{backup: foo}
+%bar
+%\end{frame}
 
 \end{document}
