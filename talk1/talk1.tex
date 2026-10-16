@@ -646,7 +646,12 @@ The Signorini problem is well-posed; there exists a unique solution.
 \item the solution displacement $u$ warps the ref.~config.~$\Omega$ to new state $\Omega' = (I+u)(\Omega)$ \, \grey{\small $\to$}
 
 \medskip
-\item $\sigma_n=n\cdot\sigma(u)\,n$ is the \emph{normal stress}
+\item $\sigma_n=n\cdot\sigma(u)\,n$ denotes the \emph{normal stress}
+    \begin{itemize}
+    \item[$\lc$] note frictionless: tangential $\sigma_t=0$ on $\Gamma_C$
+    \end{itemize}
+
+\medskip
 \item \alert{complementarity applies along $\Gamma_C$}:
 \begin{align*}
 g - u\cdot n &\ge 0 && \text{\small gap exceeds displacement}\\
@@ -654,7 +659,6 @@ g - u\cdot n &\ge 0 && \text{\small gap exceeds displacement}\\
 (g-u\cdot n) \, \sigma_n &= 0 && \text{\small not both}
 \end{align*}
 \item the free boundary is a \alert{subset of $\Gamma_C$}
-\item frictionless: $\sigma_t=0$ on all of $\Gamma_C$
 \end{itemize}
 
 \bigskip
@@ -671,42 +675,40 @@ g - u\cdot n &\ge 0 && \text{\small gap exceeds displacement}\\
 
 \begin{frame}{contact in nonlinear hyperelasticity (multiple solutions)}
 
-FIXME
-large deformations: $x\mapsto x+u(x)$, deformation gradient $F=I+\nabla u$, $J=\det F>0$
-\begin{itemize}
-\item hyperelastic: stored energy density $W(F)$, e.g.~compressible neo-Hookean
-      $$
-        W(F) = \tfrac{\mu}{2}\left(|F|^2-2\right) - \mu\ln J + \tfrac{\lambda}{2}(\ln J)^2
-      $$
-\item minimize $\displaystyle \Pi(v) = \int_\Omega W(I+\nabla v) - B\cdot v$
-      \; over the same kind of $\cK$
-\item a minimizer solves the VI
-      $$
-        \ip{\Pi'(u)}{v-u}\ge 0 \qquad\text{for all } v\in\cK
-      $$
-\item linearizing $W$ at $F=I$ recovers the Signorini problem
-\item but $W$ is \alert{not convex} \grey{(Ciarlet 2022)}, so the VI is only a
-      \emph{necessary} condition, and solutions need not be unique
-\end{itemize}
-
 \begin{columns}[T]
-\begin{column}{0.6\textwidth}
-  a neo-Hookean beam $(0,1)\times(0,\tfrac{1}{10})$:
-  \begin{itemize}
-    \item clamped at left, compressed axially at right, with gravity
-    \item obstacles: $u_2\le \alpha$ on top, $u_2\ge-\alpha$ on bottom
-  \end{itemize}
-  \medskip
-  \alert{seven} solutions: three never touch the obstacles, four (right) are in contact
-
-  \medskip
-  found by \emph{deflation}: modify the semismooth Newton residual so known solutions
-  are no longer roots, then re-solve from the same initial guess
-
-  \medskip
-  {\scriptsize \grey{Farrell, Croci \& Surowiec (2020), Fig.~2}}
+\begin{column}{0.65\textwidth}
+\only<1>{
+\begin{itemize}
+\item linear elasticity is inadequate for large deformations
+\item consider nonlinear \alert{hyperelastic} material:
+\begin{align*}
+u \leftarrow \min_{v\in K} \omega(v) = \int_\Omega W(I+\nabla v) - f\cdot v
+\end{align*}
+where $W(Z)$ is the \emph{strain energy density}
+    \begin{itemize}
+    \item[$\lc$] \emph{compressible neo-Hookean} model gives $W$ formula
+    \item[$\lc$] linearizing $W$ at $Z=I$ recovers previous model
+    \end{itemize}
+\item a minimizer solves the VI
+    $$\ip{\omega'(u)}{v-u}\ge 0 \qquad\text{for all } v\in K$$
+\item but $W$ is \alert{not convex} in neo-Hookean model (Ciarlet 2022), so solutions need not be unique
+\end{itemize}
+}
+\only<2>{
+\begin{itemize}
+\item Farrell, Croci \& Surowiec (2020) considered a neo-Hookean beam
+\item constrained by top and bottom (box) obstacles
+\item clamped at left, compressed axially from right end
+\item \alert{7 solutions} to this problem were found by \alert{deflating} \grey{(root-finding technique)} the VI problems:
+    \begin{itemize}
+    \item[$\lc$] 3 solutions never touch the obstacles (not shown)
+    \item[$\lc$] 4 are in contact, shown (right) with pale unconstrained versions
+    \item[$\lc$] using Firedrake, of course
+    \end{itemize}
+\end{itemize}
+}
 \end{column}
-\begin{column}{0.38\textwidth}
+\begin{column}{0.35\textwidth}
   \centering
   \includegraphics[height=0.8\textheight]{figs/farrell2020-fig2.jpg}
 \end{column}
@@ -715,6 +717,8 @@ large deformations: $x\mapsto x+u(x)$, deformation gradient $F=I+\nabla u$, $J=\
 
 
 \begin{frame}{a fluid layer in a climate}
+
+FIXME
 a thin fluid layer moves on a substrate, with mass added (precipitation, accumulation)
 or removed (evaporation, ablation) by a signed source $f$, the \emph{climate}
 \begin{center}
@@ -734,6 +738,8 @@ $$
 
 
 \begin{frame}{fluid layer: one implicit time step}
+
+FIXME
 \begin{columns}[T]
 \begin{column}{0.6\textwidth}
   given $u_{n-1}\ge0$, find $u_n\ge0$ so that
@@ -769,27 +775,34 @@ $$
 \end{frame}
 
 
-\begin{frame}{examples so far}
+\begin{frame}{$\infty$-dimensional VI examples}
 \begin{center}
 \begin{tabular}{llll}
 \toprule
 problem                & unknown                         & constraint              & minimization? \\
 \midrule
-obstacle               & $u\in H^1(\Omega)$              & $u\ge\psi$              & yes (convex) \\
-Signorini              & $u\in H^1(\Omega;\mathbb{R}^d)$ & $u\cdot n\le g$ on $\Gamma_C$ & yes (convex) \\
-hyperelastic contact   & $u\in W^{1,p}(\Omega;\mathbb{R}^d)$ & $u\cdot n\le g$ on $\Gamma_C$ & yes \\
-fluid layer time step  & $u\in W^{1,p}(\Omega)$        & $u\ge 0$                  & no \\
+classical obstacle     & $u\in H^1(\Omega)$              & $u\ge\psi$ on $\Omega$  & yes (convex) \\
+Signorini contact      & $u\in H^1(\Omega;\mathbb{R}^d)$ & $u\cdot n\le g$ on $\Gamma_C$ & yes (convex) \\
+hyperelastic contact\quad & \qquad ''                    & \qquad ''               & yes (not convex) \\
+fluid layer thickness  & $u\in W^{1,p}(\Omega)$          & $u\ge 0$ on $\Omega$    & no \\
 \bottomrule
 \end{tabular}
 \end{center}
+
+\bigskip
+in each:
 \begin{itemize}
-\item in each, a PDE holds on an \emph{unknown} subset, and the constraint holds on the rest
-\item the VI is posed on all of $\Omega$, with no reference to the free boundary
+\item the constraint is active on a subset of $\Omega$ or $\Gamma_C \subset \partial\Omega$
+\item one solves simultaneously for the solution $u$ and the active subset
+\item the VI is posed without prior reference to active subset or free boundary
 \end{itemize}
+
+\bigskip
+\grey{variational inequalities have many more applications, including pricing of options, traffic flow networks, game theory, electrical circuits, phase transformations, and so on}
 \end{frame}
 
 
-\section[FE solutions]{finite element solutions}
+\section[FE solutions]{finite element solutions \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{differences from PDE case}}}
 
 \begin{frame}{foo}
 
