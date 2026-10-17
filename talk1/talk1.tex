@@ -16,6 +16,8 @@
 \newcommand{\cK}{{\mathcal{K}}}  % with extra outer braces: safe in P_\cK under unicode-math
 \newcommand{\cX}{{\mathcal{X}}}
 
+\newcommand{\bq}{\mathbf{q}}
+
 \newcommand{\RR}{{\mathbb{R}}}
 
 \newcommand{\eps}{\epsilon}
@@ -666,7 +668,7 @@ g - u\cdot n &\ge 0 && \text{\small gap exceeds displacement}\\
 \end{column}
 
 \begin{column}{0.45\textwidth}
-\hfill \input{tikz/signorinideformed.tex}  % FIXME new figure showing deformed state
+\hfill \input{tikz/signorinideformed.tex}
 \end{column}
 \end{columns}
 
@@ -699,7 +701,7 @@ where $W(Z)$ is the \emph{strain energy density}
 \item Farrell, Croci \& Surowiec (2020) considered a neo-Hookean beam
 \item constrained by top and bottom (box) obstacles
 \item clamped at left, compressed axially from right end
-\item \alert{7 solutions} to this problem were found by \alert{deflating} \grey{(root-finding technique)} the VI problems:
+\item \alert{7 solutions} to this problem were found by \alert{deflating} \grey{(a root-finding technique)} the VI problems:
     \begin{itemize}
     \item[$\lc$] 3 solutions never touch the obstacles (not shown)
     \item[$\lc$] 4 are in contact, shown (right) with pale unconstrained versions
@@ -716,88 +718,117 @@ where $W(Z)$ is the \emph{strain energy density}
 \end{frame}
 
 
-\begin{frame}{a fluid layer in a climate}
+\begin{frame}{fluid layer in a climate}
 
-FIXME
-a thin fluid layer moves on a substrate, with mass added (precipitation, accumulation)
-or removed (evaporation, ablation) by a signed source $f$, the \emph{climate}
-\begin{center}
-  \includegraphics[width=0.45\textwidth]{figs/bueler2021-fig1.png}
-\end{center}
-thickness $u(x,t)\ge 0$, flux $q=q(\nabla u,u,x,t)$, e.g.~$q=-D\nabla u+Xu$:
-$$
-  u_t+\nabla\cdot q = f \quad \text{where } u>0, \qquad\qquad u\ge 0 \quad\text{everywhere}
-$$
-\vspace{-2mm}
 \begin{itemize}
-  \item glaciers and ice sheets, sea ice, subglacial water, rain on a windshield
-  \item the fluid-covered area is a \alert{leading-order} modeling goal \grey{(e.g.~albedo)}
+\item there are many applications of VIs, but here is a simple one I obsess upon \dots
+\item consider a thin layer of moving incompressible fluid, on a substrate, and in a climate:
+    $$\alert{u_t+\nabla\cdot \bq = f} \hspace{70mm}$$
+
+\vspace{-7mm}
+\hfill  \includegraphics[width=0.45\textwidth]{figs/bueler2021-fig1.png} \,
+
+\vspace{-17mm}
+    \begin{itemize}
+    \item[$\lc$] $u$ is the \alert{layer thickness}
+
+\smallskip
+    \item[$\lc$] $\bq(x,u,\grad u)$ is the vertically-summed \alert{flux},
+
+e.g.~gravity-driven or wind/ocean-driven
+
+\smallskip
+    \item[$\lc$] $f(t,x)$\strut \,is an (abstract) \alert{signed climate},
+
+a source term; it adds or removes mass
+    \end{itemize}
+
+\smallskip
+\item examples: glaciers and ice sheets, sea ice, evaporating lakes, rain on a windshield
+\item the source $f$ is the ``surface mass balance'', the difference between mass added \emph{(e.g.~precipitation)} and removed \emph{(e.g.~evaporation, melt-and-runoff)}
+
+\pause
+\medskip
+\item but \alert{$u\ge 0$}, because it is a \emph{thickness}, right?
 \end{itemize}
-{\scriptsize \grey{Bueler, \emph{Conservation laws for free-boundary fluid layers}, SIAM J.~Appl.~Math.~2021}}
 \end{frame}
 
 
-\begin{frame}{fluid layer: one implicit time step}
+\begin{frame}{fluid layer in a climate: implicit time step VI}
 
-FIXME
-\begin{columns}[T]
+\begin{itemize}
+\item perhaps easiest to reason about backward Euler time steps
+\item let \alert{$K=\{v\in X=W^{1,p}(\Omega) : v\ge 0\}$} be the set of \alert{admissible thicknesses}
+\item given previous thickness $u_{n-1}\in K$, at time $t_{n-1}$
+\item VI problem is to find $u_n\in K$ at $t_n$ so that, for all $v\in K$,
+    $$\alert{\int_\Omega \frac{u_n-u_{n-1}}{\Delta t}(v-u_n) - \bq_n\cdot\nabla(v-u_n) \ge \int_\Omega f_n\,(v-u_n)} \hspace{20mm}$$
+\item $\bq_n = \bq(x,u_n,\grad u_n)$ denotes the unknown flux
+\item well-posed for many flux formulas \,\grey{\small (B.~2021)}
+\item generally not an optimization problem
+\item note that $\Delta t\to \infty$ limit is steady state
+\end{itemize}
+
+\vspace{-16mm}
+\hfill \includegraphics[width=0.4\textwidth]{figs/bueler2021-fig1.png}
+\end{frame}
+
+
+\begin{frame}{fluid layer in a climate: implicit time step VI}
+
+model for updated thickness $u_n\in \alert{K = \{v\in X=W^{1,p}(\Omega) : v\ge 0\}}$:
+    $$\alert{\int_\Omega \frac{u_n-u_{n-1}}{\Delta t}(v-u_n) - \bq_n\cdot\nabla(v-u_n) \ge \int_\Omega f_n\,(v-u_n)} \hspace{35mm}$$
+
+\begin{columns}[T,onlytextwidth]
 \begin{column}{0.6\textwidth}
-  given $u_{n-1}\ge0$, find $u_n\ge0$ so that
-  $$
-    \frac{u_n-u_{n-1}}{\Delta t}+\nabla\cdot Q_n = F_n \quad \text{where } u_n>0
-  $$
-  this decomposes $\Omega$ into disjoint sets:
+\begin{itemize}
+\item solution decomposes $\Omega$ into disjoint sets:
   \begin{align*}
-    \Omega_n         &= \{u_n>0\} \\
-    \Omega_n^r       &= \{u_n=0 \text{ and } u_{n-1}>0\} \quad \grey{\text{retreat}} \\
-    \Omega_n^{00}    &= \{u_n=0 \text{ and } u_{n-1}=0\}
+    \Omega_n      &= \{u_n>0\}                        && \grey{\text{\small fluid-covered area}} \\
+    \Omega_n^r    &= \{u_n=0 \text{ and } u_{n-1}>0\} && \grey{\text{\small retreat area}} \\
+    \Omega_n^{00} &= \{u_n=0 \text{ and } u_{n-1}=0\} && \grey{\text{\small remaining uncovered}}
   \end{align*}
-  \vspace{-2mm}
-  \uncover<2->{
-  VI on $\cK=\{v\in W^{1,p}(\Omega) : v\ge 0\}$: for all $v\in\cK$,
-  $$
-    \int_\Omega \frac{u_n-u_{n-1}}{\Delta t}(v-u_n) - Q_n\cdot\nabla(v-u_n)
-    \ge \int_\Omega F_n\,(v-u_n)
-  $$}
+\item note that $u_{n-1}+\Delta t\,f_n\le 0$ on $\Omega_n^r\cup\Omega_n^{00}$
+\end{itemize}
 \end{column}
-\begin{column}{0.38\textwidth}
-  \centering
-  \includegraphics[width=0.85\textwidth]{figs/bueler2021-fig3.png}
+\begin{column}{0.4\textwidth}
 
-  \medskip
-  \raggedright
-  {\small on $\Omega_n^r\cup\Omega_n^{00}$: \, $u_{n-1}+\Delta t\,F_n\le 0$}
-
-  \smallskip
-  {\small \grey{mass is \emph{not} exactly conserved on the retreat set}}
+\vspace{-12mm}
+\hfill \includegraphics[width=0.7\textwidth]{figs/bueler2021-fig3.png}
 \end{column}
 \end{columns}
+
+\smallskip
+\begin{block}{observation (B.~2021)}
+The \alert{mass lost in the retreat area $\Omega_n^r$ came from an unknowable split between flow and climate.}  This is a barrier to exact mass conservation in numerical simulations.
+\end{block}
 \end{frame}
 
 
 \begin{frame}{$\infty$-dimensional VI examples}
 \begin{center}
+
+\renewcommand{\arraystretch}{1.25}
 \begin{tabular}{llll}
-\toprule
-problem                & unknown                         & constraint              & minimization? \\
+
+problem                & unknown                           & constraint              & minimization? \\
 \midrule
-classical obstacle     & $u\in H^1(\Omega)$              & $u\ge\psi$ on $\Omega$  & yes (convex) \\
-Signorini contact      & $u\in H^1(\Omega;\mathbb{R}^d)$ & $u\cdot n\le g$ on $\Gamma_C$ & yes (convex) \\
-hyperelastic contact\quad & \qquad ''                    & \qquad ''               & yes (not convex) \\
-fluid layer thickness  & $u\in W^{1,p}(\Omega)$          & $u\ge 0$ on $\Omega$    & no \\
+classical obstacle     & displacement $u\in H^1(\Omega)$   & $u\ge\psi$ on $\Omega$  & yes (convex) \\
+Signorini contact      & displacement $u\in H^1(\Omega;\mathbb{R}^d)$ & $u\cdot n\le g$ on $\Gamma_C$ & yes (convex) \\
+hyperelastic contact\quad & \qquad ''                      & \qquad ''               & yes (not convex) \\
+fluid layer thickness  & thickness $u\in W^{1,p}(\Omega)$  & $u\ge 0$ on $\Omega$    & no \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\bigskip
+\medskip
 in each:
 \begin{itemize}
-\item the constraint is active on a subset of $\Omega$ or $\Gamma_C \subset \partial\Omega$
-\item one solves simultaneously for the solution $u$ and the active subset
+\item the constraint is active on a subset of $\Omega$, or of $\Gamma_C \subset \partial\Omega$
+\item simultaneously solution process for $u$ and the active subset
 \item the VI is posed without prior reference to active subset or free boundary
 \end{itemize}
 
-\bigskip
+\medskip
 \grey{variational inequalities have many more applications, including pricing of options, traffic flow networks, game theory, electrical circuits, phase transformations, and so on}
 \end{frame}
 
