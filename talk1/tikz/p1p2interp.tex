@@ -1,0 +1,36 @@
+\begin{tikzpicture}
+  % nonnegative nodal values on [0,6]; P1 interpolant (dashed) is nonnegative,
+  % but P2 interpolant on elements [0,2],[2,4],[4,6] dips below zero
+  \begin{axis}[scale only axis, width=\linewidth, height=0.55\linewidth, clip=false,
+               axis lines=none, xmin=-0.3, xmax=6.3, ymin=-0.22, ymax=1.6,
+               xtick=\empty, ytick=\empty, samples=60]
+    % fixed bounding box, so overlays do not shift the picture
+    \path (rel axis cs:0,0) rectangle (rel axis cs:1,1);
+    \draw[icNavy] (axis cs:-0.25,0) -- (axis cs:6.25,0);
+    \draw[icNavy] (axis cs:0,-0.05) -- (axis cs:0,0.05);
+    \draw[icNavy] (axis cs:2,-0.05) -- (axis cs:2,0.05);
+    \draw[icNavy] (axis cs:4,-0.05) -- (axis cs:4,0.05);
+    \draw[icNavy] (axis cs:6,-0.05) -- (axis cs:6,0.05);
+    % P1 interpolant
+    \addplot[icBlue, thick] coordinates
+      {(0,1.4) (1,0) (2,0) (3,0) (4,1.2) (5,1.0) (6,0.5)};
+    % P2 interpolant, one quadratic per element
+    \only<2->{
+    \addplot[draw=none, fill=icAccent!25, domain=1:2] {0.7*(x-1)*(x-2)} \closedcycle;
+    \addplot[draw=none, fill=icAccent!25, domain=2:3] {0.6*(x-2)*(x-3)} \closedcycle;
+    \addplot[icAccent, very thick, domain=0:2] {0.7*(x-1)*(x-2)};
+    \addplot[icAccent, very thick, domain=2:4] {0.6*(x-2)*(x-3)};
+    \addplot[icAccent, very thick, domain=4:6]
+      {0.6*(x-5)*(x-6) - 1.0*(x-4)*(x-6) + 0.25*(x-4)*(x-5)};
+    }
+    % legend, northeast; \uncover keeps layout fixed across overlays
+    \node[anchor=north east, inner sep=0pt, font=\small] at (rel axis cs:1,1) {%
+      \begin{tabular}{@{}c@{\,}l@{}}
+        \tikz\draw[icBlue, thick] (0,0) -- (0.4,0); & $P_1$ \\
+        \uncover<2->{\tikz\draw[icAccent, very thick] (0,0) -- (0.4,0);} & \uncover<2->{$P_2$}
+      \end{tabular}};
+    % nodal values
+    \addplot[only marks, mark=*, mark size=1.4pt, icNavy] coordinates
+      {(0,1.4) (1,0) (2,0) (3,0) (4,1.2) (5,1.0) (6,0.5)};
+  \end{axis}
+\end{tikzpicture}
