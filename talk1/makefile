@@ -3,7 +3,7 @@ export TEXINPUTS := ../theme//:
 export OPENTYPEFONTS := ../theme/fonts//:
 
 TALK := talk1
-LATEX := lualatex -interaction=nonstopmode -halt-on-error
+LATEX := lualatex -shell-escape -interaction=nonstopmode -halt-on-error
 
 $(TALK).pdf: $(TALK).tex ../theme/icl26.sty $(wildcard figs/*) $(wildcard tikz/*.tex) references.tex
 	$(LATEX) $(TALK) > /dev/null || (grep -A5 '^!' $(TALK).log; false)
@@ -12,4 +12,4 @@ $(TALK).pdf: $(TALK).tex ../theme/icl26.sty $(wildcard figs/*) $(wildcard tikz/*
 .PHONY: clean
 clean:
 	rm -f *.aux *.log *.nav *.out *.snm *.toc *.vrb
-
+	rm -rf _minted*

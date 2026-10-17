@@ -9,6 +9,9 @@
 
 \usepackage{icl26}
 \usepackage{verbatim,fancyvrb}
+\usepackage{algorithm,algorithmic}
+\usepackage{ifthen}
+\usepackage{minted}
 
 \newtheorem{proposition}[theorem]{Proposition}
 
@@ -834,6 +837,45 @@ in each:
 
 
 \section[FE solutions]{finite element solutions \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{differences from PDE case}}}
+
+\begin{frame}{finite element for VIs: the basics}
+
+\begin{itemize}
+\item \strikeThrough{taking coals to Newcastle}
+\item presenting finite element (FE) basics at Imperial may be unnecessary
+\item nonetheless the next slides are both:
+    \begin{itemize}
+    \item[$\lc$] relatively elementary, and
+    \item[$\lc$] focussed on the contrast between PDEs and VIs
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{finite element for VIs: admissibility}
+
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\item bar
+\end{itemize}
+\end{column}
+\begin{column}{0.4\textwidth}
+\input{tikz/p1p2interp.tex}
+
+\includegraphics[width=\textwidth]{figs/ciarlet-513.png}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}[fragile] % The [fragile] option is required for the minted environment
+  \frametitle{demo of minted}
+    \inputminted[frame=lines, fontsize=\scriptsize]{python}{code/aol.py}
+    %\vfill
+\end{frame}
+
 
 \begin{frame}{foo}
 
