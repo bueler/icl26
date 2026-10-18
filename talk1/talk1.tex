@@ -30,9 +30,14 @@
 
 \newcommand{\ip}[2]{\left\langle #1, #2 \right\rangle}
 
-\newcommand{\gcomm}[1]{\ensuremath{\text{\footnotesize \grey{$\leftarrow$ #1}}}}
-
 \newcommand{\lc}{{\text{\large $\circ$}}}
+
+% grey comments on the right
+\newcommand{\acomm}[1]{\ensuremath{\text{\small \grey{$\leftarrow$ #1}}}}
+\newcommand{\afcomm}[1]{\ensuremath{\text{\footnotesize \grey{$\leftarrow$ #1}}}}
+\newcommand{\pcomm}[1]{\ensuremath{\text{\small \grey{(#1)}}}}
+
+\newcommand{\blue}[1]{{\color{icBlue}#1}}
 
 
 \title{Variational inequalities and their finite element solutions}
@@ -121,7 +126,7 @@
 \begin{frame}{projection onto a closed, convex set}
 
 \begin{itemize}
-\item suppose $H$ is a real Hilbert space \grey{(e.g.~$\mathbb{R}^n$)}
+\item suppose $H$ is a real Hilbert space \pcomm{e.g.~$\mathbb{R}^n$}
 \item let $K\subset H$ be nonempty, closed, and convex
 \item a parallelogram law \& completeness argument shows that a unique minimizer exists for the following problem, so it makes a good definition
 
@@ -416,9 +421,9 @@ This is the \alert{variational inequality} problem for the data $K$ and $F$, den
 \item bounded domain $\Omega \subset \RR^d$ with Lipschitz boundary
 \item consider an elastic membrane, with vertical displacement $u$ over $\Omega$
     \begin{itemize}
-    \item[$\lc$] suppose small displacements $u$ \,\grey{(we will use the Laplacian $\grad^2$)}
+    \item[$\lc$] suppose small displacements $u$ \pcomm{we will use the Laplacian $\grad^2$}
     \end{itemize}
-\item $u=g$ on $\partial\Omega$ \,\grey{(fixed boundary condition)}
+\item $u=g$ on $\partial\Omega$ \pcomm{fixed boundary condition}
 \item subject to a vertical force $f$
 
 \hfill \input{tikz/justomega.tex}
@@ -427,12 +432,12 @@ This is the \alert{variational inequality} problem for the data $K$ and $F$, den
 \item constrained to be on or above an \alert{obstacle} $\psi$
 
 \medskip
-\item then:
+\item<2> then:
 \begin{align*}
--\grad^2 u &= f \text{\, where $u>\psi$} && \gcomm{black mesh} && \hspace{50mm} \\\
-         u &= \psi \text{\, otherwise} && \gcomm{white mesh}
+-\grad^2 u &= f \text{\, where $u>\psi$} && \afcomm{black mesh} && \hspace{50mm} \\\
+         u &= \psi \text{\, otherwise} && \afcomm{white mesh}
 \end{align*}
-\item but \emph{where} will $u=\psi$ hold?
+\item<2> but \emph{where} will $u=\psi$ hold?
 \end{itemize}
 
 \vspace{-16mm}
@@ -511,7 +516,7 @@ result:
 
     \begin{itemize}
     \item[$\lc$] Poisson equation $-\grad^2 u=f$ holds in $E_u$
-    \item[$\lc$] both Dirichlet \& Neumann conditions will hold along $\Gamma_u$ \, \grey{(which compensates for unknown location of $\Gamma_u$?)}
+    \item[$\lc$] both Dirichlet \& Neumann conditions will hold along $\Gamma_u$ \pcomm{which compensates for unknown location of $\Gamma_u$?}
     \end{itemize}
 \end{itemize}
 
@@ -530,7 +535,7 @@ result:
     \begin{itemize}
     \item[$\lc$] in applications, this step is not as obvious as for the equality-constrained case?
     \end{itemize}
-\item let \alert{$K = \{v\in H^1(\Omega) : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$}, a closed, convex subset \,\grey{(not a subspace)}
+\item let \alert{$K = \{v\in H^1(\Omega) : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$}, a closed, convex subset \pcomm{not a subspace}
 \end{itemize}
 
 \begin{block}{weak forms}
@@ -589,7 +594,7 @@ Suppose $a(\cdot,\cdot)$ is bilinear, bounded, and coercive on a Hilbert space $
 \begin{column}{0.65\textwidth}
 \begin{itemize}
 \item see textbook Ciarlet (2022) for elasticity generally
-\item consider a linear elastic solid on $\Omega\subset\RR^d$ \, \grey{($d=2,3$)}
+\item consider a linear elastic solid on $\Omega\subset\RR^d$ \pcomm{$d=2,3$}
 \item $u:\Omega\to\RR^d$ is \emph{displacement} from ref.~config.
 \item $E(u) = \tfrac12\left(\nabla u+\nabla u^\top\right)$ is \emph{strain tensor}
 \item $\sigma(u) = \lambda\, (\operatorname{tr}E(u))\, I + 2\mu\, E(u)$ is \emph{stress tensor}
@@ -611,10 +616,10 @@ Suppose $a(\cdot,\cdot)$ is bilinear, bounded, and coercive on a Hilbert space $
 
 \onslide<2->
 \begin{itemize}
-\item a \emph{gap function} $g$ is given on $\Gamma_C$ \, \grey{\small ($g=$ normal distance from ref.~config.~to obstacle)}
+\item a \emph{gap function} $g$ is given on $\Gamma_C$ \pcomm{$g=$ normal distance from ref.~config.~to obstacle}
 \item equations of equilibrium:
 \begin{align*}
-  -\nabla\cdot\sigma(u) &= f \quad \text{in } \Omega && \text{stress balance \, \grey{\small ($f$ is body force)}} \\
+  -\nabla\cdot\sigma(u) &= f \quad \text{in } \Omega && \text{stress balance \pcomm{$f$ is body force}} \\
   u\cdot n &\le g \quad \text{on } \Gamma_C && \text{\alert{non-penetration constraint}}
 \end{align*}
 \end{itemize}
@@ -766,7 +771,7 @@ a source term; it adds or removes mass
 \item VI problem is to find $u_n\in K$ at $t_n$ so that, for all $v\in K$,
     $$\alert{\int_\Omega \frac{u_n-u_{n-1}}{\Delta t}(v-u_n) - \bq_n\cdot\nabla(v-u_n) \ge \int_\Omega f_n\,(v-u_n)} \hspace{20mm}$$
 \item $\bq_n = \bq(x,u_n,\grad u_n)$ denotes the unknown flux
-\item well-posed for many flux formulas \,\grey{\small (B.~2021)}
+\item well-posed for many flux formulas \pcomm{B.~2021}
 \item generally not an optimization problem
 \item note that $\Delta t\to \infty$ limit is steady state
 \end{itemize}
@@ -807,18 +812,18 @@ The \alert{mass lost in the retreat area $\Omega_n^r$ came from an unknowable sp
 \end{frame}
 
 
-\begin{frame}{$\infty$-dimensional VI examples}
+\begin{frame}{summary: $\infty$-dimensional VI examples}
 \begin{center}
 
 \renewcommand{\arraystretch}{1.25}
 \begin{tabular}{llll}
 
-problem                & unknown                           & constraint              & minimization? \\
+problem                 & unknown                           & constraint              & minimization? \\
 \midrule
-classical obstacle     & displacement $u\in H^1(\Omega)$   & $u\ge\psi$ on $\Omega$  & yes (convex) \\
-Signorini contact      & displacement $u\in H^1(\Omega;\mathbb{R}^d)$ & $u\cdot n\le g$ on $\Gamma_C$ & yes (convex) \\
-hyperelastic contact\quad & \qquad ''                      & \qquad ''               & yes (not convex) \\
-fluid layer thickness  & thickness $u\in W^{1,p}(\Omega)$  & $u\ge 0$ on $\Omega$    & no \\
+classical obstacle      & displacement $u\in H^1(\Omega)$   & $u\ge\psi$ on $\Omega$  & yes (convex) \\
+Signorini contact       & displacement $u\in H^1(\Omega;\mathbb{R}^d)$ & $u\cdot n\le g$ on $\Gamma_C$ & yes (convex) \\
+hyperelastic contact    & \qquad ''                      & \qquad ''               & yes (not convex) \\
+fluid layer in climate  & thickness $u\in W^{1,p}(\Omega)$  & $u\ge 0$ on $\Omega$    & no \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -826,66 +831,111 @@ fluid layer thickness  & thickness $u\in W^{1,p}(\Omega)$  & $u\ge 0$ on $\Omega
 \medskip
 in each:
 \begin{itemize}
-\item the constraint is active on a subset of $\Omega$, or of $\Gamma_C \subset \partial\Omega$
-\item simultaneously solution process for $u$ and the active subset
-\item the VI is posed without prior reference to active subset or free boundary
+\item the constraint is active on a subset of $\Omega$, or of $\Gamma_C \subset \partial\Omega$, but
+\item \alert{a VI problem does not refer to the active subset or free boundary}
 \end{itemize}
 
-\medskip
-\grey{variational inequalities have many more applications, including pricing of options, traffic flow networks, game theory, electrical circuits, phase transformations, and so on}
+\medskip 
+\grey{there are many more applications of VIs: pricing of options, traffic flow networks, game theory, electrical circuits, phase transformations, \dots}
 \end{frame}
 
 
-\section[FE solutions]{finite element solutions \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{differences from PDE case}}}
+\section[FE solutions]{finite element solutions \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{basics, and differences from PDE case}}}
 
-\begin{frame}{finite element for VIs: the basics}
+\begin{frame}{finite elements (FE) for VIs: the basics}
 
 \begin{itemize}
-\item \strikeThrough{taking coals to Newcastle}
-\item presenting finite element (FE) basics at Imperial may be unnecessary
-\item nonetheless the next slides are both:
+\item presenting FE basics at Imperial may be unnecessary \, \pcomm{coals to Newcastle}
+\item the final slides in this talk:
     \begin{itemize}
-    \item[$\lc$] relatively elementary, and
-    \item[$\lc$] focussed on the contrast between PDEs and VIs
+    \item[$\lc$] are relatively elementary, and
+    \item[$\lc$] focus on the contrast between PDEs and VIs
     \end{itemize}
+\item let us return to the classical obstacle problem,
+\begin{align*}
+&K = \{v\in H^1(\Omega) : v\ge\psi \text{ and } v|_{\partial\Omega}=g\} \\
+&\int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u) \quad \forall v\in K \hspace{30mm}
+\end{align*}
+\item and summarize regularity:
+\end{itemize}
+
+\vspace{-20mm}
+\hfill \includegraphics[width=0.30\textwidth]{figs/viamr-obstacle.png}
+
+\medskip
+\begin{proposition}[Kinderlehrer \& Stampacchia, 1980]
+For reasonable $\Omega$, if $\psi \in H^2$, $f\in L^2$, and $g\in H^{1/2}$ then \alert{$u\in H_g^1(\Omega)\cap H^2(\Omega)$}.  However, in general, \alert{$u\notin C^2$ and $u\notin H^3$}; this holds even if data are arbitrarily smooth.
+\end{proposition}
+\end{frame}
+
+
+\begin{frame}{FE for VIs: the basics}
+
+\begin{itemize}
+\item the FE problem is a \alert{finite-dimensional VI}, for \alert{$u_h \in K_h$}:
+\alert{
+\begin{align*}
+&K_h = \{v_h\in P_1 : v_h\ge\psi_h \text{ and } v_h|_{\partial\Omega}=g\} \\
+&\int_\Omega \nabla u_h\cdot\nabla(v_h-u_h) \ge \int_\Omega f\,(v_h-u_h) \quad \forall v_h\in K_h \hspace{30mm}
+\end{align*}
+}
+    \begin{itemize}
+    \item[$\lc$] for simplicity assume $g\in P_1$ and $\int f v_h$ is exact \pcomm{usual FE conformity dismissal}
+    \item[$\lc$] assume for now that \alert{$\psi_h=I_h \psi$};\, the discrete obstacle is the $P_1$ interpolant of $\psi$
+    \end{itemize}
+\item note that I am sticking to $P_1$ elements (continuous piecewise-linear)
+\pause
+\item but I have company
+
+\medskip
+{\small
+\begin{block}{the low-order VI gauntlet \, (Ciarlet 2002, p 289)}
+[Because of the low regularity], \emph{finite elements ``of low degree'' are sufficient for all practical purposes, a fact amply confirmed by numerical evidence.}
+\end{block}
+}
+
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{finite element for VIs: admissibility}
+\begin{frame}[fragile] % The [fragile] option is required for the minted environment
+\frametitle{FE for VIs: Firedrake for classical obstacle problem}
+
+\vspace{-3mm}
+\begin{itemize}
+\item having made an element choice, the Firedrake {\small (\blue{\href{https://www.firedrakeproject.org}{firedrakeproject.org}})} is easy
+\end{itemize}
+
+\vspace{15mm}
+\hfill \includegraphics[width=0.4\textwidth]{figs/cop.png}
+
+\vspace{-30mm}
+\inputminted[fontsize=\scriptsize]{python}{code/cop.py}
+\end{frame}
+
+
+\begin{frame}{FE for VIs: new admissibility concerns}
 
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{itemize}
 \item bar
+\item<2-> foo
 \end{itemize}
 \end{column}
 \begin{column}{0.4\textwidth}
-\input{tikz/p1p2interp.tex}
-
 \includegraphics[width=\textwidth]{figs/ciarlet-513.png}
+
+\onslide<2->{
+\input{tikz/p1p2interp.tex}
+}
 \end{column}
 \end{columns}
 
 \end{frame}
 
 
-\begin{frame}[fragile] % The [fragile] option is required for the minted environment
-  \frametitle{demo of minted}
-    \inputminted[frame=lines, fontsize=\scriptsize]{python}{code/aol.py}
-    %\vfill
-\end{frame}
-
-
-\begin{frame}{foo}
-
-\begin{itemize}
-\item bar
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{Falk's a priori estimate}
+\begin{frame}{FE for VIs: Falk's lemma}
   for $P_1$ elements on a quasi-uniform mesh, with $\cK_h\not\subset\cK$ in general,
   $$
     \|u-u_h\|_{H^1} \le C\Big(
@@ -898,12 +948,17 @@ in each:
 
 \begin{frame}{summary}
 
-  foo
-\end{frame}
+FIXME
 
+\pause
+\centering
+{\Large
+\bigskip
+\alert{thank you for listening!}
 
-\begin{frame}[standout]
-Questions?
+\bigskip
+\alert{questions?}
+}
 \end{frame}
 
 

@@ -15,7 +15,7 @@
     \addplot[icBlue, thick] coordinates
       {(0,1.4) (1,0) (2,0) (3,0) (4,1.2) (5,1.0) (6,0.5)};
     % P2 interpolant, one quadratic per element
-    \only<2->{
+    \only<3->{
     \addplot[draw=none, fill=icAccent!25, domain=1:2] {0.7*(x-1)*(x-2)} \closedcycle;
     \addplot[draw=none, fill=icAccent!25, domain=2:3] {0.6*(x-2)*(x-3)} \closedcycle;
     \addplot[icAccent, very thick, domain=0:2] {0.7*(x-1)*(x-2)};
@@ -27,7 +27,7 @@
     \node[anchor=north east, inner sep=0pt, font=\small] at (rel axis cs:1,1) {%
       \begin{tabular}{@{}c@{\,}l@{}}
         \tikz\draw[icBlue, thick] (0,0) -- (0.4,0); & $P_1$ \\
-        \uncover<2->{\tikz\draw[icAccent, very thick] (0,0) -- (0.4,0);} & \uncover<2->{$P_2$}
+        \uncover<3->{\tikz\draw[icAccent, very thick] (0,0) -- (0.4,0);} & \uncover<3->{$P_2$}
       \end{tabular}};
     % nodal values
     \addplot[only marks, mark=*, mark size=1.4pt, icNavy] coordinates
