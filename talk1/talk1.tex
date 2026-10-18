@@ -842,29 +842,28 @@ in each:
 
 \section[FE solutions]{finite element solutions \hfill {\small \texorpdfstring{$\leftarrow$}{←} \emph{basics, and differences from PDE case}}}
 
-\begin{frame}{finite elements (FE) for VIs: the basics}
+\begin{frame}{finite elements (FE) for VIs: only some basics}
 
 \begin{itemize}
-\item presenting FE basics at Imperial may be unnecessary \, \pcomm{coals to Newcastle}
 \item the final slides in this talk:
     \begin{itemize}
-    \item[$\lc$] are relatively elementary, and
+    \item[$\lc$] are very elementary regarding FE, and
     \item[$\lc$] focus on the contrast between PDEs and VIs
     \end{itemize}
-\item let us return to the classical obstacle problem,
+\item recall the continuum classical obstacle problem:
 \begin{align*}
 &K = \{v\in H^1(\Omega) : v\ge\psi \text{ and } v|_{\partial\Omega}=g\} \\
-&\int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u) \quad \forall v\in K \hspace{30mm}
+&\int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u) \quad \forall v\in K \hspace{55mm}
 \end{align*}
-\item and summarize regularity:
+\item regularity for this problem:
 \end{itemize}
 
-\vspace{-20mm}
-\hfill \includegraphics[width=0.30\textwidth]{figs/viamr-obstacle.png}
+\vspace{-23mm}
+\hfill \includegraphics[width=0.40\textwidth]{figs/viamr-obstacle.png}
 
 \medskip
 \begin{proposition}[Kinderlehrer \& Stampacchia, 1980]
-For reasonable $\Omega$, if $\psi \in H^2$, $f\in L^2$, and $g\in H^{1/2}$ then \alert{$u\in H_g^1(\Omega)\cap H^2(\Omega)$}.  However, in general, \alert{$u\notin C^2$ and $u\notin H^3$}; this holds even if data are arbitrarily smooth.
+For reasonable $\Omega$, if $\psi \in H^2$ and $f\in L^2$ then \alert{$u\in H_g^1(\Omega)\cap H^2(\Omega)$}.  However, \alert{even if data are arbitrarily smooth, generally $u\notin C^2$ and $u\notin H^3$}.
 \end{proposition}
 \end{frame}
 
@@ -872,24 +871,27 @@ For reasonable $\Omega$, if $\psi \in H^2$, $f\in L^2$, and $g\in H^{1/2}$ then 
 \begin{frame}{FE for VIs: the basics}
 
 \begin{itemize}
-\item the FE problem is a \alert{finite-dimensional VI}, for \alert{$u_h \in K_h$}:
+\item the FE problem is a \alert{finite-dimensional VI} over $X_h \subset X=H^1(\Omega)$, for \alert{$u_h \in K_h$}:
 \alert{
 \begin{align*}
-&K_h = \{v_h\in P_1 : v_h\ge\psi_h \text{ and } v_h|_{\partial\Omega}=g\} \\
+&K_h = \{v_h\in X_h : v_h\ge\psi_h\} \\
 &\int_\Omega \nabla u_h\cdot\nabla(v_h-u_h) \ge \int_\Omega f\,(v_h-u_h) \quad \forall v_h\in K_h \hspace{30mm}
 \end{align*}
 }
+
+\vspace{-2mm}
     \begin{itemize}
-    \item[$\lc$] for simplicity assume $g\in P_1$ and $\int f v_h$ is exact \pcomm{usual FE conformity dismissal}
-    \item[$\lc$] assume for now that \alert{$\psi_h=I_h \psi$};\, the discrete obstacle is the $P_1$ interpolant of $\psi$
+    \item[$\lc$] setting fixed boundary condition $g=0$ for simplicity
+    \item[$\lc$] assume $\int f v_h$ is exact \hfill \pcomm{usual FE conformity dismissal}
+    \item[$\lc$] assume for now that \alert{$\psi_h=I_h \psi$};\, the discrete obstacle is the interpolant of $\psi$
     \end{itemize}
-\item note that I am sticking to $P_1$ elements (continuous piecewise-linear)
+\item pragmatically I am sticking to \alert{$X_h=P_1$} (continuous piecewise-linear)
 \pause
-\item but I have company
+\item regarding this choice, I have company
 
 \medskip
 {\small
-\begin{block}{the low-order VI gauntlet \, (Ciarlet 2002, p 289)}
+\begin{block}{the low-order gauntlet for VIs \, (Ciarlet 2002, p 289)}
 [Because of the low regularity], \emph{finite elements ``of low degree'' are sufficient for all practical purposes, a fact amply confirmed by numerical evidence.}
 \end{block}
 }
@@ -903,29 +905,46 @@ For reasonable $\Omega$, if $\psi \in H^2$, $f\in L^2$, and $g\in H^{1/2}$ then 
 
 \vspace{-3mm}
 \begin{itemize}
-\item having made an element choice, the Firedrake {\small (\blue{\href{https://www.firedrakeproject.org}{firedrakeproject.org}})} is easy
+\item having chosen $P_1$, the Firedrake {\small (\blue{\href{https://www.firedrakeproject.org}{firedrakeproject.org}})} code is easy!
 \end{itemize}
 
 \vspace{15mm}
-\hfill \includegraphics[width=0.4\textwidth]{figs/cop.png}
+\hfill \includegraphics[width=0.45\textwidth]{figs/cop.png}
 
-\vspace{-30mm}
+\vspace{-32mm}
 \inputminted[fontsize=\scriptsize]{python}{code/cop.py}
 \end{frame}
 
 
-\begin{frame}{FE for VIs: new admissibility concerns}
+\begin{frame}{FE for VIs: 2 new admissibility concerns}
 
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-\item bar
-\item<2-> foo
+\item the FE set-up:
+\begin{align*}
+K &= \{v : v\ge\psi\} \subset X=H^1(\Omega) \\
+K_h &= \{v_h : v_h\ge\psi_h\} \subset X_h 
+\end{align*}
+\item but \alert{$\psi_h=I_h\psi$ can be on either side of $\psi$}
+\item[1.] conformity is generally fragile, for any $X_h=P_k$:
+\begin{center}
+\alert{$K_h \not{\subset} K$ even when $X_h\subset X$}
+\end{center}
+
+    \begin{itemize}
+    \item[$\lc$] Ciarlet's FE book includes a picture \,\grey{$\nearrow$}
+    \end{itemize}
+\item<2-> $P_1$ enjoys \alert{nodal monotonicity}:
+	$$\alert{v_{h,j} \le w_{h,j} \implies v_h(x) \le w_h(x)}$$
+\item<3->[2.] but this fails for $P_2$ and higher \,\grey{$\to$}
+\item<3-> e.g.~$\psi=0$: non-admissible $v_h \in P_2$ with $v_{h,j}\ge 0$
 \end{itemize}
 \end{column}
 \begin{column}{0.4\textwidth}
 \includegraphics[width=\textwidth]{figs/ciarlet-513.png}
 
+\bigskip
 \onslide<2->{
 \input{tikz/p1p2interp.tex}
 }
@@ -936,13 +955,18 @@ For reasonable $\Omega$, if $\psi \in H^2$, $f\in L^2$, and $g\in H^{1/2}$ then 
 
 
 \begin{frame}{FE for VIs: Falk's lemma}
-  for $P_1$ elements on a quasi-uniform mesh, with $\cK_h\not\subset\cK$ in general,
-  $$
-    \|u-u_h\|_{H^1} \le C\Big(
-      \inf_{v_h\in\cK_h}\|u-v_h\| + \inf_{v\in\cK}\|u_h - v\| \Big)^{1/2}
-      \lesssim C\,h
-  $$
+FIXME
+
+  for $X=H^1(\Omega)$ and $P_1$ elements on a quasi-uniform mesh, with $K_h\not\subset K$ in general, and $a(u,v)=\ip{Au}{v}$ with $A:X\to X'$ and $\ell\in X'$
+
   \grey{Falk, Math.\ Comp.\ 1974}
+
+\begin{align*}
+\|u-u_h\|_X^2 &\le C(\alpha) \inf_{v_h\in K_h} \|u - v_h\|^2 \\
+   &\quad + \frac{2}{\alpha} \left(\inf_{v\in K} \ip{Au-\ell}{v-u_h} + \inf_{v_h\in K_h} \ip{Au-\ell}{v_h-u}\right)
+\end{align*}
+
+cor: shows $\|u-u_h\|_X$ is $O(h^1)$
 \end{frame}
 
 
