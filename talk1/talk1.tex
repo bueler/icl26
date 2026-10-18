@@ -903,7 +903,7 @@ For reasonable $\Omega$, if $\psi \in H^2$ and $f\in L^2$ then \alert{$u\in H_g^
 \begin{frame}[fragile] % The [fragile] option is required for the minted environment
 \frametitle{FE for VIs: Firedrake for classical obstacle problem}
 
-\vspace{-3mm}
+\vspace{-6mm}
 \begin{itemize}
 \item having chosen $P_1$, the Firedrake {\small (\blue{\href{https://www.firedrakeproject.org}{firedrakeproject.org}})} code is easy!
 \end{itemize}
@@ -950,23 +950,85 @@ K_h &= \{v_h : v_h\ge\psi_h\} \subset X_h
 }
 \end{column}
 \end{columns}
-
 \end{frame}
 
 
 \begin{frame}{FE for VIs: Falk's lemma}
-FIXME
 
-  for $X=H^1(\Omega)$ and $P_1$ elements on a quasi-uniform mesh, with $K_h\not\subset K$ in general, and $a(u,v)=\ip{Au}{v}$ with $A:X\to X'$ and $\ell\in X'$
+\begin{itemize}
+\item for elliptic PDEs, the basic FE accuracy story starts with Cea's lemma
+    \begin{itemize}
+    \item[$\lc$] the \alert{error} is $u-u_h$
+    \end{itemize}
+\item what error norm can we expect for a VI like the classical obstacle problem?
 
-  \grey{Falk, Math.\ Comp.\ 1974}
+\pause
+\medskip
+\item answer: Falk's 1974 generalization of C\'ea's lemma \pcomm{next slide}
+\item we state the lemma using an abstracted set-up:
 
+\smallskip
+    \begin{itemize}
+    \item[$\lc$] assume $K_h\subset X_h \subset X$ \, \pcomm{but generally $K_h \not\subset K$}
+
+\smallskip
+    \item[$\lc$] suppose continuity for the bilinear form: $a(v,w)\le M\|v\|\|w\|$ for all $v,w\in X$
+
+\smallskip
+    \item[$\lc$] and coercivity: $a(v,v)\ge \alpha \|v\|^2$ for all $v\in X$
+
+\smallskip
+    \item[$\lc$] define a linear operator $A:X\to X'$, so that $a(v,w)=\ip{Av}{w}$ for all $v,w\in X$
+
+\smallskip
+    \item the \alert{residual} of $w\in X$ is \alert{$F(w)=Aw-\ell \in X'$}, for a source term $\ell \in X'$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{FE for VIs: Falk's lemma}
+
+\begin{itemize}
+\item continuum problem for $u\in K$: \, $a(u,v-u) \ge \ip{\ell}{v-u} \,\forall v\in K$
+    \begin{itemize}
+    \item[$\lc$] for the exact solution $u\in K$, generally \alert{$F(u) = Au-\ell \ne 0$}
+        \end{itemize}
+
+\vspace{-12mm}
+\hfill \input{tikz/solnsupport.tex}
+
+\vspace{-8mm}
+\item FE problem for $u_h\in K_h$: \, $a(u_h,v_h-u_h) \ge \ip{\ell}{v_h-u_h} \,\forall v_h\in K_h$
+\end{itemize}
+
+\begin{lemma}[Falk, 1974]
+
+\vspace{-5mm}
 \begin{align*}
-\|u-u_h\|_X^2 &\le C(\alpha) \inf_{v_h\in K_h} \|u - v_h\|^2 \\
-   &\quad + \frac{2}{\alpha} \left(\inf_{v\in K} \ip{Au-\ell}{v-u_h} + \inf_{v_h\in K_h} \ip{Au-\ell}{v_h-u}\right)
+\|u-u_h\|_X^2 &\le \frac{M^2}{\alpha^2} \inf_{v_h\in K_h} \|u - v_h\|^2 \\
+   &\qquad \alert{+ \frac{2}{\alpha} \left(\inf_{v\in K} \ip{F(u)}{v-u_h} + \inf_{v_h\in K_h} \ip{F(u)}{v_h-u}\right)}
 \end{align*}
+\end{lemma}
 
-cor: shows $\|u-u_h\|_X$ is $O(h^1)$
+\begin{overlayarea}{\textwidth}{12mm}
+\vspace{-2mm}
+\only<2>{
+\begin{corollary}[C\'ea, 1964]
+$K=X$: \qquad $\|u-u_h\|_X \le \frac{M}{\alpha} \inf_{v_h\in X_h} \|u - v_h\|$.
+\end{corollary}
+}
+\only<3>{
+\begin{corollary}[more conforming case]
+$K_h \subset K$: \qquad ``$\inf_{v\in K}$'' term can be replaced with zero
+\end{corollary}
+}
+\only<4>{
+\begin{corollary}[first-order convergence; Falk, 1974]
+assuming quasi-uniform (regular) meshes: \qquad $\|u-u_h\|_X \le C h$
+\end{corollary}
+}
+\end{overlayarea}
 \end{frame}
 
 
