@@ -1,0 +1,680 @@
+\documentclass[aspectratio=169,10pt]{beamer}
+
+% fallback search path for ../theme/ when TEXINPUTS is not set (e.g. texmaker
+% quick build); the makefile's TEXINPUTS takes precedence, so no conflict
+\makeatletter
+\providecommand*{\input@path}{}
+\edef\input@path{\input@path{../theme/}{../theme/moloch/}}
+\makeatother
+
+\usepackage{icl26}
+\usepackage{verbatim,fancyvrb}
+\usepackage{algorithm,algorithmic}
+\usepackage{ifthen}
+\usepackage{minted}
+
+\newtheorem{proposition}[theorem]{Proposition}
+
+\newcommand{\cA}{{\mathcal{A}}}
+\newcommand{\cI}{{\mathcal{I}}}
+\newcommand{\cK}{{\mathcal{K}}}  % with extra outer braces: safe in P_\cK under unicode-math
+\newcommand{\cT}{{\mathcal{T}}}
+\newcommand{\cU}{{\mathcal{U}}}
+\newcommand{\cD}{{\mathcal{D}}}
+\newcommand{\cV}{{\mathcal{V}}}
+
+\newcommand{\RR}{{\mathbb{R}}}
+
+\newcommand{\eps}{\epsilon}
+
+\newcommand{\grad}{\nabla}
+\newcommand{\Div}{\nabla\cdot}
+
+\newcommand{\ip}[2]{\left\langle #1, #2 \right\rangle}
+
+\newcommand{\lc}{{\text{\large $\circ$}}}
+
+% grey comments on the right
+\newcommand{\acomm}[1]{\ensuremath{\text{\small \grey{$\leftarrow$ #1}}}}
+\newcommand{\afcomm}[1]{\ensuremath{\text{\footnotesize \grey{$\leftarrow$ #1}}}}
+\newcommand{\pcomm}[1]{\ensuremath{\text{\small \grey{(#1)}}}}
+
+\newcommand{\blue}[1]{{\color{icBlue}#1}}
+
+% author photos, from figs/people/, stacked at the far right of a frame:
+%   \begin{withpeople}{\photo{a.jpg}{A.~Name} \photo{b.jpg}{B.~Name}} ... frame body ... \end{withpeople}
+% (optional arg of \photo is the height, for longer stacks)
+% use generic.png when none was found
+\newcommand{\photo}[3][12mm]{\hbox to \linewidth{\hss\includegraphics[height=#1]{figs/people/#2}}\nointerlineskip\vskip0.2mm\hbox to \linewidth{\hss\tiny #3}\vskip0.6mm}
+\newenvironment{withpeople}[1]
+  {\def\peoplestack{#1}\begin{columns}[T,onlytextwidth]\begin{column}{0.88\textwidth}}
+  {\end{column}\begin{column}{0.11\textwidth}\raggedleft\vspace*{-2mm}\peoplestack\end{column}\end{columns}}
+
+% demo/figure not yet made
+\newcommand{\placeholder}[3]{\fbox{\parbox[c][#2][c]{#1}{\centering \small \grey{PLACEHOLDER: #3}}}}
+
+
+\title{A sampling of new solvers for variational inequalities}
+%\subtitle{Newton, \emph{a posteriori}, multilevel, and beyond}
+
+\author{Ed Bueler}
+
+\institute{University of Alaska Fairbanks}
+
+\date{Imperial College London \, 2026}
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{outline}
+  \tableofcontents
+\end{frame}
+
+
+\section[active-set Newton]{active-set Newton methods}
+
+\begin{frame}{recall: the FE obstacle problem is a finite-dimensional VI}
+
+\begin{itemize}
+\item last week: for $u_h\in K_h = \{v_h \in X_h : v_h \ge \psi_h\}$, with $X_h=P_1$,
+    $$\int_\Omega \grad u_h\cdot\grad(v_h-u_h) \ge \int_\Omega f\,(v_h-u_h) \quad \forall v_h\in K_h$$
+\item in nodal coefficients $u\in\RR^N$, with stiffness matrix $A$ and load vector $b$, the residual is
+    $$F(u) = Au - b \in \RR^N$$
+\item because $P_1$ admissibility is nodal, the VI is a \alert{complementarity problem} in $\RR^N$:
+\begin{align*}
+u_i - \psi_i &\ge 0 \\
+F_i(u) &\ge 0 \\
+(u_i-\psi_i)\, F_i(u) &= 0
+\end{align*}
+\item the \alert{multiplier} $\lambda = F(u) = Au-b$ is nonzero only on the \alert{active set} $\cA = \{i : u_i=\psi_i\}$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{the active set idea}
+
+\begin{itemize}
+\item \emph{if} we knew the active set $\cA$, with inactive set $\cI = \{1,\dots,N\}\setminus\cA$, then one \alert{linear} solve:
+    $$u_\cA = \psi_\cA, \qquad (Au - b)_\cI = 0$$
+\item so: guess $\cA$, solve, update the guess, repeat
+\item the \alert{primal-dual active set} (PDAS) iteration uses both $u$ and $\lambda$ to update the guess, with any $c>0$:
+\end{itemize}
+
+{\small
+\begin{algorithmic}[1]
+\FOR{$k=0,1,2,\dots$}
+  \STATE $\cA^k = \{i : \lambda_i^k - c(u_i^k-\psi_i) > 0\}$, \quad $\cI^k = $ complement
+  \STATE solve for $u^{k+1}$: \, $u^{k+1}_{\cA^k} = \psi_{\cA^k}$ \, and \, $(Au^{k+1}-b)_{\cI^k} = 0$
+  \STATE $\lambda^{k+1} = Au^{k+1}-b$ \, \pcomm{so $\lambda^{k+1}_{\cI^k}=0$}
+  \STATE stop if $\cA^{k+1} = \cA^k$
+\ENDFOR
+\end{algorithmic}
+}
+\end{frame}
+
+
+\begin{frame}{PDAS is a Newton method}
+\begin{withpeople}{\photo{hintermueller.jpg}{M.~Hinterm\"uller} \photo{generic.png}{K.~Ito} \photo{kunisch.jpg}{K.~Kunisch}}
+
+\begin{itemize}
+\item complementarity, for any $c>0$, is a nonsmooth \alert{equation}:
+    $$u\ge \psi, \,\, \lambda \ge 0, \,\, \lambda_i(u_i-\psi_i)=0 \quad \iff \quad \lambda - \max\{0,\lambda - c(u-\psi)\} = 0$$
+\item so solve the nonlinear system $G(u,\lambda)=0$:
+    $$G(u,\lambda) = \begin{pmatrix} Au - b - \lambda \\ \lambda - \max\{0,\lambda - c(u-\psi)\} \end{pmatrix}$$
+\end{itemize}
+
+\begin{theorem}[Hinterm\"uller, Ito \& Kunisch 2002]
+PDAS is identical to a \alert{semismooth Newton} iteration for $G(u,\lambda)=0$.  It therefore converges locally superlinearly.  If $A$ is an M-matrix then it converges globally, and $u^k\ge\psi$ after the first step.
+\end{theorem}
+\end{withpeople}
+\end{frame}
+
+
+\begin{frame}{reduced-space Newton in PETSc}
+\begin{withpeople}{\photo{generic.png}{S.~Benson} \photo{munson.jpg}{T.~Munson}}
+
+\begin{itemize}
+\item PETSc's \texttt{vinewtonrsls} (Benson \& Munson 2006) is similar, but with a line search
+    \begin{itemize}
+    \item[$\lc$] general bounds $\underline{\psi} \le u \le \overline{\psi}$, and nonlinear $F$
+    \item[$\lc$] this is what Firedrake calls when you say \texttt{"snes\_type": "vinewtonrsls"}
+    \end{itemize}
+\item at iterate $u^k$ define the active and inactive sets:
+    $$\cA^k = \{i \,:\, u_i^k = \psi_i \text{ and } F_i(u^k) > 0\}, \qquad \cI^k = \text{complement}$$
+\item Newton step only on the inactive (\alert{reduced}) space:
+    $$J(u^k)_{\cI^k,\cI^k}\, d_{\cI^k} = -F(u^k)_{\cI^k}, \qquad d_{\cA^k} = 0$$
+\item line search on projected iterates $u^{k+1} = \max\{\psi, u^k+\beta d\}$, so all iterates are admissible
+\item the linear solver is the user's choice \pcomm{CG, multigrid, \dots}
+\end{itemize}
+
+
+\grey{see also Chapter 12 of Bueler (2021)}
+\end{withpeople}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{demo: refine the mesh in last week's code}
+
+\begin{minipage}[t]{0.66\textwidth}
+\vspace{-5mm}
+\inputminted[fontsize=\fontsize{6}{7}\selectfont]{python}{code/copref.py}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.32\textwidth}
+\vspace{0mm}
+\begin{itemize}
+\item same problem as \texttt{cop.py} last week \pcomm{hemisphere obstacle}
+\item but loop over meshes
+\end{itemize}
+
+\medskip
+\begin{tabular}{rc}
+mesh & Newton its. \\
+\midrule
+$15\times 15$   & 5 \\
+$30\times 30$   & 6 \\
+$60\times 60$   & 10 \\
+$120\times 120$ & 18 \\
+$240\times 240$ & \alert{34} \\
+\bottomrule
+\end{tabular}
+
+\medskip
+\begin{itemize}
+\item iterations roughly \alert{double} with each refinement
+\end{itemize}
+\end{minipage}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{why? the active set shrinks one layer at a time}
+
+\begin{itemize}
+\item initial iterate $u^0=0$ gives $u^1\approx\max\{0,\psi\}$, with much too large an active set
+\item each iteration only frees nodes at the edge of the current active set
+\item example: \texttt{-snes\_vi\_monitor} output on a $65\times 65$ grid, from Bueler (2021):
+\end{itemize}
+
+{\scriptsize
+\begin{Verbatim}[xleftmargin=10mm]
+  0 SNES VI Function norm 8.02729 Active lower constraints 729/885 ...
+  1 SNES VI Function norm 1.4556 Active lower constraints 629/729 ...
+  2 SNES VI Function norm 0.463479 Active lower constraints 553/629 ...
+...
+  6 SNES VI Function norm 2.44749e-08 Active lower constraints 421/421 ...
+\end{Verbatim}
+}
+
+\begin{itemize}
+\item Newton cannot converge quadratically until the active set is correct
+\item the free boundary moves about one cell per iteration, so iterations grow like $1/h$ or faster
+\end{itemize}
+
+\medskip
+\placeholder{0.6\textwidth}{18mm}{figure showing iterates peeling away from the obstacle?}
+\end{frame}
+
+
+\begin{frame}{a theorem explains the mesh dependence}
+\begin{withpeople}{\photo{papadopoulos.jpg}{I.~Papadopoulos} \photo{hintermueller.jpg}{M.~Hinterm\"uller}}
+
+\begin{itemize}
+\item consider PDAS for the $P_1$ classical obstacle problem, with $f>0$ and constant $\psi$
+\end{itemize}
+
+\begin{theorem}[Papadopoulos \& Hinterm\"uller 2026; sticky active sets]
+If node $i$ and all of its mesh neighbors are in $\cA^k$ then $i\in\cA^{k+1}$.
+\end{theorem}
+
+\begin{corollary}[peeling effect]
+A node can only leave the active set if it neighbors a node in the inactive set.
+\end{corollary}
+
+\begin{itemize}
+\item they observe iteration counts on uniform $n\times n$ meshes in 2D:
+\end{itemize}
+
+{\small
+\centering
+\begin{tabular}{lccccccc}
+$n$        & $2^4$ & $2^5$ & $2^6$ & $2^7$ & $2^8$ & $2^9$ & $2^{10}$ \\
+\midrule
+PDAS iterations & 5 & 7 & 12 & 22 & 43 & 83 & \alert{165} \\
+\bottomrule
+\end{tabular}
+\par
+}
+
+\begin{itemize}
+\item in function space the iteration is not even well-defined \pcomm{they show}
+\item but Signorini problems only grow mildly
+\end{itemize}
+\end{withpeople}
+\end{frame}
+
+
+\AtBeginSection[]
+{
+  \begin{frame}{outline}
+  \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\section[\emph{a posteriori} and AMR]{\emph{a posteriori} estimates and adaptive refinement}
+
+\begin{frame}{\emph{a posteriori} error estimates for PDEs}
+
+\begin{itemize}
+\item for the Poisson problem $-\grad^2 u = f$, the error $u-u_h$ is unknown, but the \alert{residual} of $u_h$ is computable
+\item Babu\v{s}ka \& Rheinboldt (1978): on each element $T$,
+    $$\eta_T^2 = h_T^2 \int_T |f + \grad^2 u_h|^2 + \frac{h_T}{2} \int_{\partial T} \left[\!\left[ \grad u_h\cdot n \right]\!\right]^2$$
+\item then for $\eta^2 = \sum_T \eta_T^2$ there are constants so that
+    $$c\,\eta \le |u-u_h|_{H^1} \le C\, \eta$$
+    \begin{itemize}
+    \item[$\lc$] upper bound: \alert{reliability}
+    \item[$\lc$] lower bound: \alert{efficiency}
+    \end{itemize}
+\item adaptive mesh refinement (AMR) loop:
+    $$\text{solve} \to \text{estimate} \to \text{mark} \to \text{refine} \to \text{solve} \to \dots$$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{what is different for VIs?}
+\begin{withpeople}{\photo{generic.png}{A.~Veeser}}
+
+\begin{itemize}
+\item recall the residual $\sigma = F(u) - \ell$, e.g.~$\sigma = -\grad^2 u - f$
+    \begin{itemize}
+    \item[$\lc$] $\sigma \ge 0$ on the active set, and $\sigma = 0$ on the inactive set
+    \item[$\lc$] $\sigma$ is the \alert{multiplier}; generally a measure
+    \end{itemize}
+\item the map from data $f$ to solution $u$ is not one-to-one:
+    \begin{itemize}
+    \item[$\lc$] changing $f$ inside the active set may not change $u$ at all
+    \item[$\lc$] the information lost from $u$ is recorded in $\sigma$
+    \end{itemize}
+\end{itemize}
+
+\begin{block}{Veeser's idea (2001)}
+For VIs, estimate the error in the \alert{pair} $(u,\sigma)$, not just in $u$.
+\end{block}
+
+\begin{itemize}
+\item Veeser (2001) proved reliable and efficient energy-norm estimators for $(u-u_h,\sigma-\sigma_h)$
+\item the interior residual is localized to the (discrete) inactive set
+\end{itemize}
+\end{withpeople}
+\end{frame}
+
+
+\begin{frame}{pointwise \emph{a posteriori} bounds (NSV03)}
+\begin{withpeople}{\photo{nochetto.jpg}{R.~Nochetto} \photo{siebert.jpg}{K.~Siebert} \photo{generic.png}{A.~Veeser}}
+
+\begin{itemize}
+\item Nochetto, Siebert \& Veeser (2003): maximum-norm bounds, with constraint imposed only at nodes
+\end{itemize}
+
+\begin{theorem}[NSV03]
+For the $P_1$ classical obstacle problem there is a computable $E_h$ so that
+    $$\max\left\{\|u-u_h\|_{L^\infty}, \,\, \|\sigma-\tilde\sigma_h\|_{W^{-2,\infty}}\right\} \le E_h,$$
+and each term of $E_h$ is also locally efficient.
+\end{theorem}
+
+\vspace{-1mm}
+{\small
+\begin{align*}
+E_h &= C_0 |\log h_{\min}|^2 \|h^2 R_\infty\|_\infty && \afcomm{residual, localized to inactive set} \\
+    &\quad + C_1 |\log h_{\min}|^2 \|h^2 \grad\sigma_h\|_{d} && \afcomm{quadrature} \\
+    &\quad + \|(\psi - u_h)^+\|_\infty + \|(u_h-\psi)^+\|_{\infty;\{\sigma_h>0\}} && \afcomm{obstacle approx.~and detachment} \\
+    &\quad + \|g - I_h g\|_{\infty;\partial\Omega} && \afcomm{boundary data}
+\end{align*}
+}
+\end{withpeople}
+\end{frame}
+
+
+\begin{frame}{corollary: bilateral obstacle problems}
+
+\begin{itemize}
+\item now the box constraint $\underline{\psi} \le u \le \overline{\psi}$, with contact sets $\underline{C}_u$ and $\overline{C}_u$
+\item $\sigma\ge 0$ on $\underline{C}_u$, $\sigma\le 0$ on $\overline{C}_u$
+\end{itemize}
+
+\begin{corollary}[Bueler 2026]
+The NSV03 bound $\|u-u_h\|_{L^\infty} \le E_h$, and its efficiency, extend to the bilateral case, with
+\begin{itemize}
+\item two obstacle-admissibility terms, and
+\item two detachment terms, over \alert{star-dilated} discrete contact sets.
+\end{itemize}
+\end{corollary}
+
+\begin{itemize}
+\item the only real cost is in the barrier construction for reliability
+\item implemented in VIAMR \pcomm{next}
+\end{itemize}
+
+\vspace{-28mm}
+\hfill \includegraphics[width=0.25\textwidth]{figs/bilateral-surf.png}
+
+\vspace{5mm}
+\end{frame}
+
+
+\begin{frame}{bilateral example}
+
+\begin{itemize}
+\item exact radial solution on $(-2,2)^2$, with $-1\le u\le 1$; free boundaries are circles
+\item AMR by marking with the bilateral $E_h$
+\item marked elements, early and later:
+\end{itemize}
+
+\begin{center}
+\includegraphics[height=0.3\textheight]{figs/bilateral-mark-4.png} \qquad
+\includegraphics[height=0.3\textheight]{figs/bilateral-mark-7.png}
+\end{center}
+
+\begin{itemize}
+\item optimal $O(h^2)$ pointwise error; effectivity settles near 4:
+\end{itemize}
+
+\begin{center}
+\includegraphics[height=0.27\textheight]{figs/bilateral-conv.png} \qquad
+\includegraphics[height=0.27\textheight]{figs/bilateral-eff.png}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{VIAMR: AMR for the free boundary}
+\begin{withpeople}{\photo{fochesatto.jpg}{S.~Fochesatto}}
+
+\begin{itemize}
+\item often the \alert{free boundary location} is the goal
+\item VIAMR: a Firedrake-based library
+\item separate two concerns, then recombine:
+    \begin{itemize}
+    \item[1.] \alert{UDO}: refine near the free boundary
+    \item[2.] \alert{BR}: estimator in the inactive set
+    \end{itemize}
+\item UDO $=$ unstructured dilation operator:
+    \begin{itemize}
+    \item[$\lc$] mark elements with both active and inactive vertices
+    \item[$\lc$] dilate the marking by $n$ layers of neighbors
+    \end{itemize}
+\item mark by the union, then refine
+\end{itemize}
+
+\vspace{-38mm}
+\hfill \includegraphics[width=0.24\textwidth]{figs/sphereudo.png}
+\end{withpeople}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{demo: VIAMR}
+
+\begin{itemize}
+\item after solving for $u_h$ \pcomm{as in \texttt{cop.py}}, refine by UDO+BR:
+\end{itemize}
+
+\begin{minted}[fontsize=\scriptsize]{python}
+from viamr import VIAMR
+amr = VIAMR()
+fbmark = amr.udomark(uh, psih, n=1)                 # near free boundary
+residual = -div(grad(uh))
+imark, _, _ = amr.brinactivemark(uh, psih, residual, theta=0.7)  # in inactive set
+mark = amr.unionmarks(fbmark, imark)
+refinedmesh = amr.refinemarkedelements(mesh, mark)
+\end{minted}
+
+\medskip
+\begin{itemize}
+\item repeat: solve on the refined mesh, using the previous solution as initial iterate
+\end{itemize}
+
+\medskip
+\placeholder{0.8\textwidth}{30mm}{live demo or figure: a few levels of UDO+BR refinement on the hemisphere obstacle}
+\end{frame}
+
+
+\begin{frame}{comparison: UDO+BR versus NSV03}
+
+\begin{itemize}
+\item bilateral example again, both methods \hfill \grey{\small \texttt{viamr/examples/bilateral.py}}
+\end{itemize}
+
+\begin{center}
+\includegraphics[height=0.55\textheight]{figs/viamr-bilateral-compare.png}
+\end{center}
+
+\placeholder{0.8\textwidth}{12mm}{rerun at larger target; what is the take-away?}
+\end{frame}
+
+
+\section{multilevel solvers}
+
+\begin{frame}{grid sequencing}
+
+\begin{itemize}
+\item fix for the peeling effect: start from a good initial iterate
+\item solve on a coarse mesh, then interpolate to the next finer mesh, and repeat
+\item in the earlier demo code, set \texttt{gridseq = True}
+    \begin{itemize}
+    \item[$\lc$] then \texttt{prolong()} makes the coarse solution into the initial iterate
+    \end{itemize}
+\end{itemize}
+
+\bigskip
+\begin{center}
+\begin{tabular}{rcc}
+mesh & \multicolumn{2}{c}{Newton iterations} \\
+     & refine only & grid sequencing \\
+\midrule
+$15\times 15$   & 5 & 5 \\
+$30\times 30$   & 6 & 2 \\
+$60\times 60$   & 10 & 2 \\
+$120\times 120$ & 18 & 2 \\
+$240\times 240$ & 34 & \alert{2} \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{Newton-multigrid}
+
+\begin{itemize}
+\item the reduced-space Newton step is an SPD linear system on the inactive set
+\item precondition it with multigrid: \alert{Newton-multigrid}
+\item combined with grid sequencing \pcomm{a nonlinear F-cycle}:
+    \begin{itemize}
+    \item[$\lc$] mesh-independent Newton \emph{and} Krylov iterations
+    \item[$\lc$] optimal $O(N)$ work
+    \end{itemize}
+\item example in PETSc, from Bueler (2021), Chapter 12: \hfill \grey{\small \texttt{-snes\_grid\_sequence}}
+\end{itemize}
+
+\medskip
+\includegraphics[height=0.33\textheight]{figs/obstacle-flops-per-n.png}
+\hfill
+\placeholder{0.45\textwidth}{25mm}{Firedrake version of this demo?}
+
+\medskip
+\begin{itemize}
+\item but this needs a \emph{global} linearization on the finest mesh
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{constraint decomposition and FAS}
+\begin{withpeople}{\photo{abrandt.jpg}{A.~Brandt} \photo{tai.jpg}{X.-C.~Tai} \photo{farrell.jpg}{P.~Farrell}}
+
+\begin{itemize}
+\item full approximation scheme (FAS; Brandt 1977): multigrid for \emph{nonlinear} problems, without global linearization
+\item constraint decomposition (Tai 2003): for a subspace decomposition $\cV = \sum_i \cV_i$, write
+    $$\cK = \sum_i \cK_i, \qquad \cK_i \subset \cV_i$$
+\item FASCD (Bueler \& Farrell 2024) combines them, using mesh levels:
+    \begin{itemize}
+    \item[$\lc$] \alert{defect constraint} $\chi^J = \psi^J - w^J$ for the fine-level iterate $w^J$
+    \item[$\lc$] monotone restriction $\chi^{j-1} = R^\oplus \chi^j$ generates coarser constraints
+    \item[$\lc$] down-smoothing in sets $\cD^j$, up-smoothing in larger sets $\cU^j$
+    \item[$\lc$] smoother: a few reduced-space Newton steps on each level
+    \end{itemize}
+\end{itemize}
+
+\vspace{-5mm}
+\hfill \includegraphics[width=0.35\textwidth]{figs/fascd-vcycle.png}
+\end{withpeople}
+\end{frame}
+
+
+\begin{frame}{FASCD results: classical obstacle problem}
+
+\begin{itemize}
+\item ball and spiral problems; up to $3.4\times 10^7$ nodes
+\end{itemize}
+
+{\small
+\begin{center}
+\begin{tabular}{rrcccccc}
+     &       & \multicolumn{3}{c}{ball} & \multicolumn{3}{c}{spiral} \\
+levels & nodes & RS only & V-cycles & FMG & RS only & V-cycles & FMG \\
+\midrule
+3  & 545              & 3  & 6  & +2 & 6  & 5  & +2 \\
+5  & $8.3\times 10^3$ & 13 & 9  & +3 & 11 & 9  & +3 \\
+7  & $1.3\times 10^5$ & 46 & 11 & +3 & 35 & 11 & +4 \\
+9  & $2.1\times 10^6$ &    & 13 & +2 &    & 13 & +5 \\
+11 & $3.4\times 10^7$ &    & 14 & +1 &    & 18 & +5 \\
+\bottomrule
+\end{tabular}
+\end{center}
+}
+
+\begin{itemize}
+\item RS only: iterations grow like resolution
+\item V-cycles: slow growth; asymptotic rate about $0.1$
+\item FMG: one full multigrid cycle, plus a few V-cycles
+\end{itemize}
+
+\vspace{-14mm}
+\hfill \includegraphics[width=0.12\textwidth]{figs/ball-set.png} \includegraphics[width=0.12\textwidth]{figs/spiral-set.png}
+\end{frame}
+
+
+\begin{frame}{FASCD results: a glacier}
+
+\begin{itemize}
+\item shallow ice approximation: nonlinear, degenerate, and not an optimization
+\item FMG with $Q_1$ elements; weak scaling on ARCHER2
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.55\textwidth]{figs/sialev8scene.png}
+\end{center}
+
+{\small
+\begin{center}
+\begin{tabular}{rrrcc}
+processes & levels & nodes & V-cycles after FMG & time (s) \\
+\midrule
+1    & 6  & $641^2$   & +2 & 98 \\
+16   & 8  & $2561^2$  & +2 & 124 \\
+1024 & 11 & $20481^2$ & +1 & 177 \\
+\bottomrule
+\end{tabular}
+\end{center}
+}
+
+\begin{itemize}
+\item $4.1\times 10^8$ unknowns \pcomm{87.5 m resolution} in under 3 minutes
+\end{itemize}
+\end{frame}
+
+
+\section[higher-order and latent]{higher-order and latent variables}
+
+\begin{frame}{high-order bounds via the Bernstein basis}
+\begin{withpeople}{\photo{kirby.jpg}{R.~Kirby} \photo{shapero.jpg}{D.~Shapero}}
+
+\begin{itemize}
+\item recall from last week: nodal values $\ge 0$ do not imply $v_h\ge 0$ for $P_k$, $k\ge 2$
+\item Bernstein basis on $[0,1]$: \, $B_i^n(x) = \binom{n}{i} x^i (1-x)^{n-i}$
+    \begin{itemize}
+    \item[$\lc$] nonnegative partition of unity
+    \item[$\lc$] $p = \sum_i p_i B_i^n$ lies in the convex hull of its coefficients (control net)
+    \item[$\lc$] so \alert{coefficients $\ge 0$ implies $p\ge 0$} \pcomm{converse false}
+    \item[$\lc$] extends to simplices via barycentric coordinates
+    \end{itemize}
+\item Kirby \& Shapero (2024): solve a VI over bounds-satisfying $P_k$
+    \begin{itemize}
+    \item[$\lc$] e.g.~$0\le u\le 1$ for advection-diffusion
+    \item[$\lc$] C\'ea-type theorem; constrained $P_k$ approximates well
+    \item[$\lc$] bounds on Bernstein coefficients: optimal orders observed
+    \end{itemize}
+\item but the \emph{continuum} problem is a PDE, not a VI
+\end{itemize}
+\end{withpeople}
+\end{frame}
+
+
+\begin{frame}{latent variable proximal point (LVPP)}
+\begin{withpeople}{\photo{dokken.jpg}{J.~Dokken} \photo{farrell.jpg}{P.~Farrell} \photo{keith.jpg}{B.~Keith} \photo{papadopoulos.jpg}{I.~Papadopoulos} \photo{surowiec.jpg}{T.~Surowiec}}
+
+\begin{itemize}
+\item Dokken, Farrell, Keith, Papadopoulos \& Surowiec (2025)
+\item Bregman proximal point iteration, using a \alert{latent} variable $\phi$:
+    \, $u = \psi + e^{\phi} > \psi$
+\item classical obstacle problem: given $\phi^{k-1}$, solve a nonlinear PDE system for $(u^k,\phi^k)$:
+\begin{align*}
+\alpha_k \int_\Omega \grad u^k\cdot\grad v + \int_\Omega \phi^k v &= \alpha_k \int_\Omega f v + \int_\Omega \phi^{k-1} v \\
+\int_\Omega u^k w - \int_\Omega (\psi + e^{\phi^k})\, w &= 0
+\end{align*}
+\item no constraints to discretize: any FE spaces and degree, standard Newton
+\item mesh-independent iterations observed; $\tilde u_h = \psi + e^{\phi_h}$ satisfies the bound
+\item also contact, fracture, plasticity, Monge--Amp\`ere, \dots
+\end{itemize}
+\end{withpeople}
+\end{frame}
+
+
+\begin{frame}{summary}
+
+\begin{itemize}
+\item active-set Newton methods (PDAS, RS) are Newton methods, but iterations grow under refinement
+    \begin{itemize}
+    \item[$\lc$] the active set peels away one layer per iteration
+    \end{itemize}
+\item \emph{a posteriori} estimates for VIs control the pair $(u,\sigma)$
+    \begin{itemize}
+    \item[$\lc$] AMR should target the free boundary \emph{and} the PDE in the inactive set
+    \end{itemize}
+\item multilevel methods give mesh-independence:
+    \begin{itemize}
+    \item[$\lc$] grid sequencing $+$ Newton-multigrid, or FASCD
+    \end{itemize}
+\item new ideas: Bernstein bounds for high order, and LVPP
+\end{itemize}
+
+\pause
+\centering
+{\Large
+\bigskip\bigskip
+\alert{thank you for listening!}
+
+\bigskip
+\alert{questions?}
+}
+\end{frame}
+
+
+\begin{frame}[allowframebreaks]{references}
+\input{references.tex}
+\end{frame}
+
+\end{document}
