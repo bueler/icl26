@@ -113,9 +113,8 @@
 \item all are captured by a single \alert{variational inequality} (VI):
   $$u \text{ locally minimizes } f \implies \quad \boxed{\alert{f'(u)\,(x-u) \ge 0}} \qquad \text{for all } x\in[a,b]$$
 
-\pause
 \smallskip
-\item same product is 1st-order term in Taylor expansion: \, $f(x) = f(u) + \alert{f'(u) (x-u)} + \dots$
+\item note 1st-order term in Taylor expansion: \, $f(x) = f(u) + \alert{f'(u) (x-u)} + \dots$
 
 \medskip
 \grey{viewpoint: traveling infinitesimally from $u$ into $[a,b]$, $f$ \strikeThrough{increases} does not decrease}
@@ -192,7 +191,7 @@ Suppose:
 \item $K\subset\RR^n$ is convex, and
 \item $f : K \to \RR$ is in $C^1$.
 \end{itemize}
-Then a local minimizer $u\in K$ satisfies
+If $u\in K$ is a local minimizer then
   $$\boxed{\alert{\ip{\nabla f(u)}{v-u} \ge 0}} \qquad\text{for all } v\in K.$$
 \end{minipage}
 \hfill
@@ -202,16 +201,15 @@ Then a local minimizer $u\in K$ satisfies
 \end{minipage}
 \end{theorem}
 
-\pause
-\medskip
-\emph{proof:}\, If $v\in K$ then $(1-t) u + t v = u+t(v-u)\in K$ for $0\le t\le 1$.
+\smallskip
+\emph{proof:}\, Note that \alert{$(1-t) u + t v = u+t(v-u)\in K$} for $0\le t\le 1$.
 
-We know that $t=0$ locally minimizes $g(t)=f(u+t(v-u))$ on $[0,1]$.
+But $t=0$ locally minimizes $g(t)=f(u+t(v-u))$ on $[0,1]$.
 
 By the calculus I problem, $0\le g'(0)=\ip{\nabla f(u)}{v-u}$. \qed
 
 \medskip
-\grey{idea: $\grad f(u)\ne 0$ is possible, but $f$ does not decrease as we start from $u$ and head into $K$}
+\grey{idea: $\grad f(u)\ne 0$ is possible, but $f$ does not decrease as we move from $u$ into $K$}
 \end{frame}
 
 
@@ -235,26 +233,26 @@ Then $u\in K$ is a minimizer \alert{if and only if}
 \end{theorem}
 
 \begin{itemize}
-\item $u$ exists if $K\ne \emptyset$ and
+\item the boxed \alert{variational inequality} is one way to state the KKT condition
+\item $u$ exists if additionally $K\ne \emptyset$ and
     \begin{itemize}
     \item[$\lc$] $K$ is compact, or
     \item[$\lc$] $K$ is closed and $f$ is \emph{coercive}: $f\to \infty$ as $\|v\|\to \infty$ for $v\in K$
     \end{itemize}
-\item $u$ is unique if $f$ strictly convex
-\item the boxed variational inequality is one way to state the KKT conclusion
+\item $u$ is unique if additionally $f$ strictly convex
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{nonlinear equations with inequality constraints?}
+\begin{frame}{systems of nonlinear equations}
 
 \begin{itemize}
 \item maybe variational inequalities are just convenience notation in optimization?
 
 \pause
-\item in fact, they \alert{need not come from optimization}
+\item but they \alert{need not come from optimization}
 \item to put us in the right frame of mind, recall this \dots
-\begin{block}{\only<1-4>{folk theorem?}\only<5->{\strikeThrough{folk theorem}}}
+\begin{block}{\only<1-4>{folk theorem}\only<5->{\strikeThrough{folk theorem}}}
 \begin{minipage}{0.05\linewidth}
 \vspace{18mm}
 \end{minipage}
@@ -274,13 +272,10 @@ Then $u\in K$ is a minimizer \alert{if and only if}
 \end{minipage}
 \end{block}
 
-\item<5-> no general existence theorem for ``$F(x)=0$,'' even on very nice input $K \subset \RR^n$
+\item<5-> no general existence theorem for ``$F(x)=0$,'' even on very nice input sets
 
 \smallskip
 \grey{advice to numerical users: Newton's method with line search is powerful, but \dots}
-
-\smallskip
-\item<5-> but we are now close to the Brouwer fixed point theorem \dots
 \end{itemize}
 \end{frame}
 
@@ -313,19 +308,18 @@ If $K\subset\mathbb{R}^n$ is nonempty, compact, and convex, and if $F:K \to\RR^n
 \alert{Furthermore, if $u$ is in the interior of $K$ then $F(u)=0$}.
 \end{theorem}
 
-\emph{proof of ``Furthermore'':}\, Take $v = u+\eps w$ for $w\in \RR^n$. \qed
+\emph{proof of ``Furthermore'':}\, Take \alert{$v = u+\eps w \in K$} for $w\in \RR^n$ and $\eps>0$ small enough. \qed
 
 \bigskip
 \begin{itemize}
-\item exactly 2 cases here:
+\item exactly 2 cases:
 
 \vspace{-10mm}
 
-\hfill \mbox{\input{tikz/solninterior.tex} \hspace{25mm} \input{tikz/solnsupport.tex} \hspace{15mm}}
+\hfill \mbox{\input{tikz/solninterior.tex} \hspace{30mm} \input{tikz/solnsupport.tex} \hspace{25mm}}
 
-\hfill{\small we found $u$ solving $F(u)=0$} \quad {\small we found a support plane for $K$}
+\hfill {\small we found $u$ solving $F(u)=0$} \qquad {\small we found a support plane for $K$} \hspace{8mm}
 
-\pause
 \medskip
 \item $F$ here plays the role of $\grad f$ in optimization, but its Jacobian need not be symmetric
 \end{itemize}
@@ -334,23 +328,21 @@ If $K\subset\mathbb{R}^n$ is nonempty, compact, and convex, and if $F:K \to\RR^n
 
 \begin{frame}{uniqueness?}
 
-{\small
 \begin{theorem}[Hartman \& Stampacchia, 1964]
 If $K\subset\mathbb{R}^n$ is nonempty, compact, and convex, and if $F:K \to\RR^n$ is continuous, then there exists $u\in K$ so that
     $$\boxed{\alert{\ip{F(u)}{v-u} \ge 0}} \qquad\text{for all } v\in K.$$
 Furthermore, if $u$ is in the interior of $K$ then $F(u)=0$.
 \end{theorem}
-}
 
 \medskip
 \begin{itemize}
-\item what about uniqueness here? what hypothesis on $F$ would give it?
+\item what about uniqueness here? sufficient hypothesis on $F$?
 
 \pause
 \bigskip
 \item suppose for $u_1,u_2\in K$: \, $\ip{F(u_i)}{v-u_i} \ge 0$ for all $v\in K$
-\item substitute $v=u_2$ and then $v=u_1$, then add, and then negate:
-	$$\ip{F(u_1) - F(u_2)}{u_1-u_2} \le 0 \hspace{20mm} \leftarrow \text{\small let's \alert{block this} when $u_1\ne u_2$}$$
+\item substitute $v=u_2$ and then $v=u_1$, then add:
+	$$\ip{F(u_1) - F(u_2)}{u_1-u_2} \le 0 \hspace{10mm} \leftarrow \text{\small for uniqueness, \alert{block this} when $u_1\ne u_2$}$$
 \end{itemize}
 \end{frame}
 
@@ -358,7 +350,7 @@ Furthermore, if $u$ is in the interior of $K$ then $F(u)=0$.
 \begin{frame}{a well-posed problem}
 
 \begin{definition}
-$F$ is \alert{monotone} on $K$ if
+$F:K \to \RR^n$ is \alert{monotone} if
     $$\ip{F(v)-F(w)}{v-w} \ge 0$$
 for all $v,w\in K$, and \alert{strictly monotone} if equality implies $v=w$.
 \end{definition}
@@ -367,13 +359,14 @@ for all $v,w\in K$, and \alert{strictly monotone} if equality implies $v=w$.
 If additionally $F$ is strictly monotone then $u\in K$ is unique.
 \end{corollary}
 
-\pause
 \begin{itemize}
-\item is this hypothesis reasonable?
-\item in optimization case, it matches strict convexity of the objective function
+\item but is this hypothesis reasonable?
+
+\pause
+\item yes, it is the same as strict convexity of the objective function
 \end{itemize}
 
-\begin{proposition}
+\begin{proposition}[optimization case]
 Suppose $f:\RR^n \to \RR$ is $C^1$.  Then $f$ is strictly convex if and only if $F=\grad f$ is strictly monotone.
 \end{proposition}
 \end{frame}
@@ -381,27 +374,27 @@ Suppose $f:\RR^n \to \RR$ is $C^1$.  Then $f$ is strictly convex if and only if 
 
 \begin{frame}{variational inequalities}
 
-\begin{definitions}[made official!]
+\begin{definitions}[made official]
 Given a normed vector space $X$, a closed and convex \alert{admissible subset} $K\subset X$, and $F: K\to X'$ continuous, but generally nonlinear, find $u\in K$ so that
   $$\boxed{\alert{\ip{F(u)}{v-u} \ge 0}} \qquad \text{for all } v\in K.$$
-This is the \alert{variational inequality} problem for the data $K$ and $F$, denoted $\operatorname{VI}(K,F)$.
+This is the \alert{variational inequality} problem for the data $K$ and $F$.
 \end{definitions}
 
 \bigskip
   {\centering\small
     \begin{tabular}{lll}
-      example                     & admissible set           & variational inequality \\
+      example problem             & typical admissible set           & variational inequality \\
       \midrule
-      calculus I min problem      & $[a,b]\subset\RR$                & $f'(u)(x-u) \ge 0 \quad\forall x\in [a,b]$ \\
-      projection of $x$ onto $K$  & $K\subset H$ closed, convex        & $\ip{u-x}{y-u} \ge 0 \quad\forall y\in K$ \\
-      minimize $f$ over $K$       & $K\subset \RR^n$ closed, convex    & $\ip{\nabla f(u)}{v-u} \ge 0 \quad\forall v\in K$ \\
-      constrained nonlinear eqns  & $K\subset \RR^n$ compact, convex   & $\ip{F(u)}{v-u} \ge 0 \quad\forall v\in K$ \\
+      calculus minimization       & $[a,b]\subset\RR$                & $f'(u)(v-u) \ge 0 \quad\,\forall v\in [a,b]$ \\
+      projection of $x$ onto $K$  & $K\subset H$ closed, convex        & $\ip{u-x}{v-u} \ge 0 \quad\forall v\in K$ \\
+      minimize $f$ over $K$       & $K\subset \RR^n$ compact, convex    & $\ip{\nabla f(u)}{v-u} \ge 0 \quad\forall v\in K$ \\
+      constrain nonlinear eqns to $K$ & $K\subset \RR^n$ compact, convex   & $\ip{F(u)}{v-u} \ge 0 \quad\,\forall v\in K$ \\
       \bottomrule
     \end{tabular}
   \par}
 
 \bigskip
-{\small \grey{perspective: \, VIs generalize equations $F(u)=0$ to convex input sets, enabling existence}}
+{\small \grey{perspective: \, VI generalizes system $F(u)=0$ to convex input sets, enabling existence}}
 \end{frame}
 
 
@@ -447,40 +440,6 @@ This is the \alert{variational inequality} problem for the data $K$ and $F$, den
 \end{frame}
 
 
-\begin{frame}{example in 1d}
-
-\begin{columns}
-\begin{column}{0.5\textwidth}
-\begin{itemize}
-\item suppose $\Omega=(-2,2)\subset \RR^1$, $f=0$, $g=0$
-\item choose obstacle $\psi(x) = 1-x^2$
-\item define $K=\{v \,:\, v(\pm 2)=0 \text{ and } v \ge \psi\}$
-    \begin{itemize}
-    \item[$\lc$] ignoring regularity for now
-    \end{itemize}
-\item seek $u\in K$ solving $-u''=0$ if $u>\psi$,
-
-and $u=\psi$ otherwise
-\end{itemize}
-\end{column}
-\begin{column}{0.5\textwidth}
-\hfill \input{tikz/obstacle1d.tex}
-\end{column}
-\end{columns}
-
-\pause
-\medskip
-result:
-\begin{itemize}
-\item $a=2 - \sqrt{3}\approx 0.2679$ \, locates the \alert{free boundary}
-\item both \alert{Dirichlet and Neumann conditions} hold there:\, $u(a)=\psi(a)$ \,\&\, $u'(a)=\psi'(a)$
-\item $\displaystyle u(x) = \begin{cases} 1-x^2, & 0 \le |x| \le a, \\
-                           2a(2-|x|), & a \le |x| \le 2, \end{cases}$
-\item $u\in C^1 \setminus C^2$, despite $C^\infty$ data and Laplacian operator
-\end{itemize}
-\end{frame}
-
-
 \begin{frame}{classical obstacle problem (strong form and subsets)}
 
 \begin{columns}[T]
@@ -509,14 +468,14 @@ result:
 \begin{itemize}
 \item the solution $u$ defines subsets of $\Omega$:
 \begin{align*}
-\text{\emph{inactive set} }\, E_u &= \{x\,:\,u(x)>\psi(x)\} \\
-\text{\emph{contact} (or \emph{active}) \emph{set} }\, C_u &= \Omega \setminus E_u \\
-\text{\emph{free boundary} }\, \Gamma_u &= \Omega\cap\partial E_u
+&\text{\alert{inactive set} } & E_u &= \{x\,:\,u(x)>\psi(x)\} \\
+&\text{\alert{active (contact) set} } & C_u &= \Omega \setminus E_u \\
+&\text{\alert{free boundary} } & \Gamma_u &= \Omega\cap\partial E_u
 \end{align*}
 
     \begin{itemize}
-    \item[$\lc$] Poisson equation $-\grad^2 u=f$ holds in $E_u$
-    \item[$\lc$] both Dirichlet \& Neumann conditions will hold along $\Gamma_u$ \pcomm{which compensates for unknown location of $\Gamma_u$?}
+    \item[$\lc$] Poisson equation $-\grad^2 u=f$ applies in $E_u$
+    \item[$\lc$] both Dirichlet \& Neumann conditions hold along $\Gamma_u$ \grey{\small {(which compensates for unknown location of $\Gamma_u$?)}}
     \end{itemize}
 \end{itemize}
 
@@ -528,39 +487,73 @@ result:
 \end{frame}
 
 
+\begin{frame}{example in 1d}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item suppose $\Omega=(-2,2)\subset \RR^1$, $f=0$, $g=0$
+\item choose obstacle $\psi(x) = 1-x^2$
+\item define $K=\{v \,:\, v(\pm 2)=0 \text{ and } v \ge \psi\}$
+    \begin{itemize}
+    \item[$\lc$] ignoring regularity for now
+    \end{itemize}
+\item \alert{seek $u\in K$ solving $-u''=0$ if $u>\psi$,}
+
+\alert{and $u=\psi$ otherwise}
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\hfill \input{tikz/obstacle1d.tex}
+\end{column}
+\end{columns}
+
+\pause
+\medskip
+result:
+\begin{itemize}
+\item $a=2 - \sqrt{3}\approx 0.2679$ \, locates the \alert{free boundary}
+\item both \alert{Dirichlet and Neumann conditions} hold there:\, $u(a)=\psi(a)$ \,\&\, $u'(a)=\psi'(a)$
+\item $\displaystyle u(x) = \begin{cases} 1-x^2, & 0 \le |x| \le a, \\
+                           2a(2-|x|), & a \le |x| \le 2, \end{cases}$
+\item $u\in C^1 \setminus C^2$, despite $C^\infty$ data and Laplacian operator
+\end{itemize}
+\end{frame}
+
+
 \begin{frame}{classical obstacle problem (weak forms)}
 
 \begin{itemize}
 \item for theoretical and finite-element purposes, we want to rewrite in \alert{weak form}
-    \begin{itemize}
-    \item[$\lc$] in applications, this step is not as obvious as for the equality-constrained case?
-    \end{itemize}
-\item let \alert{$K = \{v\in H^1(\Omega) : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$}, a closed, convex subset \pcomm{not a subspace}
+
+\grey{\small this step is not as obvious to applied users as the equality-constrained case?}
+\item let \alert{$K = \{v\in X=H^1(\Omega) : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$}, a closed, convex \alert{subset} \pcomm{not subspace}
 \end{itemize}
 
 \begin{block}{weak forms}
-the classical obstacle problem can be stated as
+the classical obstacle problem seeks \alert{$u\in K$} solving
 
 \begin{columns}[T]
 \begin{column}{0.45\textwidth}
 \begin{itemize}
-\item a \alert{minimization problem}:
-    $$u \leftarrow \min_{v\in K} \int_\Omega \tfrac12|\nabla v|^2 - fv$$
+\item the \alert{minimization problem}:
+    $$u \leftarrow \min_{\alert{v\in K}} \int_\Omega \tfrac12|\nabla v|^2 - fv$$
 \end{itemize}
 \end{column}
 \begin{column}{0.55\textwidth}
 \begin{itemize}
-\item a \alert{variational inequality} (VI):
-    $$\int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u) \quad \forall v\in K$$
+\item the \alert{variational inequality} (VI):
+    $$\int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u) \quad \forall \alert{v\in K}$$
 \end{itemize}
 \end{column}
 \end{columns}
 \end{block}
 
+\pause
 \begin{proposition}
 \begin{itemize}
-\item the problems are equivalent, and well-posed
 \item if $u\in K$ is regular enough to solve the complementarity problem (strong form) then it solves these weak forms
+\item the weak forms are equivalent, and well-posed
 \end{itemize}
 \end{proposition}
 \end{frame}
@@ -569,17 +562,17 @@ the classical obstacle problem can be stated as
 \begin{frame}{theory interruption}
 
 \begin{definition}
-A bilinear form $a(\cdot,\cdot)$ is \alert{coercive} if there is $\alpha>0$ so that
+A bilinear form $a(\cdot,\cdot)$ is \alert{coercive} on a Hilbert space $H$ if there is $\alpha>0$ so that
 	$$a(v,v) \ge \alpha \|v\|^2 \quad \text{for all } v\in H.$$
 \end{definition}
 
 \begin{itemize}
-\item the bilinear form in the obstacle problem, $a(u,v) = \int_\Omega \nabla u \cdot \nabla v$, is coercive on $H_0^1(\Omega)$, by the Poincar\'e inequality
+\item by the Poincar\'e inequality the bilinear form in the obstacle problem, $a(u,v) = \int_\Omega \nabla u \cdot \nabla v$ is coercive on $H_0^1(\Omega)$
 \item coercive $\implies$ strictly monotone
 \end{itemize}
 
-\begin{theorem}[Stampacchia 1964; generalizes Lax--Milgram (1954) to $K\subset H$]
-Suppose $a(\cdot,\cdot)$ is bilinear, bounded, and coercive on a Hilbert space $H$, and $K \subset H$ is nonempty, closed, and convex.  Then for each $\ell\in H'$ there is a unique $u\in K$ with
+\begin{theorem}[Stampacchia 1964; generalizes Lax--Milgram to $K\subset H$]
+Suppose $a(\cdot,\cdot)$ is bilinear, continuous, and coercive on a Hilbert space $H$.  Suppose $K \subset H$ is nonempty, closed, and convex.  Then for $\ell\in H'$ there exists a unique $u\in K$ with
     $$a(u,v-u)\ge \ip{\ell}{v-u} \quad\forall v\in K.$$
 \end{theorem}
 
@@ -593,17 +586,16 @@ Suppose $a(\cdot,\cdot)$ is bilinear, bounded, and coercive on a Hilbert space $
 
 \begin{column}{0.65\textwidth}
 \begin{itemize}
-\item see textbook Ciarlet (2022) for elasticity generally
 \item consider a linear elastic solid on $\Omega\subset\RR^d$ \pcomm{$d=2,3$}
 \item $u:\Omega\to\RR^d$ is \emph{displacement} from ref.~config.
 \item $E(u) = \tfrac12\left(\nabla u+\nabla u^\top\right)$ is \emph{strain tensor}
 \item $\sigma(u) = \lambda\, (\operatorname{tr}E(u))\, I + 2\mu\, E(u)$ is \emph{stress tensor}
 
-\grey{\small \,(with \emph{Lam\'e consts} $\lambda,\mu$)}
+\grey{\small \,(Lam\'e constants $\lambda,\mu$; see Ciarlet (2022) for elasticity)}
 \item partition $\partial \Omega$:
     \begin{itemize}
     \item[] on $\Gamma_D$, a given displacement $u=u_D$,
-    \item[] on $\Gamma_N$, zero traction, and
+    \item[] on $\Gamma_N$, zero traction\only<2->{, and}
     \item<2->[] on $\Gamma_C$, allow frictionless \alert{contact}
     \end{itemize}
 \end{itemize}
@@ -616,13 +608,50 @@ Suppose $a(\cdot,\cdot)$ is bilinear, bounded, and coercive on a Hilbert space $
 
 \onslide<2->
 \begin{itemize}
-\item a \emph{gap function} $g$ is given on $\Gamma_C$ \pcomm{$g=$ normal distance from ref.~config.~to obstacle}
+\item \alert{gap function $g$} is given on $\Gamma_C$ \hfill \pcomm{$g=$ normal distance from ref.~config.~to obstacle}
 \item equations of equilibrium:
 \begin{align*}
-  -\nabla\cdot\sigma(u) &= f \quad \text{in } \Omega && \text{stress balance \pcomm{$f$ is body force}} \\
-  u\cdot n &\le g \quad \text{on } \Gamma_C && \text{\alert{non-penetration constraint}}
+  -\nabla\cdot\sigma(u) &= f \quad\, \text{in } \Omega && \text{stress balance \pcomm{$f$ is body force}} \\
+  u &= u_D \quad \text{on } \Gamma_D && \text{given displacement} \\
+  u\cdot n &\le g \quad\, \text{on } \Gamma_C && \text{\alert{non-penetration constraint}}
 \end{align*}
 \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Signorini contact problem (complementarity)}
+
+\begin{columns}[T]
+
+\begin{column}{0.55\textwidth}
+\begin{itemize}
+\item the solution displacement $u$ warps the ref.~config.~$\Omega$ to new state $\Omega' = (I+u)(\Omega)$ \, \grey{\small $\to$}
+
+\medskip
+\item $\sigma_n=n\cdot\sigma(u)\,n$ denotes the \emph{normal stress}
+    \begin{itemize}
+    \item[$\lc$] frictionless contact: tangential $\sigma_t=0$ on $\Gamma_C$
+    \end{itemize}
+
+\medskip
+\item along $\Gamma_C$:
+\begin{align*}
+g - u\cdot n &\ge 0 && \text{\small non-penetration}\\
+-\sigma_n &\ge 0 && \text{\small inward normal stress} \\
+(g-u\cdot n) \, \sigma_n &= 0 && \text{\small \alert{complementarity}}
+\end{align*}
+\item the free boundary is a \alert{subset of $\Gamma_C$}
+\end{itemize}
+
+\bigskip
+\qquad \grey{\small see textbook Kikuchi \& Oden (1988) for contact}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\hfill \input{tikz/signorinideformed.tex}
+\end{column}
+\end{columns}
+
 \end{frame}
 
 
@@ -644,42 +673,6 @@ The Signorini problem is well-posed; there exists a unique solution.
 \item equivalent to minimizing the elastic energy over admissible displacements:
     $$u \leftarrow \min_{v\in K} \int_\Omega \tfrac12\sigma(v):E(v) - f\cdot v$$
 \end{itemize}
-\end{frame}
-
-
-\begin{frame}{Signorini contact problem (complementarity)}
-
-\begin{columns}[T]
-
-\begin{column}{0.55\textwidth}
-\begin{itemize}
-\item the solution displacement $u$ warps the ref.~config.~$\Omega$ to new state $\Omega' = (I+u)(\Omega)$ \, \grey{\small $\to$}
-
-\medskip
-\item $\sigma_n=n\cdot\sigma(u)\,n$ denotes the \emph{normal stress}
-    \begin{itemize}
-    \item[$\lc$] note frictionless: tangential $\sigma_t=0$ on $\Gamma_C$
-    \end{itemize}
-
-\medskip
-\item \alert{complementarity applies along $\Gamma_C$}:
-\begin{align*}
-g - u\cdot n &\ge 0 && \text{\small gap exceeds displacement}\\
--\sigma_n &\ge 0 && \text{\small inward normal stress} \\
-(g-u\cdot n) \, \sigma_n &= 0 && \text{\small not both}
-\end{align*}
-\item the free boundary is a \alert{subset of $\Gamma_C$}
-\end{itemize}
-
-\bigskip
-\qquad \grey{\small see textbook Kikuchi \& Oden (1988) for contact}
-\end{column}
-
-\begin{column}{0.45\textwidth}
-\hfill \input{tikz/signorinideformed.tex}
-\end{column}
-\end{columns}
-
 \end{frame}
 
 
