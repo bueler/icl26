@@ -22,7 +22,7 @@ TODO: Mine talks from mcd-extended/, and VI-AMR/presentations/.  Feature PDAS, H
 * Papa. & Hintermuller: one layer of triangles per iteration
 2.
 * a posterior estimators, esp NSV 03
-* AMR
+* AMR; VIAMR with stefano
 3.
 * grid sequencing
 * Newton-multigrid

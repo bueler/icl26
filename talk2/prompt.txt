@@ -1,0 +1,10 @@
+Draft talk2.tex.  The latex should look like talk1/talk1.tex.  Try to use \alert and overlays no more than I have in talk1.
+The 4 parts of talk2, and the topics, are in ../README.md.
+Generally PDFs for references are on ~/Desktop/, some in appmath_PDFs/.  Note chapter 12 of my is in ~/roarpos/p4pdes-book/chaps/.  But ask me before wasting time/bandwidth on finding sources.
+For the many new results, on appropriate slides I want photos of authors; make an effort to find those.  Not including myself.
+Goal is 30 slides.
+Part 1: gentle overview of primal-dual active set idea as Newton-with-constraints (HIK, BM, possibly my Petsc book chapter 12).  Recall demo code from talk1, and show a short sequence of refining meshes to exhibit grid-dependent Newton iterations.  Give PH as theorem.
+Part 2: Intro a posteriori idea by giving Babuska & Rheinbolt.  Summarize NSV03, with Veeser as source of idea for (u,\sigma) focus.  As corollary, my bilateral result.  Intro VIAMR, esp UDO+BR idea, demo code with compare to NSV03.
+Part 3: Intro grid-sequencing and Newton-multigrid on classical obstacle problem by modifying demo from talk1.  Summarize FASCD, results from paper (no demo code here).
+Part 4: Two brief parts: Kirby & Shapero use Bernstein (but not on a continuum VI).  LVPP sketch idea.
+It is a lot.  So in 30 slides some topics will be only *very* high level.
