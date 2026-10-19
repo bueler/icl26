@@ -676,7 +676,7 @@ The Signorini problem is well-posed.
 \begin{frame}{contact in nonlinear hyperelasticity (multiple solutions)}
 
 \begin{columns}[T]
-\begin{column}{0.65\textwidth}
+\begin{column}{0.7\textwidth}
 \only<1>{
 \begin{itemize}
 \item linear elasticity is inadequate for large deformations
@@ -691,26 +691,30 @@ where $W(Z)$ is the \emph{strain energy density}
     \end{itemize}
 \item a minimizer solves the VI
     $$\ip{J'(u)}{v-u}\ge 0 \qquad\text{for all } v\in K$$
-\item but $W$ is \alert{not convex} in neo-Hookean model (Ciarlet 2022), so solutions need not be unique
+\item but $W$ is \alert{not convex} in neo-Hookean model (Ciarlet 2022), so multiple minimizers are possible
 \end{itemize}
 }
 \only<2>{
 \begin{itemize}
 \item Farrell, Croci \& Surowiec (2020) considered a neo-Hookean beam
 \item constrained by top and bottom (box) obstacles
-\item clamped at left, compressed axially from right end
-\item \alert{7 solutions} to this problem were found by \alert{deflating} \grey{(a root-finding technique)} the VI problems:
+\item clamped at left, compressed axially from right
+\item they found \alert{7 solutions} to this VI problem
     \begin{itemize}
     \item[$\lc$] 3 solutions never touch the obstacles (not shown)
-    \item[$\lc$] 4 are in contact, shown (right) with pale unconstrained versions
-    \item[$\lc$] using Firedrake, of course
+    \item[$\lc$] 4 are in contact (right), with pale unconstrained versions
+    \end{itemize}
+\item by method of \alert{deflation}
+    \begin{itemize}
+    \item[$\lc$] and using Firedrake, of course
     \end{itemize}
 \end{itemize}
 }
 \end{column}
-\begin{column}{0.35\textwidth}
-  \centering
-  \includegraphics[height=0.8\textheight]{figs/farrell2020-fig2.jpg}
+\begin{column}{0.3\textwidth}
+\hfill \includegraphics[height=0.8\textheight]{figs/farrell2020-fig2.jpg}
+
+\hfill \grey{\scriptsize Farrell, Croci \& Surowiec (2020)}
 \end{column}
 \end{columns}
 \end{frame}
@@ -769,8 +773,10 @@ a source term; it adds or removes mass
 \item note: $\Delta t\to \infty$ limit is steady state
 \end{itemize}
 
-\vspace{-16mm}
-\hfill \includegraphics[width=0.4\textwidth]{figs/bueler2021-fig1.png}
+\vspace{-25mm}
+\hfill \includegraphics[width=0.4\textwidth]{figs/bueler2021-fig2.png}
+
+\vspace{5mm}
 \end{frame}
 
 
@@ -879,7 +885,7 @@ For reasonable $\Omega$, if $\psi \in H^2$ and $f\in L^2$ then \alert{$u\in H_g^
     \item[$\lc$] assume $\int f v_h$ is exact \hfill \pcomm{usual FE conformity dismissal}
     \item[$\lc$] assume for now that \alert{$\psi_h=I_h \psi$};\, the discrete obstacle is the interpolant of $\psi$
     \end{itemize}
-\item pragmatically I am sticking to \alert{$X_h=P_1$} (continuous piecewise-linear)
+\item pragmatically I am sticking to \alert{$X_h=P_1$} (continuous piecewise-linear) over meshes $\mathcal{T}_h$ of triangles/tetrahedra
 \pause
 \item regarding this choice, I have company
 
@@ -915,12 +921,12 @@ For reasonable $\Omega$, if $\psi \in H^2$ and $f\in L^2$ then \alert{$u\in H_g^
 \begin{columns}
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-\item the FE set-up:
+\item the FE set-up for e.g.~$X=H^1(\Omega)$:
 \begin{align*}
-K &= \{v : v\ge\psi\} \subset X=H^1(\Omega) \\
+K &= \{v : v\ge\psi\} \subset X \\
 K_h &= \{v_h : v_h\ge\psi_h\} \subset X_h 
 \end{align*}
-\item but \alert{$\psi_h=I_h\psi$ can be on either side of $\psi$}
+\item but \alert{$\psi_h=I_h\psi$ can be on either side of $\psi$}, so
 \item[1.] conformity is generally fragile, for any $X_h=P_k$:
 \begin{center}
 \alert{$K_h \not{\subset} K$ even when $X_h\subset X$}
@@ -930,8 +936,8 @@ K_h &= \{v_h : v_h\ge\psi_h\} \subset X_h
     \item[$\lc$] Ciarlet's FE book includes a picture \,\grey{$\nearrow$}
     \end{itemize}
 \item<2-> $P_1$ enjoys \alert{nodal monotonicity}:
-	$$\alert{v_{h,j} \le w_{h,j} \implies v_h(x) \le w_h(x)}$$
-\item<3->[2.] but this fails for $P_2$ and higher \,\grey{$\to$}
+	$$v_{h,j} \le w_{h,j} \implies v_h(x) \le w_h(x)$$
+\item<3->[2.] \alert{which fails for $P_k$, $k\ge 2$} \,\grey{$\to$}
 \item<3-> e.g.~$\psi=0$: non-admissible $v_h \in P_2$ with $v_{h,j}\ge 0$
 \end{itemize}
 \end{column}
@@ -951,32 +957,32 @@ K_h &= \{v_h : v_h\ge\psi_h\} \subset X_h
 
 \begin{itemize}
 \item for elliptic PDEs, the basic FE accuracy story starts with Cea's lemma
+\item what error norm can we expect for a VI like the classical obstacle problem?
     \begin{itemize}
     \item[$\lc$] the \alert{error} is $u-u_h$
     \end{itemize}
-\item what error norm can we expect for a VI like the classical obstacle problem?
 
 \pause
 \medskip
-\item answer: Falk's 1974 generalization of C\'ea's lemma \pcomm{next slide}
-\item we state the lemma using an abstracted set-up:
+\item answer: Falk's generalization of C\'ea's lemma \pcomm{next slide}
+\item we state this using a standard set-up:
 
 \smallskip
     \begin{itemize}
     \item[$\lc$] assume $K_h\subset X_h \subset X$ \, \pcomm{but generally $K_h \not\subset K$}
 
 \smallskip
-    \item[$\lc$] suppose continuity for the bilinear form: $a(v,w)\le M\|v\|\|w\|$ for all $v,w\in X$
+    \item[$\lc$] suppose \alert{continuity} for the bilinear form: $a(v,w)\le M\|v\|\|w\|$ for all $v,w\in X$
 
 \smallskip
-    \item[$\lc$] and coercivity: $a(v,v)\ge \alpha \|v\|^2$ for all $v\in X$
+    \item[$\lc$] and \alert{coercivity}: $a(v,v)\ge \alpha \|v\|^2$ for all $v\in X$
 
 \smallskip
     \item[$\lc$] define a linear operator $A:X\to X'$, so that $a(v,w)=\ip{Av}{w}$ for all $v,w\in X$
 
-\smallskip
-    \item the \alert{residual} of $w\in X$ is \alert{$F(w)=Aw-\ell \in X'$}, for a source term $\ell \in X'$
     \end{itemize}
+\smallskip
+\item for a source term $\ell \in X'$, the \alert{residual} of $w\in X$ is \alert{$F(w)=Aw-\ell \in X'$}
 \end{itemize}
 \end{frame}
 
@@ -984,7 +990,7 @@ K_h &= \{v_h : v_h\ge\psi_h\} \subset X_h
 \begin{frame}{FE for VIs: Falk's lemma}
 
 \begin{itemize}
-\item continuum problem for $u\in K$: \, $a(u,v-u) \ge \ip{\ell}{v-u} \,\forall v\in K$
+\item continuum problem for $u\in K$: \quad $a(u,v-u) \ge \ip{\ell}{v-u} \quad \forall v\in K$
     \begin{itemize}
     \item[$\lc$] for the exact solution $u\in K$, generally \alert{$F(u) = Au-\ell \ne 0$}
         \end{itemize}
@@ -993,14 +999,14 @@ K_h &= \{v_h : v_h\ge\psi_h\} \subset X_h
 \hfill \input{tikz/solnsupport.tex}
 
 \vspace{-8mm}
-\item FE problem for $u_h\in K_h$: \, $a(u_h,v_h-u_h) \ge \ip{\ell}{v_h-u_h} \,\forall v_h\in K_h$
+\item FE problem for $u_h\in K_h$: \quad $a(u_h,v_h-u_h) \ge \ip{\ell}{v_h-u_h} \quad \forall v_h\in K_h$
 \end{itemize}
 
 \begin{lemma}[Falk, 1974]
 
 \vspace{-5mm}
 \begin{align*}
-\|u-u_h\|_X^2 &\le \frac{M^2}{\alpha^2} \inf_{v_h\in K_h} \|u - v_h\|^2 \\
+\|u-u_h\|_X^2 &\le \frac{M^2}{\alpha^2} \inf_{v_h\in K_h} \|u - v_h\|_X^2 \\
    &\qquad \alert{+ \frac{2}{\alpha} \left(\inf_{v\in K} \ip{F(u)}{v-u_h} + \inf_{v_h\in K_h} \ip{F(u)}{v_h-u}\right)}
 \end{align*}
 \end{lemma}
@@ -1009,11 +1015,11 @@ K_h &= \{v_h : v_h\ge\psi_h\} \subset X_h
 \vspace{-2mm}
 \only<1>{
 \begin{corollary}[C\'ea's lemma]
-$K=X$: \qquad $\|u-u_h\|_X \le \frac{M}{\alpha} \inf_{v_h\in X_h} \|u - v_h\|$.
+$K=X$: \qquad $\|u-u_h\|_X \le \frac{M}{\alpha} \inf_{v_h\in X_h} \|u - v_h\|_X$.
 \end{corollary}
 }
 \only<2>{
-\begin{corollary}[more conforming case]
+\begin{corollary}[conforming $K_h$ case]
 $K_h \subset K$: \qquad ``$\inf_{v\in K}$'' term can be replaced with zero
 \end{corollary}
 }
@@ -1028,12 +1034,19 @@ assuming quasi-uniform (regular) meshes: \qquad $\|u-u_h\|_X \le C h$
 
 \begin{frame}{summary}
 
-FIXME
+a \alert{variational inequality} is:
+\begin{itemize}
+\item an inner-product description of inequality-constrained minimizers
+\item a constrained generalization of equations $F(u)=0$, enabling existence
+\item a precise weak form for describing active-set and free-boundary problems
+\item solvable by finite elements \grey{(easily, in Firedrake)}
+\item an interesting thing, worth learning about
+\end{itemize}
 
 \pause
 \centering
 {\Large
-\bigskip
+\bigskip\bigskip
 \alert{thank you for listening!}
 
 \bigskip
