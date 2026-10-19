@@ -17,7 +17,7 @@ See [talk1/talk1.pdf](talk1/talk1.pdf), with LaTeX sources in [talk1/](talk1/).
 TODO: Mine talks from mcd-extended/, and VI-AMR/presentations/.  Feature PDAS, HIK, Benson&Munson, Papadapoulos&Hintermuller peeling theorem, FASCD, NSV03, VIAMR.  Mention LVPP (but others have talked about that).
 
 1.
-* active-set Newton methods
+* active-set Newton methods (HIK)
 * vinewtonrsls in Petsc (BM06)
 * Papa. & Hintermuller: one layer of triangles per iteration
 2.
