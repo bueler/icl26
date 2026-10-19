@@ -629,9 +629,6 @@ Suppose $a(\cdot,\cdot)$ is bilinear, continuous, and coercive on a Hilbert spac
 
 \medskip
 \item $\sigma_n=n\cdot\sigma(u)\,n$ denotes the \emph{normal stress}
-    \begin{itemize}
-    \item[$\lc$] frictionless contact: tangential $\sigma_t=0$ on $\Gamma_C$
-    \end{itemize}
 
 \medskip
 \item along $\Gamma_C$:
@@ -641,6 +638,7 @@ g - u\cdot n &\ge 0 && \text{\small non-penetration}\\
 (g-u\cdot n) \, \sigma_n &= 0 && \text{\small \alert{complementarity}}
 \end{align*}
 \item the free boundary is a \alert{subset of $\Gamma_C$}
+\item frictionless contact: tangential $\sigma_t=0$ on $\Gamma_C$
 \end{itemize}
 
 \bigskip
@@ -662,16 +660,15 @@ g - u\cdot n &\ge 0 && \text{\small non-penetration}\\
     $$\alert{K = \{v\in H^1(\Omega;\mathbb{R}^d) : v=u_D \text{ on } \Gamma_D \text{ and } v\cdot n\le g \text{ on } \Gamma_C\}}$$
 \item VI problem is to find \alert{$u\in K$} so that
     $$\alert{\int_\Omega \sigma(u):E(v-u) \ge \int_\Omega f\cdot(v-u) \qquad\text{for all } v\in K}$$
-
-\pause
-\item key idea: \, $a(v,w)=\int_\Omega \sigma(v):E(w)$ is coercive on $H_0^1(\Omega;\mathbb{R}^d)$ by Korn's inequality
-
-\begin{theorem}[Fichera 1964]
-The Signorini problem is well-posed; there exists a unique solution.
-\end{theorem}
-
 \item equivalent to minimizing the elastic energy over admissible displacements:
     $$u \leftarrow \min_{v\in K} \int_\Omega \tfrac12\sigma(v):E(v) - f\cdot v$$
+
+\pause
+\begin{theorem}[Fichera 1964]
+The Signorini problem is well-posed.
+\end{theorem}
+
+\item key idea: \, $a(v,w)=\int_\Omega \sigma(v):E(w)$ is coercive on $H_0^1(\Omega;\mathbb{R}^d)$ by Korn's inequality
 \end{itemize}
 \end{frame}
 
@@ -685,7 +682,7 @@ The Signorini problem is well-posed; there exists a unique solution.
 \item linear elasticity is inadequate for large deformations
 \item consider nonlinear \alert{hyperelastic} material:
 \begin{align*}
-u \leftarrow \min_{v\in K} \omega(v) = \int_\Omega W(I+\nabla v) - f\cdot v
+u \leftarrow \min_{v\in K} J(v) = \int_\Omega W(I+\nabla v) - f\cdot v
 \end{align*}
 where $W(Z)$ is the \emph{strain energy density}
     \begin{itemize}
@@ -693,7 +690,7 @@ where $W(Z)$ is the \emph{strain energy density}
     \item[$\lc$] linearizing $W$ at $Z=I$ recovers previous model
     \end{itemize}
 \item a minimizer solves the VI
-    $$\ip{\omega'(u)}{v-u}\ge 0 \qquad\text{for all } v\in K$$
+    $$\ip{J'(u)}{v-u}\ge 0 \qquad\text{for all } v\in K$$
 \item but $W$ is \alert{not convex} in neo-Hookean model (Ciarlet 2022), so solutions need not be unique
 \end{itemize}
 }
@@ -722,7 +719,7 @@ where $W(Z)$ is the \emph{strain energy density}
 \begin{frame}{fluid layer in a climate}
 
 \begin{itemize}
-\item there are many applications of VIs, but here is a simple one I obsess upon \dots
+\item there are many applications of VIs, but here is my obsession \dots
 \item consider a thin layer of moving incompressible fluid, on a substrate, and in a climate:
     $$\alert{u_t+\nabla\cdot \bq = f} \hspace{70mm}$$
 
@@ -755,18 +752,21 @@ a source term; it adds or removes mass
 \end{frame}
 
 
-\begin{frame}{fluid layer in a climate: implicit time step VI}
+\begin{frame}{fluid layer in a climate: implicit time step}
 
 \begin{itemize}
-\item perhaps easiest to reason about backward Euler time steps
-\item let \alert{$K=\{v\in X=W^{1,p}(\Omega) : v\ge 0\}$} be the set of \alert{admissible thicknesses}
-\item given previous thickness $u_{n-1}\in K$, at time $t_{n-1}$
+\item consider backward Euler time steps \hfill \pcomm{parabolic form open?}
+\item for $X=W^{1,p}(\Omega)$ let \alert{$K=\{v\in X : v\ge 0\}$} be the \alert{admissible thicknesses}
+\item given previous (time $t_{n-1}$) thickness $u_{n-1}\in K$
 \item VI problem is to find $u_n\in K$ at $t_n$ so that, for all $v\in K$,
     $$\alert{\int_\Omega \frac{u_n-u_{n-1}}{\Delta t}(v-u_n) - \bq_n\cdot\nabla(v-u_n) \ge \int_\Omega f_n\,(v-u_n)} \hspace{20mm}$$
-\item $\bq_n = \bq(x,u_n,\grad u_n)$ denotes the unknown flux
+\item \alert{$\bq_n = \bq(x,u_n,\grad u_n)$} denotes the unknown flux
 \item well-posed for many flux formulas \pcomm{B.~2021}
-\item generally not an optimization problem
-\item note that $\Delta t\to \infty$ limit is steady state
+    \begin{itemize}
+    \item[$\lc$] advective, diffusive, nonlinear, \dots
+    \end{itemize}
+\item generally not an optimization
+\item note: $\Delta t\to \infty$ limit is steady state
 \end{itemize}
 
 \vspace{-16mm}
@@ -774,9 +774,9 @@ a source term; it adds or removes mass
 \end{frame}
 
 
-\begin{frame}{fluid layer in a climate: implicit time step VI}
+\begin{frame}{fluid layer in a climate: implicit time step}
 
-model for updated thickness $u_n\in \alert{K = \{v\in X=W^{1,p}(\Omega) : v\ge 0\}}$:
+VI model for updated thickness $\alert{u_n\in K = \{v\in X : v\ge 0\}}$:
     $$\alert{\int_\Omega \frac{u_n-u_{n-1}}{\Delta t}(v-u_n) - \bq_n\cdot\nabla(v-u_n) \ge \int_\Omega f_n\,(v-u_n)} \hspace{35mm}$$
 
 \begin{columns}[T,onlytextwidth]
@@ -800,7 +800,7 @@ model for updated thickness $u_n\in \alert{K = \{v\in X=W^{1,p}(\Omega) : v\ge 0
 
 \smallskip
 \begin{block}{observation (B.~2021)}
-The \alert{mass lost in the retreat area $\Omega_n^r$ came from an unknowable split between flow and climate.}  This is a barrier to exact mass conservation in numerical simulations.
+The \alert{mass lost in the retreat area $\Omega_n^r$} arose from an \alert{unknowable split between flow and climate.}  This is a barrier to exact mass conservation in numerical simulations.
 \end{block}
 \end{frame}
 
@@ -825,7 +825,8 @@ fluid layer in climate  & thickness $u\in W^{1,p}(\Omega)$  & $u\ge 0$ on $\Omeg
 in each:
 \begin{itemize}
 \item the constraint is active on a subset of $\Omega$, or of $\Gamma_C \subset \partial\Omega$, but
-\item \alert{a VI problem does not refer to the active subset or free boundary}
+\item the \alert{VI problem does not refer to the active set or free boundary}
+\item the solution process determines these sets
 \end{itemize}
 
 \medskip 
@@ -1006,18 +1007,18 @@ K_h &= \{v_h : v_h\ge\psi_h\} \subset X_h
 
 \begin{overlayarea}{\textwidth}{12mm}
 \vspace{-2mm}
-\only<2>{
-\begin{corollary}[C\'ea, 1964]
+\only<1>{
+\begin{corollary}[C\'ea's lemma]
 $K=X$: \qquad $\|u-u_h\|_X \le \frac{M}{\alpha} \inf_{v_h\in X_h} \|u - v_h\|$.
 \end{corollary}
 }
-\only<3>{
+\only<2>{
 \begin{corollary}[more conforming case]
 $K_h \subset K$: \qquad ``$\inf_{v\in K}$'' term can be replaced with zero
 \end{corollary}
 }
-\only<4>{
-\begin{corollary}[first-order convergence; Falk, 1974]
+\only<3>{
+\begin{corollary}[first-order convergence]
 assuming quasi-uniform (regular) meshes: \qquad $\|u-u_h\|_X \le C h$
 \end{corollary}
 }
