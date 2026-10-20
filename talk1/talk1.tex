@@ -83,16 +83,6 @@
 
 \vspace{-13mm}
 \mbox{\hspace{40mm} \input{tikz/calcIgeneric.tex}}
-
-\pause
-\raggedright
-
-\vspace{-2mm}
-\item 3 cases arise for a local minimizer $u$:
-
-\medskip
-  \centering
-  \input{tikz/calcIcases.tex}
 \end{itemize}
 \end{frame}
 
@@ -100,6 +90,7 @@
 \begin{frame}{a calculus I problem}
 
 \begin{itemize}
+\item how do you minimize a smooth $f(x)$ over a closed interval $[a,b]$?
 \item 3 cases for a local minimizer:
 
 \medskip
@@ -127,7 +118,6 @@
 \begin{itemize}
 \item suppose $H$ is a real Hilbert space \pcomm{e.g.~$\mathbb{R}^n$}
 \item let $K\subset H$ be nonempty, closed, and convex
-\item a parallelogram law \& completeness argument shows that a unique minimizer exists for the following problem, so it makes a good definition
 
 \begin{columns}
 \begin{column}{0.55\textwidth}
@@ -145,6 +135,7 @@ For $x\in H$, define the \emph{projection of $x$ onto $K$}:
 
 \medskip
 
+\item a parallelogram law \& completeness argument shows that a unique minimizer exists; this is a good definition
 \item notation: $u=\Pi_K x$
 \item observation: $\Pi_K:H \to K$ is Lipschitz continuous
 \end{itemize}
@@ -158,7 +149,7 @@ For $x\in H$, define the \emph{projection of $x$ onto $K$}:
 \begin{column}{0.55\textwidth}
 \begin{definition}
 For $K\subset H$ nonempty, closed, and convex, in a Hilbert space $H$, define the \emph{projection of $x\in H$ onto $K$}:
-  $$\qquad \Pi_K x = u \leftarrow \min_{y\in K}\, \|y-x\|. \hspace{50mm}$$
+  $$\qquad \Pi_K x \leftarrow \min_{y\in K}\, \|y-x\|. \hspace{50mm}$$
 \end{definition}
 
 \bigskip
@@ -172,7 +163,7 @@ For $K\subset H$ nonempty, closed, and convex, in a Hilbert space $H$, define th
 }
 
 \begin{itemize}
-\item question: how do we characterize the projection $u=\Pi_K x$ using inner products?
+\item question: can we characterize $\Pi_K x$ using inner products?
 \item answer: $u=\Pi_K x$ if and only if $u\in K$ and
 
 $$\boxed{\alert{\ip{u-x}{y-u}\ge 0}} \quad \text{for all } y\in K$$
@@ -247,7 +238,7 @@ Then $u\in K$ is a minimizer \alert{if and only if}
 \begin{frame}{systems of nonlinear equations}
 
 \begin{itemize}
-\item maybe variational inequalities are just convenience notation in optimization?
+\item variational inequalities are merely convenient notation in optimization?
 
 \pause
 \item but they \alert{need not come from optimization}
@@ -283,11 +274,11 @@ Then $u\in K$ is a minimizer \alert{if and only if}
 \begin{frame}{constrained nonlinear equations}
 
 \begin{itemize}
-\item change the problem minimally: solve a variational inequality instead of ``$F(u)=0$''
+\item minimal problem change: solve a variational inequality instead of ``$F(u)=0$''
 \end{itemize}
 
 \medskip
-\begin{theorem}[Hartman \& Stampacchia, 1964]
+\begin{theorem}[Hartman \& Stampacchia, 1966]
 If $K\subset\mathbb{R}^n$ is nonempty, compact, and convex, and if $F:K \to\RR^n$ is continuous, then there exists $u\in K$ so that
     $$\boxed{\alert{\ip{F(u)}{v-u} \ge 0}} \qquad\text{for all } v\in K.$$
 \end{theorem}
@@ -336,7 +327,7 @@ Furthermore, if $u$ is in the interior of $K$ then $F(u)=0$.
 
 \medskip
 \begin{itemize}
-\item what about uniqueness here? sufficient hypothesis on $F$?
+\item what about uniqueness? sufficient hypothesis on $F$?
 
 \pause
 \bigskip
@@ -577,7 +568,7 @@ Suppose $a(\cdot,\cdot)$ is bilinear, continuous, and coercive on a Hilbert spac
 \end{frame}
 
 
-\begin{frame}{elastic contact problem (Signorini, 1933)}
+\begin{frame}{elastic contact problem (Signorini, 1933?)}
 
 \begin{columns}[T,onlytextwidth]
 
@@ -660,7 +651,7 @@ g - u\cdot n &\ge 0 && \text{\small non-penetration}\\
 \item equivalent to minimizing the elastic energy over admissible displacements:
     $$u \leftarrow \min_{v\in K} \int_\Omega \tfrac12\sigma(v):E(v) - f\cdot v$$
 
-\begin{theorem}[Fichera 1964]
+\begin{theorem}[Fichera 1963]
 The Signorini problem is well-posed.
 \end{theorem}
 
@@ -695,12 +686,12 @@ where $W(Z)$ is the \emph{strain energy density}
 \item Farrell, Croci \& Surowiec (2020) considered a neo-Hookean beam
 \item constrained by top and bottom (box) obstacles
 \item clamped at left, compressed axially from right
-\item they found \alert{7 solutions} to this VI problem
+\item they found \alert{7 solutions} to a finite element approximation of this VI problem
     \begin{itemize}
     \item[$\lc$] 3 solutions never touch the obstacles (not shown)
     \item[$\lc$] 4 are in contact (right), with pale unconstrained versions
     \end{itemize}
-\item by method of \alert{deflation}
+\item from a new \alert{deflation} technique
     \begin{itemize}
     \item[$\lc$] and using Firedrake, of course
     \end{itemize}
@@ -784,7 +775,7 @@ VI model for updated thickness $\alert{u_n\in K = \{v\in X : v\ge 0\}}$:
 \begin{columns}[T,onlytextwidth]
 \begin{column}{0.6\textwidth}
 \begin{itemize}
-\item solution decomposes $\Omega$ into disjoint sets:
+\item the solution decomposes $\Omega$ into disjoint sets:
   \begin{align*}
     \Omega_n      &= \{u_n>0\}                        && \grey{\text{\small fluid-covered area}} \\
     \Omega_n^r    &= \{u_n=0 \text{ and } u_{n-1}>0\} && \grey{\text{\small retreat area}} \\
@@ -826,9 +817,8 @@ fluid layer in climate  & thickness $u\in W^{1,p}(\Omega)$  & $u\ge 0$ on $\Omeg
 \medskip
 in each:
 \begin{itemize}
-\item the constraint is active on a subset of $\Omega$, or of $\Gamma_C \subset \partial\Omega$, but
-\item the \alert{VI problem does not refer to the active set or free boundary}
-\item the solution process determines these sets
+\item one solves a PDE on an inactive subset which is not known in advance
+\item the \alert{VI problem does not refer, a priori, to the active set or free boundary}
 \end{itemize}
 
 \medskip 
@@ -843,7 +833,7 @@ in each:
 \begin{itemize}
 \item the final slides in this talk:
     \begin{itemize}
-    \item[$\lc$] are very elementary regarding FE, and
+    \item[$\lc$] are minimal and elementary regarding FE, and they
     \item[$\lc$] focus on the contrast between PDEs and VIs
     \end{itemize}
 \item recall the continuum classical obstacle problem:
@@ -877,18 +867,21 @@ For reasonable $\Omega$, if $\psi \in H^2$ and $f\in L^2$ then \alert{$u\in H_g^
 
 \vspace{-2mm}
     \begin{itemize}
-    \item[$\lc$] setting fixed boundary condition $g=0$ for simplicity
-    \item[$\lc$] assume $\int f v_h$ is exact \hfill \pcomm{usual FE conformity dismissal}
-    \item[$\lc$] assume for now that \alert{$\psi_h=I_h \psi$};\, the discrete obstacle is the interpolant of $\psi$
+    \item[$\lc$] setting fixed boundary condition $g=0$ for simplicity, and assuming $\int f v_h$ is exact
+    \item[$\lc$] assume for now that \alert{$\psi_h=I_h \psi$}:\, the discrete obstacle is the interpolant of $\psi$
     \end{itemize}
-\item pragmatically I am sticking to \alert{$X_h=P_1$} (continuous piecewise-linear) over meshes $\mathcal{T}_h$ of triangles/tetrahedra
+\item set \alert{$X_h=P_1$} (continuous piecewise-linear)
+    \begin{itemize}
+    \item[$\lc$] over meshes $\mathcal{T}_h$ of triangles or tetrahedra
+    \end{itemize}
+
 \pause
-\item regarding this choice, I have company
+\item regarding this wimpy choice:
 
 \medskip
 {\small
 \begin{block}{the low-order gauntlet for VIs \, (Ciarlet 2002, p 289)}
-[Because of the low regularity], \emph{finite elements ``of low degree'' are sufficient for all practical purposes, a fact amply confirmed by numerical evidence.}
+[Because of the low regularity in the obstacle problem], \emph{finite elements ``of low degree'' are sufficient for all practical purposes, a fact amply confirmed by numerical evidence.}
 \end{block}
 }
 
@@ -953,15 +946,13 @@ K_h &= \{v_h : v_h\ge\psi_h\} \subset X_h
 
 \begin{itemize}
 \item for elliptic PDEs, the basic FE accuracy story starts with Cea's lemma
-\item what error norm can we expect for a VI like the classical obstacle problem?
+\item what error norm bound applies to VIs?
     \begin{itemize}
     \item[$\lc$] the \alert{error} is $u-u_h$
     \end{itemize}
-
 \pause
-\medskip
 \item answer: Falk's generalization of C\'ea's lemma \pcomm{next slide}
-\item we state this using a standard set-up:
+\item stated using a standard set-up:
 
 \smallskip
     \begin{itemize}
@@ -974,7 +965,7 @@ K_h &= \{v_h : v_h\ge\psi_h\} \subset X_h
     \item[$\lc$] and \alert{coercivity}: $a(v,v)\ge \alpha \|v\|^2$ for all $v\in X$
 
 \smallskip
-    \item[$\lc$] define a linear operator $A:X\to X'$, so that $a(v,w)=\ip{Av}{w}$ for all $v,w\in X$
+    \item[$\lc$] define a linear operator $A:X\to X'$ such that $a(v,w)=\ip{Av}{w}$ for all $v,w\in X$
 
     \end{itemize}
 \smallskip
@@ -1032,8 +1023,8 @@ assuming quasi-uniform (regular) meshes: \qquad $\|u-u_h\|_X \le C h$
 
 a \alert{variational inequality} is:
 \begin{itemize}
-\item an inner-product description of inequality-constrained minimizers
-\item a constrained generalization of equations $F(u)=0$, enabling existence
+\item an inner-product description of inequality-constrained minimization
+\item a constrained generalization of a system of equations $F(u)=0$, enabling existence
 \item a precise weak form for describing active-set and free-boundary problems
 \item solvable by finite elements \grey{(easily, in Firedrake)}
 \item an interesting thing, worth learning about
