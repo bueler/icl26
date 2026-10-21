@@ -15,6 +15,11 @@
 
 \newtheorem{proposition}[theorem]{Proposition}
 
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\bu}{\mathbf{u}}
+
+\newcommand{\bF}{\mathbf{F}}
+
 \newcommand{\cA}{{\mathcal{A}}}
 \newcommand{\cI}{{\mathcal{I}}}
 \newcommand{\cK}{{\mathcal{K}}}  % with extra outer braces: safe in P_\cK under unicode-math
@@ -37,7 +42,8 @@
 % grey comments on the right
 \newcommand{\acomm}[1]{\ensuremath{\text{\small \grey{$\leftarrow$ #1}}}}
 \newcommand{\afcomm}[1]{\ensuremath{\text{\footnotesize \grey{$\leftarrow$ #1}}}}
-\newcommand{\pcomm}[1]{\ensuremath{\text{\small \grey{(#1)}}}}
+
+\newcommand{\pcomm}[1]{\grey{\small (#1)}}
 
 \newcommand{\blue}[1]{{\color{icBlue}#1}}
 
@@ -54,7 +60,8 @@
 \newcommand{\placeholder}[3]{\fbox{\parbox[c][#2][c]{#1}{\centering \small \grey{PLACEHOLDER: #3}}}}
 
 
-\title{A sampling of new solvers for variational inequalities}
+
+\title{A sampling of solvers for variational inequalities}
 %\subtitle{Newton, \emph{a posteriori}, multilevel, and beyond}
 
 \author{Ed Bueler}
@@ -77,21 +84,130 @@
 
 \section[active-set Newton]{active-set Newton methods}
 
-\begin{frame}{recall: the FE obstacle problem is a finite-dimensional VI}
+\begin{frame}{recall: classical obstacle problem as a VI}
+
+\begin{block}{classical obstacle problem}
+for $X=H^1(\Omega)$, and an obstacle $\psi$, define the closed and convex admissible subset \alert{$K= \{v\in X : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$}; seek $u\in K$ solving the variational inequality
+    $$\alert{\int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u)} \quad \forall v\in K$$
+\end{block}
+
+\begin{columns}
+\begin{column}{0.45\textwidth}
+\includegraphics[width=0.8\textwidth]{figs/viamr-obstacle.png}
+
+\hfill \input{tikz/obstaclesets.tex}
+\end{column}
+\begin{column}{0.55\textwidth}
+\begin{definition}
+the solution $u$ defines subsets of $\Omega$:
+\begin{align*}
+&\text{\alert{inactive set} } & E_u &= \{x\,:\,u(x)>\psi(x)\} \\
+&\text{\alert{active (contact) set} } & C_u &= \Omega \setminus E_u \\
+&\text{\alert{free boundary} } & \Gamma_u &= \Omega\cap\partial E_u
+\end{align*}
+\end{definition}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{recall: FE approximation, a finite-dimensional VI}
 
 \begin{itemize}
-\item last week: for $u_h\in K_h = \{v_h \in X_h : v_h \ge \psi_h\}$, with $X_h=P_1$,
-    $$\int_\Omega \grad u_h\cdot\grad(v_h-u_h) \ge \int_\Omega f\,(v_h-u_h) \quad \forall v_h\in K_h$$
-\item in nodal coefficients $u\in\RR^N$, with stiffness matrix $A$ and load vector $b$, the residual is
-    $$F(u) = Au - b \in \RR^N$$
-\item because $P_1$ admissibility is nodal, the VI is a \alert{complementarity problem} in $\RR^N$:
-\begin{align*}
-u_i - \psi_i &\ge 0 \\
-F_i(u) &\ge 0 \\
-(u_i-\psi_i)\, F_i(u) &= 0
-\end{align*}
-\item the \alert{multiplier} $\lambda = F(u) = Au-b$ is nonzero only on the \alert{active set} $\cA = \{i : u_i=\psi_i\}$
+\item assume \alert{$X_h=P_1$}, continuous \& piecewise-linear \hfill \pcomm{return to Ciarlet's gauntlet at the end}
+\item $g=0$ for convenience
+\item define \alert{$\psi_h = I_h \psi$}, the interpolant
+\item define $K_h = \{v_h \in X_h : v_h \ge \psi_h\}$
+    \begin{itemize}
+    \item[$\lc$] $K_h \subset X_h \subset X$, but generally \alert{$K_h \not\subset K$}
+    \item[$\lc$] for VIs: use ``conforming'' with care
+    \end{itemize}
 \end{itemize}
+
+\vspace{-17mm}
+\hfill \includegraphics[width=0.5\textwidth]{figs/cop.png}
+
+\medskip
+\begin{block}{FE approximation of classical obstacle problem}
+seek $u_h\in K_h$ so that
+    $$\int_\Omega \grad u_h\cdot\grad(v_h-u_h) \ge \int_\Omega f\,(v_h-u_h) \quad \forall v_h\in K_h$$
+\end{block}
+\end{frame}
+
+
+\begin{frame}{language: residual $=$ multipliers $=$ dual variables}
+
+\hfill \includegraphics[width=0.45\textwidth]{figs/copactive.png}
+
+\vspace{-15mm}
+\begin{itemize}
+\item for $u_h\in X_h=P_1$, let \alert{$\bu\in\RR^N$}
+
+denote the nodal solution values
+
+\smallskip
+\item for stiffness matrix $A$ and load vector $b$,
+
+the residual is \alert{$\bF(\bu) = A \bu - \bb \in \RR^N$}
+
+\smallskip
+\item in optimization, \alert{$\lambda_i = F(\bu)_i$} are the Lagrange \alert{multipliers} or \alert{dual variables}
+\pause
+\medskip
+\item at convergence, in exact arithmetic, generally \alert{$\lambda \ne 0$}, and
+    $$\lambda_i \ne 0 \implies u_i = \psi_i \text{\, and \,} x_i\in C_{u_h} \,\text{\pcomm{FE contact set; white nodes}}$$
+\end{itemize}
+
+\medskip
+\begin{block}{complementarity problem}
+  $$u_i - \psi_i \ge 0, \qquad \lambda_i \ge 0, \qquad (u_i-\psi_i) \lambda_i = 0$$
+
+    \begin{itemize}
+    \item[$\lc$] this $\RR^N$ \alert{complementarity problem} is the VI solver goal, not $\bF(\bu)=0$
+    \item[$\lc$] since $P_1$ admissibility is nodal:\, $u_i-\psi_i\ge 0 \, \forall i \, \iff \, u_h(x) - \psi_h(x)\ge 0 \, \forall x \in \Omega$
+    \end{itemize}
+\end{block}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{demo: refine the mesh and count the Newton iterations}
+
+\begin{minipage}[t]{0.66\textwidth}
+\only<1>{
+\inputminted[fontsize=\fontsize{6}{7}\selectfont]{python}{code/copref.py}
+}
+\only<2>{
+\inputminted[fontsize=\fontsize{6}{7}\selectfont]{python}{code/coprefTrue.py}
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.32\textwidth}
+\vspace{0mm}
+\includegraphics[width=\textwidth]{figs/copactive.png}
+
+\bigskip
+\begin{tabular}{rc}
+mesh & Newton its. \\
+\midrule
+$10\times 10$   & 4 \\
+$20\times 20$   & \only<1>{5}\only<2>{1} \\
+$40\times 40$   & \only<1>{8}\only<2>{2} \\
+$80\times 80$   & \only<1>{13}\only<2>{1} \\
+$160\times 160$ & \only<1>{24}\only<2>{2} \\
+$320\times 320$ & \only<1>{46}\only<2>{2} 
+\end{tabular}
+\medskip
+\begin{itemize}
+\only<1>{
+\item iterations \alert{double} at each refinement
+}
+\only<2>{
+\item \strikeThrough{iterations double at each refinement}
+}
+\item<2> resolved by \alert{grid sequencing}
+\end{itemize}
+\end{minipage}
 \end{frame}
 
 
@@ -154,41 +270,6 @@ PDAS is identical to a \alert{semismooth Newton} iteration for $G(u,\lambda)=0$.
 
 \grey{see also Chapter 12 of Bueler (2021)}
 \end{withpeople}
-\end{frame}
-
-
-\begin{frame}[fragile]
-\frametitle{demo: refine the mesh in last week's code}
-
-\begin{minipage}[t]{0.66\textwidth}
-\vspace{-5mm}
-\inputminted[fontsize=\fontsize{6}{7}\selectfont]{python}{code/copref.py}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.32\textwidth}
-\vspace{0mm}
-\begin{itemize}
-\item same problem as \texttt{cop.py} last week \pcomm{hemisphere obstacle}
-\item but loop over meshes
-\end{itemize}
-
-\medskip
-\begin{tabular}{rc}
-mesh & Newton its. \\
-\midrule
-$15\times 15$   & 5 \\
-$30\times 30$   & 6 \\
-$60\times 60$   & 10 \\
-$120\times 120$ & 18 \\
-$240\times 240$ & \alert{34} \\
-\bottomrule
-\end{tabular}
-
-\medskip
-\begin{itemize}
-\item iterations roughly \alert{double} with each refinement
-\end{itemize}
-\end{minipage}
 \end{frame}
 
 
@@ -266,230 +347,13 @@ PDAS iterations & 5 & 7 & 12 & 22 & 43 & 83 & \alert{165} \\
   \end{frame}
 }
 
-\section[\emph{a posteriori} and AMR]{\emph{a posteriori} estimates and adaptive refinement}
-
-\begin{frame}{\emph{a posteriori} error estimates for PDEs}
-
-\begin{itemize}
-\item for the Poisson problem $-\grad^2 u = f$, the error $u-u_h$ is unknown, but the \alert{residual} of $u_h$ is computable
-\item Babu\v{s}ka \& Rheinboldt (1978): on each element $T$,
-    $$\eta_T^2 = h_T^2 \int_T |f + \grad^2 u_h|^2 + \frac{h_T}{2} \int_{\partial T} \left[\!\left[ \grad u_h\cdot n \right]\!\right]^2$$
-\item then for $\eta^2 = \sum_T \eta_T^2$ there are constants so that
-    $$c\,\eta \le |u-u_h|_{H^1} \le C\, \eta$$
-    \begin{itemize}
-    \item[$\lc$] upper bound: \alert{reliability}
-    \item[$\lc$] lower bound: \alert{efficiency}
-    \end{itemize}
-\item adaptive mesh refinement (AMR) loop:
-    $$\text{solve} \to \text{estimate} \to \text{mark} \to \text{refine} \to \text{solve} \to \dots$$
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{what is different for VIs?}
-\begin{withpeople}{\photo{generic.png}{A.~Veeser}}
-
-\begin{itemize}
-\item recall the residual $\sigma = F(u) - \ell$, e.g.~$\sigma = -\grad^2 u - f$
-    \begin{itemize}
-    \item[$\lc$] $\sigma \ge 0$ on the active set, and $\sigma = 0$ on the inactive set
-    \item[$\lc$] $\sigma$ is the \alert{multiplier}; generally a measure
-    \end{itemize}
-\item the map from data $f$ to solution $u$ is not one-to-one:
-    \begin{itemize}
-    \item[$\lc$] changing $f$ inside the active set may not change $u$ at all
-    \item[$\lc$] the information lost from $u$ is recorded in $\sigma$
-    \end{itemize}
-\end{itemize}
-
-\begin{block}{Veeser's idea (2001)}
-For VIs, estimate the error in the \alert{pair} $(u,\sigma)$, not just in $u$.
-\end{block}
-
-\begin{itemize}
-\item Veeser (2001) proved reliable and efficient energy-norm estimators for $(u-u_h,\sigma-\sigma_h)$
-\item the interior residual is localized to the (discrete) inactive set
-\end{itemize}
-\end{withpeople}
-\end{frame}
-
-
-\begin{frame}{pointwise \emph{a posteriori} bounds (NSV03)}
-\begin{withpeople}{\photo{nochetto.jpg}{R.~Nochetto} \photo{siebert.jpg}{K.~Siebert} \photo{generic.png}{A.~Veeser}}
-
-\begin{itemize}
-\item Nochetto, Siebert \& Veeser (2003): maximum-norm bounds, with constraint imposed only at nodes
-\end{itemize}
-
-\begin{theorem}[NSV03]
-For the $P_1$ classical obstacle problem there is a computable $E_h$ so that
-    $$\max\left\{\|u-u_h\|_{L^\infty}, \,\, \|\sigma-\tilde\sigma_h\|_{W^{-2,\infty}}\right\} \le E_h,$$
-and each term of $E_h$ is also locally efficient.
-\end{theorem}
-
-\vspace{-1mm}
-{\small
-\begin{align*}
-E_h &= C_0 |\log h_{\min}|^2 \|h^2 R_\infty\|_\infty && \afcomm{residual, localized to inactive set} \\
-    &\quad + C_1 |\log h_{\min}|^2 \|h^2 \grad\sigma_h\|_{d} && \afcomm{quadrature} \\
-    &\quad + \|(\psi - u_h)^+\|_\infty + \|(u_h-\psi)^+\|_{\infty;\{\sigma_h>0\}} && \afcomm{obstacle approx.~and detachment} \\
-    &\quad + \|g - I_h g\|_{\infty;\partial\Omega} && \afcomm{boundary data}
-\end{align*}
-}
-\end{withpeople}
-\end{frame}
-
-
-\begin{frame}{corollary: bilateral obstacle problems}
-
-\begin{itemize}
-\item now the box constraint $\underline{\psi} \le u \le \overline{\psi}$, with contact sets $\underline{C}_u$ and $\overline{C}_u$
-\item $\sigma\ge 0$ on $\underline{C}_u$, $\sigma\le 0$ on $\overline{C}_u$
-\end{itemize}
-
-\begin{corollary}[Bueler 2026]
-The NSV03 bound $\|u-u_h\|_{L^\infty} \le E_h$, and its efficiency, extend to the bilateral case, with
-\begin{itemize}
-\item two obstacle-admissibility terms, and
-\item two detachment terms, over \alert{star-dilated} discrete contact sets.
-\end{itemize}
-\end{corollary}
-
-\begin{itemize}
-\item the only real cost is in the barrier construction for reliability
-\item implemented in VIAMR \pcomm{next}
-\end{itemize}
-
-\vspace{-28mm}
-\hfill \includegraphics[width=0.25\textwidth]{figs/bilateral-surf.png}
-
-\vspace{5mm}
-\end{frame}
-
-
-\begin{frame}{bilateral example}
-
-\begin{itemize}
-\item exact radial solution on $(-2,2)^2$, with $-1\le u\le 1$; free boundaries are circles
-\item AMR by marking with the bilateral $E_h$
-\item marked elements, early and later:
-\end{itemize}
-
-\begin{center}
-\includegraphics[height=0.3\textheight]{figs/bilateral-mark-4.png} \qquad
-\includegraphics[height=0.3\textheight]{figs/bilateral-mark-7.png}
-\end{center}
-
-\begin{itemize}
-\item optimal $O(h^2)$ pointwise error; effectivity settles near 4:
-\end{itemize}
-
-\begin{center}
-\includegraphics[height=0.27\textheight]{figs/bilateral-conv.png} \qquad
-\includegraphics[height=0.27\textheight]{figs/bilateral-eff.png}
-\end{center}
-\end{frame}
-
-
-\begin{frame}{VIAMR: AMR for the free boundary}
-\begin{withpeople}{\photo{fochesatto.jpg}{S.~Fochesatto}}
-
-\begin{itemize}
-\item often the \alert{free boundary location} is the goal
-\item VIAMR: a Firedrake-based library
-\item separate two concerns, then recombine:
-    \begin{itemize}
-    \item[1.] \alert{UDO}: refine near the free boundary
-    \item[2.] \alert{BR}: estimator in the inactive set
-    \end{itemize}
-\item UDO $=$ unstructured dilation operator:
-    \begin{itemize}
-    \item[$\lc$] mark elements with both active and inactive vertices
-    \item[$\lc$] dilate the marking by $n$ layers of neighbors
-    \end{itemize}
-\item mark by the union, then refine
-\end{itemize}
-
-\vspace{-38mm}
-\hfill \includegraphics[width=0.24\textwidth]{figs/sphereudo.png}
-\end{withpeople}
-\end{frame}
-
-
-\begin{frame}[fragile]
-\frametitle{demo: VIAMR}
-
-\begin{itemize}
-\item after solving for $u_h$ \pcomm{as in \texttt{cop.py}}, refine by UDO+BR:
-\end{itemize}
-
-\begin{minted}[fontsize=\scriptsize]{python}
-from viamr import VIAMR
-amr = VIAMR()
-fbmark = amr.udomark(uh, psih, n=1)                 # near free boundary
-residual = -div(grad(uh))
-imark, _, _ = amr.brinactivemark(uh, psih, residual, theta=0.7)  # in inactive set
-mark = amr.unionmarks(fbmark, imark)
-refinedmesh = amr.refinemarkedelements(mesh, mark)
-\end{minted}
-
-\medskip
-\begin{itemize}
-\item repeat: solve on the refined mesh, using the previous solution as initial iterate
-\end{itemize}
-
-\medskip
-\placeholder{0.8\textwidth}{30mm}{live demo or figure: a few levels of UDO+BR refinement on the hemisphere obstacle}
-\end{frame}
-
-
-\begin{frame}{comparison: UDO+BR versus NSV03}
-
-\begin{itemize}
-\item bilateral example again, both methods \hfill \grey{\small \texttt{viamr/examples/bilateral.py}}
-\end{itemize}
-
-\begin{center}
-\includegraphics[height=0.55\textheight]{figs/viamr-bilateral-compare.png}
-\end{center}
-
-\placeholder{0.8\textwidth}{12mm}{rerun at larger target; what is the take-away?}
-\end{frame}
-
-
 \section{multilevel solvers}
-
-\begin{frame}{grid sequencing}
-
-\begin{itemize}
-\item fix for the peeling effect: start from a good initial iterate
-\item solve on a coarse mesh, then interpolate to the next finer mesh, and repeat
-\item in the earlier demo code, set \texttt{gridseq = True}
-    \begin{itemize}
-    \item[$\lc$] then \texttt{prolong()} makes the coarse solution into the initial iterate
-    \end{itemize}
-\end{itemize}
-
-\bigskip
-\begin{center}
-\begin{tabular}{rcc}
-mesh & \multicolumn{2}{c}{Newton iterations} \\
-     & refine only & grid sequencing \\
-\midrule
-$15\times 15$   & 5 & 5 \\
-$30\times 30$   & 6 & 2 \\
-$60\times 60$   & 10 & 2 \\
-$120\times 120$ & 18 & 2 \\
-$240\times 240$ & 34 & \alert{2} \\
-\bottomrule
-\end{tabular}
-\end{center}
-\end{frame}
 
 
 \begin{frame}{Newton-multigrid}
 
 \begin{itemize}
+\item already seen effect of grid-sequencing
 \item the reduced-space Newton step is an SPD linear system on the inactive set
 \item precondition it with multigrid: \alert{Newton-multigrid}
 \item combined with grid sequencing \pcomm{a nonlinear F-cycle}:
@@ -597,6 +461,146 @@ processes & levels & nodes & V-cycles after FMG & time (s) \\
 \end{frame}
 
 
+\section[\emph{a posteriori} and AMR]{\emph{a posteriori} estimates and adaptive refinement}
+
+\begin{frame}{\emph{a posteriori} error estimates for PDEs}
+
+\begin{itemize}
+\item for the Poisson problem $-\grad^2 u = f$, the error $u-u_h$ is unknown, but the \alert{residual} of $u_h$ is computable
+\item Babu\v{s}ka \& Rheinboldt (1978): on each element $T$,
+    $$\eta_T^2 = h_T^2 \int_T |f + \grad^2 u_h|^2 + \frac{h_T}{2} \int_{\partial T} \left[\!\left[ \grad u_h\cdot n \right]\!\right]^2$$
+\item then for $\eta^2 = \sum_T \eta_T^2$ there are constants so that
+    $$c\,\eta \le |u-u_h|_{H^1} \le C\, \eta$$
+    \begin{itemize}
+    \item[$\lc$] upper bound: \alert{reliability}
+    \item[$\lc$] lower bound: \alert{efficiency}
+    \end{itemize}
+\item adaptive mesh refinement (AMR) loop:
+    $$\text{solve} \to \text{estimate} \to \text{mark} \to \text{refine} \to \text{solve} \to \dots$$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{what is different for VIs?}
+\begin{withpeople}{\photo{generic.png}{A.~Veeser}}
+
+\begin{itemize}
+\item recall the residual $\sigma = F(u) - \ell$, e.g.~$\sigma = -\grad^2 u - f$
+    \begin{itemize}
+    \item[$\lc$] $\sigma \ge 0$ on the active set, and $\sigma = 0$ on the inactive set
+    \item[$\lc$] $\sigma$ is the \alert{multiplier}; generally a measure
+    \end{itemize}
+\item the map from data $f$ to solution $u$ is not one-to-one:
+    \begin{itemize}
+    \item[$\lc$] changing $f$ inside the active set may not change $u$ at all
+    \item[$\lc$] the information lost from $u$ is recorded in $\sigma$
+    \end{itemize}
+\end{itemize}
+
+\begin{block}{Veeser's idea (2001)}
+For VIs, estimate the error in the \alert{pair} $(u,\sigma)$, not just in $u$.
+\end{block}
+
+\begin{itemize}
+\item Veeser (2001) proved reliable and efficient energy-norm estimators for $(u-u_h,\sigma-\sigma_h)$
+\item the interior residual is localized to the (discrete) inactive set
+\end{itemize}
+\end{withpeople}
+\end{frame}
+
+
+\begin{frame}{pointwise \emph{a posteriori} bounds (NSV03)}
+\begin{withpeople}{\photo{nochetto.jpg}{R.~Nochetto} \photo{siebert.jpg}{K.~Siebert} \photo{generic.png}{A.~Veeser}}
+
+\begin{itemize}
+\item Nochetto, Siebert \& Veeser (2003): maximum-norm bounds, with constraint imposed only at nodes
+\end{itemize}
+
+\begin{theorem}[NSV03]
+For the $P_1$ classical obstacle problem there is a computable $E_h$ so that
+    $$\max\left\{\|u-u_h\|_{L^\infty}, \,\, \|\sigma-\tilde\sigma_h\|_{W^{-2,\infty}}\right\} \le E_h,$$
+and each term of $E_h$ is also locally efficient.
+\end{theorem}
+
+\vspace{-1mm}
+{\small
+\begin{align*}
+E_h &= C_0 |\log h_{\min}|^2 \|h^2 R_\infty\|_\infty && \afcomm{residual, localized to inactive set} \\
+    &\quad + C_1 |\log h_{\min}|^2 \|h^2 \grad\sigma_h\|_{d} && \afcomm{quadrature} \\
+    &\quad + \|(\psi - u_h)^+\|_\infty + \|(u_h-\psi)^+\|_{\infty;\{\sigma_h>0\}} && \afcomm{obstacle approx.~and detachment} \\
+    &\quad + \|g - I_h g\|_{\infty;\partial\Omega} && \afcomm{boundary data}
+\end{align*}
+}
+\end{withpeople}
+\end{frame}
+
+
+\begin{frame}{VIAMR: AMR for the free boundary}
+\begin{withpeople}{\photo{fochesatto.jpg}{S.~Fochesatto}}
+
+\begin{itemize}
+\item often the \alert{free boundary location} is the goal
+\item VIAMR: a Firedrake-based library
+\item separate two concerns, then recombine:
+    \begin{itemize}
+    \item[1.] \alert{UDO}: refine near the free boundary
+    \item[2.] \alert{BR}: estimator in the inactive set
+    \end{itemize}
+\item UDO $=$ unstructured dilation operator:
+    \begin{itemize}
+    \item[$\lc$] mark elements with both active and inactive vertices
+    \item[$\lc$] dilate the marking by $n$ layers of neighbors
+    \end{itemize}
+\item mark by the union, then refine
+\end{itemize}
+
+\vspace{-38mm}
+\hfill \includegraphics[width=0.24\textwidth]{figs/sphereudo.png}
+\end{withpeople}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{demo: VIAMR}
+
+\begin{itemize}
+\item after solving for $u_h$ \pcomm{as in \texttt{cop.py}}, refine by UDO+BR:
+\end{itemize}
+
+\begin{minted}[fontsize=\scriptsize]{python}
+from viamr import VIAMR
+amr = VIAMR()
+fbmark = amr.udomark(uh, psih, n=1)                 # near free boundary
+residual = -div(grad(uh))
+imark, _, _ = amr.brinactivemark(uh, psih, residual, theta=0.7)  # in inactive set
+mark = amr.unionmarks(fbmark, imark)
+refinedmesh = amr.refinemarkedelements(mesh, mark)
+\end{minted}
+
+\medskip
+\begin{itemize}
+\item repeat: solve on the refined mesh, using the previous solution as initial iterate
+\end{itemize}
+
+\medskip
+\placeholder{0.8\textwidth}{30mm}{live demo or figure: a few levels of UDO+BR refinement on the hemisphere obstacle}
+\end{frame}
+
+
+\begin{frame}{comparison: UDO+BR versus NSV03}
+
+\begin{itemize}
+\item FIXME NOT BILATERAL bilateral example again, both methods \hfill \grey{\small \texttt{viamr/examples/bilateral.py}}
+\end{itemize}
+
+\begin{center}
+\includegraphics[height=0.55\textheight]{figs/viamr-bilateral-compare.png}
+\end{center}
+
+\placeholder{0.8\textwidth}{12mm}{rerun at larger target; what is the take-away?}
+\end{frame}
+
+
 \section[higher-order and latent]{higher-order and latent variables}
 
 \begin{frame}{high-order bounds via the Bernstein basis}
@@ -673,7 +677,8 @@ processes & levels & nodes & V-cycles after FMG & time (s) \\
 \end{frame}
 
 
-\begin{frame}[allowframebreaks]{references}
+%\begin{frame}[allowframebreaks]{references}
+\begin{frame}{references}
 \input{references.tex}
 \end{frame}
 

@@ -1,9 +1,9 @@
 from firedrake import *
 
-gridseq = False  # if True, use coarse solution as next initial iterate
+gridseq = False
 
-mesh0 = RectangleMesh(15, 15, 2, 2, -2, -2, diagonal="crossed")
-hierarchy = MeshHierarchy(mesh0, 4)  # m = 15, 30, 60, 120, 240
+mesh0 = RectangleMesh(10, 10, 2, 2, -2, -2, diagonal="crossed")
+hierarchy = MeshHierarchy(mesh0, 5)
 uh = None
 for mesh in hierarchy:
     x, y = SpatialCoordinate(mesh)
@@ -17,10 +17,11 @@ for mesh in hierarchy:
     F = inner(grad(uh), grad(vh)) * dx
     bcs = DirichletBC(V, Constant(0.0), "on_boundary")
     prob = NonlinearVariationalProblem(F, uh, bcs)
-    sp = {"snes_type": "vinewtonrsls"}
+    sp = {"snes_type": "vinewtonrsls"}  # to explain!
     solver = NonlinearVariationalSolver(prob, solver_parameters=sp)
     INF = Function(V).interpolate(Constant(PETSc.INFINITY))
     solver.solve(bounds=(psih, INF))
     m = int(round(sqrt(mesh.num_cells() / 4)))
     q = solver.snes.getIterationNumber()
     print(f"{m:4d} x {m:4d}: {q} Newton iterations")
+    #VTKFile(f"result{m}.pvd").write(uh, psih)
