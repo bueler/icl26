@@ -8,11 +8,11 @@ This repository contains the slides for lectures 1 and 2.  Links to PDFs and sou
 
 This lecture series introduces variational inequalities to a general applied mathematical audience, pursues their finite element solution, and applies them to a geophysical problem.  Variational inequalities are partial differential equation weak forms, but subject to bounds on their solution(s).  They reformulate how one might pose boundary conditions at a free location; where the conditions apply is now determined simultaneously along with the solution.  Certain variational inequalities state the KKT conditions of optimization problems in function spaces, and in all cases these continuum models introduce admissibility and complementarity concerns into numerical solver methodology.  Examples of variational inequalities include the classical obstacle problem, the problem of elastic contact, and, as I will emphasize, the problem of finding the extent of glaciation in a time- and space-varying climate.  Recent results and open problems will appear, regarding multigrid approaches, adaptive mesh refinement, higher-order elements, and well-posedness of the glacier model.
 
-## lecture 1: Introduction to variational inequalities and their finite element solution
+## lecture 1 on 20 October: Introduction to variational inequalities and their finite element solution
 
-See [talk1/talk1.pdf](talk1/talk1.pdf), with LaTeX sources in [talk1/](talk1/).
+See [slides-oct20.pdf](slides-oct20.pdf), with LaTeX sources in [talk1/](talk1/).
 
-## lecture 2: A survey of new solvers for variational inequalities
+## lecture 2 on 27 October: A survey of new solvers for variational inequalities
 
 TODO: Mine talks from mcd-extended/, and VI-AMR/presentations/.  Feature PDAS, HIK, Benson&Munson, Papadapoulos&Hintermuller peeling theorem, FASCD, NSV03, VIAMR.  Mention LVPP (but others have talked about that).
 
@@ -31,10 +31,10 @@ TODO: Mine talks from mcd-extended/, and VI-AMR/presentations/.  Feature PDAS, H
 * Berstein polynomials
 * LVPP
 
-## lecture 3: Stokes glacier models with Firedrake: A tutorial
+## lecture 3 on 3 November: Stokes glacier models with Firedrake: A tutorial
 
 This lecture uses the existing slides from [stokes-ice-tutorial/](https://github.com/bueler/stokes-ice-tutorial).
 
-## lecture 4: The mathematical (and numerical) problem of glaciation
+## lecture 4 on 17 November: The mathematical (and numerical) problem of glaciation
 
 TODO: well-posedness etc.  Mine talks from glacier-fe-estimate/talk/UW26/
