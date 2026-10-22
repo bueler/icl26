@@ -12,6 +12,7 @@
 \usepackage{ifthen}
 \usepackage{minted}
 \usepackage[kw]{pseudo}
+\usepackage[export]{adjustbox}
 
 % pseudocode: grey slanted comments, and highlights tight around the text of a line
 \newcommand{\algcomment}[1]{\textsl{\grey{#1}}}
@@ -71,7 +72,7 @@
 
 
 
-\title{New solvers for variational inequalities: a sampling}
+\title{New solvers for variational inequalities: a sample}
 %\subtitle{Newton, \emph{a posteriori}, multilevel, and beyond}
 
 \author{Ed Bueler}
@@ -116,7 +117,7 @@ This is the \alert{variational inequality} (VI) problem for the data $K$ and $F$
 \item $K$ is generally given via inequalities (and/or equalities)
     \begin{itemize}
     \item[$\lc$] libraries often restrict to \alert{box constraints}, lower \& upper bounds on each dof
-    \item[$\lc$] bounds might be $\pm$\texttt{INFINITY}, so unconstrained is included
+    \item[$\lc$] bounds might be $\pm\infty$, so unconstrained dofs are included
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -195,7 +196,8 @@ seek $u_h\in K_h$ so that
 \hfill
 \begin{minipage}[t]{0.32\textwidth}
 \vspace{-4.5mm}
-\hspace{-10mm} \includegraphics[width=0.75\textwidth]{figs/copactive.png} \hfill \includegraphics[width=0.3\textwidth]{figs/qrnanook.png}
+
+\hspace{-15mm} \mbox{\includegraphics[valign=t,width=0.85\textwidth]{figs/cop.png}  \, \includegraphics[valign=t,width=0.4\textwidth]{figs/qrnanook.png}}
 
 \bigskip
 {\small
@@ -318,6 +320,20 @@ PDAS is identical to a \alert{semismooth Newton} iteration for $G(u,\lambda)=0$.
 
 
 \grey{see also Chapter 12 of Bueler (2021)}
+\end{withpeople}
+\end{frame}
+
+
+\begin{frame}{BM is a half-step off of HIK}
+\begin{withpeople}{\photo{papadopoulos.jpg}{I.~Papadopoulos} \photo{farrell.jpg}{P.~Farrell} \photo{surowiec.jpg}{T.~Surowiec}}
+
+\begin{itemize}
+\item FIXME
+\end{itemize}
+
+\begin{theorem}[Papadopoulos, Farrell, \& Surowiec 2021]
+FIXME
+\end{theorem}
 \end{withpeople}
 \end{frame}
 
