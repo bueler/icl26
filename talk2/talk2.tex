@@ -9,7 +9,6 @@
 
 \usepackage{icl26}
 \usepackage{verbatim,fancyvrb}
-\usepackage{algorithm,algorithmic}
 \usepackage{ifthen}
 \usepackage{minted}
 \usepackage[kw]{pseudo}
@@ -104,15 +103,19 @@ Given a normed vector space $X$, a closed and convex \alert{admissible subset} $
 This is the \alert{variational inequality} (VI) problem for the data $K$ and $F$.
 \end{definition}
 
+\pause
 \begin{itemize}
 \item $\ip{\cdot}{\cdot}$ denotes Hilbert space inner product or dual pairing, according to context
+    \begin{itemize}
+    \item[$\lc$] $X$ will need to be complete (Banach) in practice
+    \end{itemize}
 \item this is a \alert{VI of the first kind} in some references
     \begin{itemize}
-    \item[$\lc$] second kind: $\ip{F(u)}{v-u} + j(u) - j(v) \ge 0$ for some $j:K\to \RR$
+    \item[$\lc$] second kind: $\ip{F(u)}{v-u} + \Phi(v) - \Phi(u) \ge 0 \, \forall v$, for some $\Phi:K\to \RR$
     \end{itemize}
-\item the subset $K$ is generally given via inequality and/or equality constraints
+\item $K$ is generally given via inequalities (and/or equalities)
     \begin{itemize}
-    \item[$\lc$] libraries often restrict to \alert{box constraints}, lower/upper bounds on each dof
+    \item[$\lc$] libraries often restrict to \alert{box constraints}, lower \& upper bounds on each dof
     \item[$\lc$] bounds might be $\pm$\texttt{INFINITY}, so unconstrained is included
     \end{itemize}
 \end{itemize}
@@ -122,7 +125,7 @@ This is the \alert{variational inequality} (VI) problem for the data $K$ and $F$
 \begin{frame}{recall: classical obstacle problem as a VI}
 
 \begin{block}{classical obstacle problem}
-for $X=H^1(\Omega)$, and an obstacle $\psi$, define the closed and convex admissible subset \alert{$K= \{v\in X : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$}; seek $u\in K$ solving the variational inequality
+for $X=H^1(\Omega)$, and an \alert{obstacle $\psi\in X$}, define the closed and convex admissible subset \alert{$K= \{v\in X : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$}, and seek $u\in K$ solving
     $$\alert{\int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u)} \quad \forall v\in K$$
 \end{block}
 
@@ -152,10 +155,10 @@ the solution $u$ defines subsets of $\Omega$:
 \item assume \alert{$X_h=P_1$}, continuous \& piecewise-linear \hfill \pcomm{I'll return to Ciarlet's gauntlet at end}
 \item $g=0$ for convenience
 \item define \alert{$\psi_h = I_h \psi$}, the interpolant
-\item define $K_h = \{v_h \in X_h : v_h \ge \psi_h\}$
+\item define \alert{$K_h = \{v_h \in X_h : v_h \ge \psi_h \text{ and } v_h|_{\partial\Omega}=0\}$}
     \begin{itemize}
     \item[$\lc$] $K_h \subset X_h \subset X$, but generally \alert{$K_h \not\subset K$}
-    \item[$\lc$] for VIs: use ``conforming'' with care
+    \item[$\lc$] please use ``conforming'' with care!
     \end{itemize}
 \end{itemize}
 
@@ -178,6 +181,51 @@ seek $u_h\in K_h$ so that
 \section{active-set Newton methods}
 
 
+\begin{frame}[fragile]
+\frametitle{demo: refine the mesh and count the Newton iterations}
+
+\begin{minipage}[t]{0.66\textwidth}
+\only<1>{
+\inputminted[fontsize=\fontsize{6}{7}\selectfont]{python}{code/copref.py}
+}
+\only<2>{
+\inputminted[fontsize=\fontsize{6}{7}\selectfont]{python}{code/coprefTrue.py}
+}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.32\textwidth}
+\vspace{-4.5mm}
+\hspace{-10mm} \includegraphics[width=0.75\textwidth]{figs/copactive.png} \hfill \includegraphics[width=0.3\textwidth]{figs/qrnanook.png}
+
+\bigskip
+{\small
+\begin{tabular}{rc}
+mesh & Newton its. \\
+\midrule
+$10\times 10$   & 4 \\
+$20\times 20$   & \only<1>{5}\only<2>{\alert{1}} \\
+$40\times 40$   & \only<1>{8}\only<2>{\alert{2}} \\
+$80\times 80$   & \only<1>{13}\only<2>{\alert{1}} \\
+$160\times 160$ & \only<1>{24}\only<2>{\alert{2}} \\
+$320\times 320$ & \only<1>{46}\only<2>{\alert{2}} 
+\end{tabular}
+}
+\medskip
+{\small
+\begin{itemize}
+\only<1>{
+\item iterations \alert{double} at each refinement
+}
+\only<2>{
+\item \strikeThrough{iterations double at each refinement}
+}
+\item<2> resolved by \alert{grid sequencing}
+\end{itemize}
+}
+\end{minipage}
+\end{frame}
+
+
 \begin{frame}{language: residual $=$ multipliers $=$ dual variables}
 
 \hfill \includegraphics[width=0.45\textwidth]{figs/copactive.png}
@@ -195,62 +243,20 @@ the residual is \alert{$\bF(\bu) = A \bu - \bb \in \RR^N$}
 
 \smallskip
 \item in optimization, \alert{$\lambda_i = F(\bu)_i$} are the Lagrange \alert{multipliers} or \alert{dual variables}
+
 \pause
 \medskip
-\item at convergence, in exact arithmetic, generally \alert{$\lambda \ne 0$}, and
-    $$\lambda_i \ne 0 \implies u_i = \psi_i \text{\, and \,} x_i\in C_{u_h} \,\text{\pcomm{FE contact set; white nodes}}$$
-\end{itemize}
-
-\medskip
-\begin{block}{complementarity problem}
+\begin{block}{complementarity problem (CP)}
+for $i \in \{1,\dots,N\}$,
   $$u_i - \psi_i \ge 0, \qquad \lambda_i \ge 0, \qquad (u_i-\psi_i) \lambda_i = 0$$
-
-    \begin{itemize}
-    \item[$\lc$] this $\RR^N$ \alert{complementarity problem} is the VI solver goal, not $\bF(\bu)=0$
-    \item[$\lc$] since $P_1$ admissibility is nodal:\, $u_i-\psi_i\ge 0 \, \forall i \, \iff \, u_h(x) - \psi_h(x)\ge 0 \, \forall x \in \Omega$
-    \end{itemize}
 \end{block}
-\end{frame}
 
-
-\begin{frame}[fragile]
-\frametitle{demo: refine the mesh and count the Newton iterations}
-
-\begin{minipage}[t]{0.66\textwidth}
-\only<1>{
-\inputminted[fontsize=\fontsize{6}{7}\selectfont]{python}{code/copref.py}
-}
-\only<2>{
-\inputminted[fontsize=\fontsize{6}{7}\selectfont]{python}{code/coprefTrue.py}
-}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.32\textwidth}
-\vspace{0mm}
-\includegraphics[width=\textwidth]{figs/copactive.png}
-
-\bigskip
-\begin{tabular}{rc}
-mesh & Newton its. \\
-\midrule
-$10\times 10$   & 4 \\
-$20\times 20$   & \only<1>{5}\only<2>{1} \\
-$40\times 40$   & \only<1>{8}\only<2>{2} \\
-$80\times 80$   & \only<1>{13}\only<2>{1} \\
-$160\times 160$ & \only<1>{24}\only<2>{2} \\
-$320\times 320$ & \only<1>{46}\only<2>{2} 
-\end{tabular}
 \medskip
-\begin{itemize}
-\only<1>{
-\item iterations \alert{double} at each refinement
-}
-\only<2>{
-\item \strikeThrough{iterations double at each refinement}
-}
-\item<2> resolved by \alert{grid sequencing}
+\item this CP in $\RR^N$ is \alert{the VI solver goal}, not $\bF(\bu)=0$
+\item $P_1$ admissibility is nodal:\,\, $u_i-\psi_i\ge 0 \, \forall i \, \iff \, u_h(x) - \psi_h(x)\ge 0 \, \forall x \in \Omega$
+\item at convergence, in exact arithmetic, generally \alert{$\lambda \ne 0$}, and
+    $$\hspace{20mm} \lambda_i \ne 0 \implies u_i = \psi_i \text{\, and \,} x_i\in C_{u_h} \,\hspace{20mm} \text{\pcomm{$x_i$ in contact set, white nodes}}$$
 \end{itemize}
-\end{minipage}
 \end{frame}
 
 
@@ -263,16 +269,16 @@ $320\times 320$ & \only<1>{46}\only<2>{2}
 \item the \alert{primal-dual active set} (PDAS) iteration uses both $u$ and $\lambda$ to update the guess, with any $c>0$:
 \end{itemize}
 
-{\small
-\begin{algorithmic}[1]
-\FOR{$k=0,1,2,\dots$}
-  \STATE $\cA^k = \{i : \lambda_i^k - c(u_i^k-\psi_i) > 0\}$, \quad $\cI^k = $ complement
-  \STATE solve for $u^{k+1}$: \, $u^{k+1}_{\cA^k} = \psi_{\cA^k}$ \, and \, $(Au^{k+1}-b)_{\cI^k} = 0$
-  \STATE $\lambda^{k+1} = Au^{k+1}-b$ \, \pcomm{so $\lambda^{k+1}_{\cI^k}=0$}
-  \STATE stop if $\cA^{k+1} = \cA^k$
-\ENDFOR
-\end{algorithmic}
-}
+\begin{center}
+\small
+\begin{pseudo}[label=, left-margin=0pt, topsep=0pt, line-height=1.25, indent-length=2.2em]
+for $k=0,1,2,\dots$ \\+
+  $\cA^k = \{i : \lambda_i^k - c(u_i^k-\psi_i) > 0\}, \quad \cI^k = $ \tn{complement} \\
+  \tn{solve for $u^{k+1}$:} \, $u^{k+1}_{\cA^k} = \psi_{\cA^k}$ \, \tn{and} \, $(Au^{k+1}-b)_{\cI^k} = 0$ \\
+  $\lambda^{k+1} = Au^{k+1}-b$ \, \tn{\pcomm{so $\lambda^{k+1}_{\cI^k}=0$}} \\
+  stop if $\cA^{k+1} = \cA^k$
+\end{pseudo}
+\end{center}
 \end{frame}
 
 
@@ -762,8 +768,8 @@ FIXME
 \end{frame}
 
 
-%\begin{frame}[allowframebreaks]{references}
-\begin{frame}{references}
+\begin{frame}[allowframebreaks]{references}
+%\begin{frame}{references}
 \input{references.tex}
 \end{frame}
 
