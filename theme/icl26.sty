@@ -20,6 +20,8 @@
   {\setmathfont{FiraMath-Regular.otf}[Path=../theme/fonts/]}
 % Fira Math has no calligraphic alphabet; take the classic one from Latin Modern
 \setmathfont{latinmodern-math.otf}[range={cal,bfcal,scr,bfscr}, Scale=MatchUppercase]
+% Fira Math's italic J is far too narrow; take a wider sans one from KpMath
+\setmathfont{KpMath-Sans.otf}[range={\mitJ}, Scale=MatchUppercase]
 % operator names (\sin, \inf, \operatorname) use the math roman font; match the text
 \setmathrm{Fira Sans}[
   UprightFont = *-Book, ItalicFont = *-Book Italic,
@@ -28,7 +30,13 @@
 % symbols at \begin{document}, so the replacements must be deferred until then
 \AtBeginDocument{%
   \renewcommand{\setminus}{\mathbin{\backslash}}%
-  \renewcommand{\top}{\mathsf{T}}}
+  \renewcommand{\top}{\mathsf{T}}%
+  % a typed J/j keeps Fira's glyph despite range= above, so make both
+  % math-active and pad both by 1mu on each side (J is the KpMath glyph)
+  % (caveat: \mathbf{j}, \mathrm{J} etc. no longer change these two letters)
+  \begingroup\lccode`~=`J \lowercase{\endgroup\def~{{\mkern1mu\mitJ\mkern1mu}}}\mathcode`J="8000
+  \begingroup\lccode`~=`j \lowercase{\endgroup\def~{{\mkern1mu\mitj\mkern1mu}}}\mathcode`j="8000
+}
 \usefonttheme{professionalfonts}
 
 % ---------- colours ----------

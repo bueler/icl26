@@ -12,6 +12,17 @@
 \usepackage{algorithm,algorithmic}
 \usepackage{ifthen}
 \usepackage{minted}
+\usepackage[kw]{pseudo}
+
+% pseudocode: grey slanted comments, and highlights tight around the text of a line
+\newcommand{\algcomment}[1]{\textsl{\grey{#1}}}
+\colorlet{algdefect}{icBlue!18}
+\colorlet{algfas}{icAccent!18}
+\newcommand{\hlline}[2]{{\setlength{\fboxsep}{1.5pt}\hspace{-\fboxsep}\colorbox{#1}{\strut #2}\hspace{-\fboxsep}}}
+\newcommand{\hldefect}[1]{\hlline{algdefect}{#1}}
+\newcommand{\hlfas}[1]{\hlline{algfas}{#1}}
+\newsavebox{\algcodebox}  % so a column beside the pseudocode can match its height
+\newcommand{\legendswatch}[1]{\textcolor{#1}{\rule[-1mm]{5mm}{4mm}}}
 
 \newtheorem{proposition}[theorem]{Proposition}
 
@@ -407,6 +418,48 @@ PDAS iterations & 5 & 7 & 12 & 22 & 43 & 83 & \alert{165} \\
 \end{frame}
 
 
+\begin{frame}{FASCD V-cycle}
+\sbox{\algcodebox}{\begin{minipage}[t]{0.56\textwidth}
+\vspace{0pt}
+\footnotesize
+\begin{pseudo}[label=, left-margin=0pt, topsep=0pt, idfont=\texttt, ctfont=\algcomment, ct-left=\quad\hfill, ct-right=, line-height=1.25, indent-length=2.2em,
+               preamble={>{\pseudohpad}\pseudolabelalign>{\pseudosetup}w{l}{0.93\linewidth}<{\pseudohpad}}]
+\texttt{fascd\_vcycle}$(J,\ell^J,\underline{\gamma}^J,\overline{\gamma}^J;w^J)$\texttt{:} \\+
+  \hldefect{$\underline{\chi}^J, \, \overline{\chi}^J = \underline{\gamma}^J - w^J, \, \overline{\gamma}^J - w^J$} \\
+  for $j=J$ downto $j=1$ \\+
+    \hldefect{$\underline{\chi}^{j-1}, \, \overline{\chi}^{j-1} = R^\oplus \underline{\chi}^j, \, R^\ominus \overline{\chi}^j$} \\
+    \hldefect{$\underline{\phi}^j, \, \overline{\phi}^j = \underline{\chi}^j - P\underline{\chi}^{j-1}, \, \overline{\chi}^j - P\overline{\chi}^{j-1}$} \\
+    $y^j = 0$ \\
+    $\text{\pr{smooth}}^{\text{\id{down}}}(\ell^j,\underline{\phi}^j,\overline{\phi}^j,w^j;y^j)$ \ct{VI problem in $\cD^j$} \\
+    \hlfas{$w^{j-1} = R^\bullet(w^j + y^j)$} \\
+    \hlfas{$\ell^{j-1} = f^{j-1}(w^{j-1}) + R \left(\ell^j - f^j(w^j+y^j)\right)$} \\-
+  $z^0 = 0$ \\
+  $\text{\pr{solve}}(\ell^0,\underline{\chi}^0,\overline{\chi}^0,w^0;z^0)$ \ct{VI problem in $\cU^0$} \\
+  for $j=1$ to $j=J$ \\+
+    \hlfas{$z^j = y^{j} + P z^{j-1}$} \\
+    $\text{\pr{smooth}}^{\text{\id{up}}}(\ell^j,\underline{\chi}^j,\overline{\chi}^j,w^j;z^j)$ \ct{VI problem in $\cU^j$} \\-
+  return $w^J+z^J$
+\end{pseudo}
+\end{minipage}}%
+\usebox{\algcodebox}
+\hfill % column on right
+\begin{minipage}[t][\dimexpr\ht\algcodebox+\dp\algcodebox-2mm\relax][t]{0.4\textwidth}
+\vspace{0pt}
+{\small $\mitJ=3$ case:}
+
+\bigskip
+\hfill \includegraphics[width=0.85\textwidth]{figs/fascd-vcycle.png}
+
+\vfill
+\small
+\mbox{\legendswatch{algdefect} \, construct defect constraints}
+
+\bigskip
+\mbox{\legendswatch{algfas} \, apply FAS formulas}
+\end{minipage}
+\end{frame}
+
+
 \begin{frame}{FASCD results: classical obstacle problem}
 
 \begin{itemize}
@@ -603,7 +656,7 @@ refinedmesh = amr.refinemarkedelements(mesh, mark)
 \end{itemize}
 
 \begin{center}
-\includegraphics[height=0.55\textheight]{figs/viamr-bilateral-compare.png}
+FIXME
 \end{center}
 
 \placeholder{0.8\textwidth}{12mm}{rerun at larger target; what is the take-away?}
