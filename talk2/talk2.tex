@@ -30,23 +30,30 @@
 \colorlet{codepink}{red!15}
 \makeatletter
 \newcommand{\codepinkline}[1]{\@namedef{codepink@#1}{}}
-\codepinkline{3}\codepinkline{15}\codepinkline{16}
+\codepinkline{3}\codepinkline{15}\codepinkline{16}  % SPECIFIC LINES FROM copref.py below
 \let\codehl@full\FancyVerbHighlightLineFirst  % Middle, Last, Single are copies of First
 \newcommand{\codehl@pick}[1]{%
   \ifcsname codepink@\the\value{FancyVerbLine}\endcsname
-    {\let\FancyVerbFormatText\codehl@fmt#1}\else\codehl@full{#1}\fi}
-% pass leading (active) spaces through, then box the rest; the color fills one
-% full line height (so boxes on consecutive lines touch), but the box reports the
-% text's natural height and depth, so line spacing matches the unhighlighted code
+    {\let\FancyVerbFormatText\codehl@fmt#1}%
+  \else
+    \codehl@natural{#1}{\let\strut\codehl@strut\codehl@full{#1}}%
+  \fi}
+% the color fills one full line height (\strut is too short in the code font),
+% so highlights on consecutive lines touch, but each box reports the text's
+% natural height and depth, so line spacing matches the unhighlighted code
+\newcommand{\codehl@strut}{\rule[-.3\baselineskip]{0pt}{\baselineskip}}
 \newsavebox{\codehl@text}
-\newcommand{\codehl@fmt}[1]{\codehl@strip#1\codehl@end}
-\def\codehl@box#1\codehl@end{%
+\newcommand{\codehl@natural}[2]{%  typeset #2 with the height and depth of #1
   \sbox{\codehl@text}{#1}%
   \@tempdima=\ht\codehl@text \@tempdimb=\dp\codehl@text
-  \setbox\codehl@text=\hbox{\setlength{\fboxsep}{0pt}\colorbox{codepink}{%
-    \kern1pt\rule[-.3\baselineskip]{0pt}{\baselineskip}\usebox{\codehl@text}\kern1pt}}%
+  \sbox{\codehl@text}{#2}%
   \ht\codehl@text=\@tempdima \dp\codehl@text=\@tempdimb
-  \kern-1pt\box\codehl@text\kern-1pt}
+  \usebox{\codehl@text}}
+% pink: pass leading (active) spaces through, then box the rest tightly
+\newcommand{\codehl@fmt}[1]{\codehl@strip#1\codehl@end}
+\def\codehl@box#1\codehl@end{%
+  \kern-1pt\codehl@natural{#1}{\setlength{\fboxsep}{0pt}\colorbox{codepink}{%
+    \kern1pt\codehl@strut#1\kern1pt}}\kern-1pt}
 \begingroup\catcode`\ =\active%
 \gdef\codehl@strip{\futurelet\codehl@next\codehl@strip@i}%
 \gdef\codehl@strip@i{\ifx\codehl@next \expandafter\codehl@eat\else\expandafter\codehl@box\fi}%
@@ -61,6 +68,7 @@
 \newtheorem{proposition}[theorem]{Proposition}
 
 \newcommand{\bb}{\mathbf{b}}
+\newcommand{\bs}{\mathbf{s}}
 \newcommand{\bu}{\mathbf{u}}
 
 \newcommand{\bF}{\mathbf{F}}
@@ -85,10 +93,9 @@
 \newcommand{\lc}{{\text{\large $\circ$}}}
 
 % grey comments on the right
-\newcommand{\acomm}[1]{\ensuremath{\text{\small \grey{$\leftarrow$ #1}}}}
 \newcommand{\afcomm}[1]{\ensuremath{\text{\footnotesize \grey{$\leftarrow$ #1}}}}
-
 \newcommand{\pcomm}[1]{\grey{\small (#1)}}
+\newcommand{\pfcomm}[1]{\grey{\footnotesize (#1)}}
 
 \newcommand{\blue}[1]{{\color{icBlue}#1}}
 
@@ -221,10 +228,11 @@ seek $u_h\in K_h$ so that
 
 \begin{minipage}[t]{0.66\textwidth}
 \only<1>{
-\inputminted[fontsize=\fontsize{6}{7}\selectfont,highlightlines={20},highlightcolor=codegreen]{python}{code/copref.py}
+\inputminted[fontsize=\fontsize{6}{7}\selectfont,highlightlines={20-23},highlightcolor=codegreen]{python}{code/copref.py}
 }
 \only<2>{
-\inputminted[fontsize=\fontsize{6}{7}\selectfont,highlightlines={3,15-16,20},highlightcolor=codegreen]{python}{code/coprefTrue.py}
+% see SPECIFIC LINES comment in preamble
+\inputminted[fontsize=\fontsize{6}{7}\selectfont,highlightlines={3,15-16,20-23},highlightcolor=codegreen]{python}{code/coprefTrue.py}
 }
 \end{minipage}
 \hfill
@@ -257,14 +265,14 @@ $320\times 320$ & \only<1>{46}\only<2>{\alert{2}}
 \only<2>{
 \item \strikeThrough{iterations double at each refinement}
 }
-\item<2> resolved by \hlline{codepink}{\alert{grid sequencing}}
+\item<2> resolved by \alert{grid sequencing}
 \end{itemize}
 }
 \end{minipage}
 \end{frame}
 
 
-\begin{frame}{language: \, residual $=$ multipliers $=$ dual variables}
+\begin{frame}{language: \, residual $=$ multipliers $=$ dual variables; \, complementarity}
 
 \hfill \includegraphics[width=0.45\textwidth]{figs/copactive.png}
 
@@ -279,8 +287,11 @@ denote the nodal solution values
 
 the residual is \alert{$\bF(\bu) = A \bu - \bb \in \RR^N$}
 
+    \begin{itemize}
+    \item[$\lc$] in this classical obstacle problem, the residual is a \strikeThrough{linear} affine map
+    \end{itemize}
 \smallskip
-\item in optimization, \alert{$\lambda_i = F(\bu)_i$} are the Lagrange \alert{multipliers} or \alert{dual variables}
+\item in optimization, \alert{$\lambda_i = F(\bu)_i$} are called the \alert{Lagrange multipliers} or \alert{dual variables}
 
 \pause
 \medskip
@@ -291,18 +302,119 @@ for $i \in \{1,\dots,N\}$,
 
 \medskip
 \item this CP in $\RR^N$ is \alert{the VI solver goal}, not $\bF(\bu)=0$
-\item $P_1$ admissibility is nodal:\,\, $u_i-\psi_i\ge 0 \, \forall i \, \iff \, u_h(x) - \psi_h(x)\ge 0 \, \forall x \in \Omega$
-\item at convergence, in exact arithmetic, generally \alert{$\lambda \ne 0$}, and
-    $$\hspace{20mm} \lambda_i \ne 0 \implies u_i = \psi_i \text{\, and \,} x_i\in C_{u_h} \,\hspace{20mm} \text{\pcomm{$x_i$ in contact set, white nodes}}$$
+    \begin{itemize}
+    \item[$\lc$] at convergence, in exact arithmetic, generally \alert{$\lambda \ne 0$}
+    \item[$\lc$] $\lambda_i \ne 0 \implies u_i = \psi_i$ and $x_i\in C_{u_h}$ \hfill \pcomm{$x_i$ in contact set, white nodes}
+    \end{itemize}
 \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{active-set method: basic idea}
+
+\begin{itemize}
+\item \alert{VI problems are nonlinear even when the residual operator is affine}
+    \begin{itemize}
+    \item[$\lc$] we expect to iterate
+    \end{itemize}
+\item consider an admissible iterate $\bu^k \in \RR^N$, so that $u_i^k \ge \psi_i$
+\item its \alert{active set} is the index set
+   $$\cA^k = \{i\,:\,u_i^k - \psi_i \le \operatorname{tol}\} \quad \subset \{1,\dots,N\} \hspace{30mm}$$
+
+    \begin{itemize}
+    \item[$\lc$] informally, $\cA^k = \{i\,:\,u_i^k = \psi_i\}$ \, \pcomm{white dots}
+    \item[$\lc$] \alert{inactive set} is complement $\cI^k = \{1,\dots,N\}\setminus\cA^k$ \pcomm{black dots}
+    \end{itemize}
+
+\vspace{-20mm}
+\hfill \includegraphics[width=0.3\textwidth]{figs/copactive.png}
+
+\vspace{5mm}
+\pause
+\medskip
+\item \alert{if we knew $\cA^k$ then one linear solve would determine the correct $\bu=\bu^{k+1}$}:
+    $$u_{\cA^k} = \psi_{\cA^k}, \qquad (Au - b)_{\cI^k} = 0 \hspace{40mm}$$
+\item however, at $k=0$ we \alert{do not know the active set}
+\item what we see in practice \grey{$\to$}
+\end{itemize}
+
+\vspace{-15mm}
+\hfill
+\begin{minipage}{0.2\textwidth}
+\begin{Verbatim}[fontsize=\tiny]
+  0 SNES Function norm 3.624969175519e+00
+  1 SNES Function norm 1.986779195391e+00
+  2 SNES Function norm 6.109441485347e-01
+  3 SNES Function norm 1.782534266924e-01
+  4 SNES Function norm 4.555052324072e-02
+  5 SNES Function norm 1.439049503152e-15
+  20 x   20: 5 Newton iterations
+\end{Verbatim}
+\end{minipage}
+\hspace{20mm}
+\end{frame}
+
+
+\begin{frame}{the active-set method in PETSc}
+\begin{withpeople}{\photo{generic.png}{S.~Benson} \photo{munson.jpg}{T.~Munson}}
+
+\begin{itemize}
+\item PETSc has SNES type \,\alert{\texttt{vinewtonrsls}}
+    \begin{itemize}
+    \item[$\lc$] \texttt{rsls} = \underline{r}educed-\underline{s}pace with \underline{l}ine \underline{s}earch \quad \pcomm{reduced-space $=$ active-set}
+    \item[$\lc$] by Benson \& Munson (2006)
+    \end{itemize}
+\item handles nonlinear $\bF:\RR^N \to \RR^N$ and box constraints $\underline{\psi} \le \bu \le \overline{\psi}$
+    \begin{itemize}
+    \item[$\lc$] reduces to \, \texttt{newtonls} \, if no constraints are active
+    \end{itemize}
+\end{itemize}
+\end{withpeople}
+
+\pause
+%\begin{columns}[c,onlytextwidth]
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\bigskip
+
+{\footnotesize
+\begin{pseudo}[label=, left-margin=0pt, topsep=0pt, line-height=1.25, indent-length=2.2em]
+\texttt{bm}$(\psi,\bu^0)$\texttt{:} \\+
+$\bu^0 = \pi(\bu^0) = \max\{u_i^0, \psi_i\}$ \quad \tn{\pfcomm{truncate}} \\
+for $k=0,1,2,\dots$ \\+
+  \alert{$\cA^k = \{i : u_i^k = \psi_i \tn{ and } F_i(u^k) > 0\}$} \\
+  $\cI^k = \{1,\dots,N\} \setminus \cA^k$ \\
+  $J_{\bF}(\bu^k)_{\cI^k,\cI^k}\, \bs_{\cI^k} = -\bF(\bu^k)_{\cI^k}$ \quad \tn{\pfcomm{linear solve}} \\
+  $\bs_{\cA^k} = 0$ \\
+  $\bu^{k+1} = \pi(\bu^k+\alpha \bs)$ \quad \tn{\pfcomm{truncated line search}} \\
+  stop if \tn{appropriate CP norm is $<\operatorname{tol}$} \\-
+\end{pseudo}
+}
+\end{column}
+\begin{column}{0.5\textwidth}
+{\small
+\begin{block}{BM = \texttt{vinewtonrsls}} 
+Newton step in inactive (reduced) space
+
+line search on admissible states
+\end{block}
+
+\begin{itemize}
+\item \grey{$\leftarrow$} shown in unilateral case $u\ge \psi$
+\item no parameter in setting $\cA^k$
+\item \alert{user's $\bF$ only sees admissible iterates}
+\item linear solver is user's choice \pfcomm{CG, multigrid, \dots}
+\end{itemize}
+}
+\end{column}
+\end{columns}
 \end{frame}
 
 
 \begin{frame}{the active set idea}
 
 \begin{itemize}
-\item \emph{if} we knew the active set $\cA$, with inactive set $\cI = \{1,\dots,N\}\setminus\cA$, then one \alert{linear} solve:
-    $$u_\cA = \psi_\cA, \qquad (Au - b)_\cI = 0$$
 \item so: guess $\cA$, solve, update the guess, repeat
 \item the \alert{primal-dual active set} (PDAS) iteration uses both $u$ and $\lambda$ to update the guess, with any $c>0$:
 \end{itemize}
@@ -333,29 +445,6 @@ for $k=0,1,2,\dots$ \\+
 \begin{theorem}[Hinterm\"uller, Ito \& Kunisch 2002]
 PDAS is identical to a \alert{semismooth Newton} iteration for $G(u,\lambda)=0$.  It therefore converges locally superlinearly.  If $A$ is an M-matrix then it converges globally, and $u^k\ge\psi$ after the first step.
 \end{theorem}
-\end{withpeople}
-\end{frame}
-
-
-\begin{frame}{reduced-space Newton in PETSc}
-\begin{withpeople}{\photo{generic.png}{S.~Benson} \photo{munson.jpg}{T.~Munson}}
-
-\begin{itemize}
-\item PETSc's \texttt{vinewtonrsls} (Benson \& Munson 2006) is similar, but with a line search
-    \begin{itemize}
-    \item[$\lc$] general bounds $\underline{\psi} \le u \le \overline{\psi}$, and nonlinear $F$
-    \item[$\lc$] this is what Firedrake calls when you say \texttt{"snes\_type": "vinewtonrsls"}
-    \end{itemize}
-\item at iterate $u^k$ define the active and inactive sets:
-    $$\cA^k = \{i \,:\, u_i^k = \psi_i \text{ and } F_i(u^k) > 0\}, \qquad \cI^k = \text{complement}$$
-\item Newton step only on the inactive (\alert{reduced}) space:
-    $$J(u^k)_{\cI^k,\cI^k}\, d_{\cI^k} = -F(u^k)_{\cI^k}, \qquad d_{\cA^k} = 0$$
-\item line search on projected iterates $u^{k+1} = \max\{\psi, u^k+\beta d\}$, so all iterates are admissible
-\item the linear solver is the user's choice \pcomm{CG, multigrid, \dots}
-\end{itemize}
-
-
-\grey{see also Chapter 12 of Bueler (2021)}
 \end{withpeople}
 \end{frame}
 
