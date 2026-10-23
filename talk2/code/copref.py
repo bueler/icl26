@@ -17,7 +17,7 @@ for mesh in hierarchy:
     F = inner(grad(uh), grad(vh)) * dx
     bcs = DirichletBC(V, Constant(0.0), "on_boundary")
     prob = NonlinearVariationalProblem(F, uh, bcs)
-    sp = {"snes_type": "vinewtonrsls"}  # an active set method
+    sp = {"snes_type": "vinewtonrsls"}  # an active-set method
     solver = NonlinearVariationalSolver(prob, solver_parameters=sp)
     INF = Function(V).interpolate(Constant(PETSc.INFINITY))
     solver.solve(bounds=(psih, INF))
