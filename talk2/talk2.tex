@@ -72,14 +72,17 @@
 \newcommand{\bu}{\mathbf{u}}
 
 \newcommand{\bF}{\mathbf{F}}
+\newcommand{\bG}{\mathbf{G}}
+
+\newcommand{\blambda}{\symbf{\lambda}}
+\newcommand{\bpsi}{\symbf{\psi}}
+\newcommand{\bzero}{\symbf{0}}
 
 \newcommand{\cA}{{\mathcal{A}}}
 \newcommand{\cI}{{\mathcal{I}}}
-\newcommand{\cK}{{\mathcal{K}}}  % with extra outer braces: safe in P_\cK under unicode-math
 \newcommand{\cT}{{\mathcal{T}}}
 \newcommand{\cU}{{\mathcal{U}}}
 \newcommand{\cD}{{\mathcal{D}}}
-\newcommand{\cV}{{\mathcal{V}}}
 
 \newcommand{\RR}{{\mathbb{R}}}
 
@@ -96,6 +99,7 @@
 \newcommand{\afcomm}[1]{\ensuremath{\text{\footnotesize \grey{$\leftarrow$ #1}}}}
 \newcommand{\pcomm}[1]{\grey{\small (#1)}}
 \newcommand{\pfcomm}[1]{\grey{\footnotesize (#1)}}
+\newcommand{\efcomm}[1]{\grey{\footnotesize \emph{#1}}}
 
 \newcommand{\blue}[1]{{\color{icBlue}#1}}
 
@@ -103,7 +107,7 @@
 %   \begin{withpeople}{\photo{a.jpg}{A.~Name} \photo{b.jpg}{B.~Name}} ... frame body ... \end{withpeople}
 % (optional arg of \photo is the height, for longer stacks)
 % use generic.png when none was found
-\newcommand{\photo}[3][12mm]{\hbox to \linewidth{\hss\includegraphics[height=#1]{figs/people/#2}}\nointerlineskip\vskip0.2mm\hbox to \linewidth{\hss\tiny #3}\vskip0.6mm}
+\newcommand{\photo}[3][10mm]{\hbox to \linewidth{\hss\includegraphics[height=#1]{figs/people/#2}}\nointerlineskip\vskip0.2mm\hbox to \linewidth{\hss\tiny #3}\vskip0.6mm}
 \newenvironment{withpeople}[1]
   {\def\peoplestack{#1}\begin{columns}[T,onlytextwidth]\begin{column}{0.88\textwidth}}
   {\end{column}\begin{column}{0.11\textwidth}\raggedleft\vspace*{-2mm}\peoplestack\end{column}\end{columns}}
@@ -303,7 +307,7 @@ for $i \in \{1,\dots,N\}$,
 \medskip
 \item this CP in $\RR^N$ is \alert{the VI solver goal}, not $\bF(\bu)=0$
     \begin{itemize}
-    \item[$\lc$] at convergence, in exact arithmetic, generally \alert{$\lambda \ne 0$}
+    \item[$\lc$] at convergence, in exact arithmetic, generally \alert{$\blambda \ne 0$}
     \item[$\lc$] $\lambda_i \ne 0 \implies u_i = \psi_i$ and $x_i\in C_{u_h}$ \hfill \pcomm{$x_i$ in contact set, white nodes}
     \end{itemize}
 \end{itemize}
@@ -334,7 +338,7 @@ for $i \in \{1,\dots,N\}$,
 \pause
 \medskip
 \item \alert{if we knew $\cA^k$ then one linear solve would determine the correct $\bu=\bu^{k+1}$}:
-    $$u_{\cA^k} = \psi_{\cA^k}, \qquad (Au - b)_{\cI^k} = 0 \hspace{40mm}$$
+    $$\bu_{\cA^k} = \bpsi_{\cA^k}, \qquad (A\bu - \bb)_{\cI^k} = 0 \hspace{40mm}$$
 \item however, at $k=0$ we \alert{do not know the active set}
 \item what we see in practice \grey{$\to$}
 \end{itemize}
@@ -349,7 +353,6 @@ for $i \in \{1,\dots,N\}$,
   3 SNES Function norm 1.782534266924e-01
   4 SNES Function norm 4.555052324072e-02
   5 SNES Function norm 1.439049503152e-15
-  20 x   20: 5 Newton iterations
 \end{Verbatim}
 \end{minipage}
 \hspace{20mm}
@@ -365,7 +368,7 @@ for $i \in \{1,\dots,N\}$,
     \item[$\lc$] \texttt{rsls} = \underline{r}educed-\underline{s}pace with \underline{l}ine \underline{s}earch \quad \pcomm{reduced-space $=$ active-set}
     \item[$\lc$] by Benson \& Munson (2006)
     \end{itemize}
-\item handles nonlinear $\bF:\RR^N \to \RR^N$ and box constraints $\underline{\psi} \le \bu \le \overline{\psi}$
+\item handles nonlinear $\bF:\RR^N \to \RR^N$ and box constraints $\underline{\bpsi} \le \bu \le \overline{\bpsi}$
     \begin{itemize}
     \item[$\lc$] reduces to \, \texttt{newtonls} \, if no constraints are active
     \end{itemize}
@@ -380,21 +383,21 @@ for $i \in \{1,\dots,N\}$,
 
 {\footnotesize
 \begin{pseudo}[label=, left-margin=0pt, topsep=0pt, line-height=1.25, indent-length=2.2em]
-\texttt{bm}$(\psi,\bu^0)$\texttt{:} \\+
-$\bu^0 = \pi(\bu^0) = \max\{u_i^0, \psi_i\}$ \quad \tn{\pfcomm{truncate}} \\
+\texttt{rsls}$(\psi,\bu^0)$\texttt{:} \\+
+$\bu^0 = \pi(\bu^0) = \max\{u_i^0, \psi_i\}$ \quad \tn{\efcomm{truncate}} \\
 for $k=0,1,2,\dots$ \\+
   \alert{$\cA^k = \{i : u_i^k = \psi_i \tn{ and } F_i(u^k) > 0\}$} \\
   $\cI^k = \{1,\dots,N\} \setminus \cA^k$ \\
-  $J_{\bF}(\bu^k)_{\cI^k,\cI^k}\, \bs_{\cI^k} = -\bF(\bu^k)_{\cI^k}$ \quad \tn{\pfcomm{linear solve}} \\
+  $J_{\bF}(\bu^k)_{\cI^k,\cI^k}\, \bs_{\cI^k} = -\bF(\bu^k)_{\cI^k}$ \quad \tn{\efcomm{linear solve}} \\
   $\bs_{\cA^k} = 0$ \\
-  $\bu^{k+1} = \pi(\bu^k+\alpha \bs)$ \quad \tn{\pfcomm{truncated line search}} \\
+  $\bu^{k+1} = \pi(\bu^k+\alpha \bs)$ \quad \tn{\efcomm{truncated line search}} \\
   stop if \tn{appropriate CP norm is $<\operatorname{tol}$} \\-
 \end{pseudo}
 }
 \end{column}
 \begin{column}{0.5\textwidth}
 {\small
-\begin{block}{BM = \texttt{vinewtonrsls}} 
+\begin{block}{RSLS = \texttt{vinewtonrsls}}
 Newton step in inactive (reduced) space
 
 line search on admissible states
@@ -412,38 +415,64 @@ line search on admissible states
 \end{frame}
 
 
-\begin{frame}{the active set idea}
+\begin{frame}{alternative(?) approach: semi-smooth Newton}
 
 \begin{itemize}
-\item so: guess $\cA$, solve, update the guess, repeat
-\item the \alert{primal-dual active set} (PDAS) iteration uses both $u$ and $\lambda$ to update the guess, with any $c>0$:
-\end{itemize}
+\item complementarity is equivalent to a \alert{semi-smooth equation}: \quad \pcomm{parameter $\alert{c}>0$}
+    $$u_i\ge \psi_i, \,\, \lambda_i \ge 0, \,\, \lambda_i(u_i-\psi_i)=0 \quad \iff \quad \lambda_i - \max\{0,\lambda_i - \alert{c}\,(u_i-\psi_i)\} = 0$$
 
-\begin{center}
-\small
-\begin{pseudo}[label=, left-margin=0pt, topsep=0pt, line-height=1.25, indent-length=2.2em]
-for $k=0,1,2,\dots$ \\+
-  $\cA^k = \{i : \lambda_i^k - c(u_i^k-\psi_i) > 0\}, \quad \cI^k = $ \tn{complement} \\
-  \tn{solve for $u^{k+1}$:} \, $u^{k+1}_{\cA^k} = \psi_{\cA^k}$ \, \tn{and} \, $(Au^{k+1}-b)_{\cI^k} = 0$ \\
-  $\lambda^{k+1} = Au^{k+1}-b$ \, \tn{\pcomm{so $\lambda^{k+1}_{\cI^k}=0$}} \\
-  stop if $\cA^{k+1} = \cA^k$
-\end{pseudo}
-\end{center}
+    \begin{itemize}
+    \item[$\lc$] $\max\{0,x\}$ is semi-smooth, with a well-behaved directional derivative
+    \end{itemize}
+
+\pause
+\medskip
+\item idea: to solve the VI by solving the nonlinear system $G(\bu,\blambda)=\bzero$:
+    $$G(\bu,\blambda) = \begin{pmatrix} \bF(\bu) - \blambda \\ \blambda - \max\{\bzero,\blambda - \alert{c}(\bu-\bpsi)\} \end{pmatrix}$$
+\item solve $\bG=\bzero$ using Newton's method, natch
+\end{itemize}
 \end{frame}
 
 
-\begin{frame}{PDAS is a Newton method}
-\begin{withpeople}{\photo{hintermueller.jpg}{M.~Hinterm\"uller} \photo{generic.png}{K.~Ito} \photo{kunisch.jpg}{K.~Kunisch}}
+\begin{frame}{primal-dual active-set is a Newton method}
 
 \begin{itemize}
-\item complementarity, for any $c>0$, is a nonsmooth \alert{equation}:
-    $$u\ge \psi, \,\, \lambda \ge 0, \,\, \lambda_i(u_i-\psi_i)=0 \quad \iff \quad \lambda - \max\{0,\lambda - c(u-\psi)\} = 0$$
-\item so solve the nonlinear system $G(u,\lambda)=0$:
-    $$G(u,\lambda) = \begin{pmatrix} Au - b - \lambda \\ \lambda - \max\{0,\lambda - c(u-\psi)\} \end{pmatrix}$$
+\item restrict to linear \& symmetric case $\bF(\bu) = A\bu - \bb$ \, \pcomm{quadratic optimization; $\bF=\grad f$}
 \end{itemize}
 
+\begin{columns}
+\begin{column}{0.6\textwidth}
+{\footnotesize
+\begin{pseudo}[label=, left-margin=0pt, topsep=0pt, line-height=1.25, indent-length=2.2em]
+\texttt{pdas}$(\psi,\bu^0)$\texttt{:} \\+
+  $\cA^0=\emptyset$, $\cI^k=\{1,\dots,N\}$, $\blambda^0=\bzero$ \\
+  for $k=0,1,2,\dots$ \\+
+    fixme \tn{\efcomm{linear solve}} \\
+    foo  \, \tn{\efcomm{so $\lambda^{k+1}_{\cI^k}=0$}} \\
+    \alert{$\cA^k = \{i : \lambda_i^k - c(u_i^k-\psi_i) > 0\}$} \\
+    $\cI^k = \{1,\dots,N\} \setminus \cA^k$ \\
+    stop if \tn{appropriate CP norm is $<\operatorname{tol}$}
+\end{pseudo}
+}
+\end{column}
+\begin{column}{0.4\textwidth}
+{\small
+\begin{block}{PDAS = primal-dual active-set}
+FOO
+\end{block}
+}
+\end{column}
+\end{columns}
+
+\pause
+\begin{withpeople}{\photo{hintermueller.jpg}{M.~Hinterm\"uller} \photo{generic.png}{K.~Ito} \photo{kunisch.jpg}{K.~Kunisch}}
+
+\bigskip
 \begin{theorem}[Hinterm\"uller, Ito \& Kunisch 2002]
-PDAS is identical to a \alert{semismooth Newton} iteration for $G(u,\lambda)=0$.  It therefore converges locally superlinearly.  If $A$ is an M-matrix then it converges globally, and $u^k\ge\psi$ after the first step.
+\begin{itemize}
+\item PDAS $=$ semismooth Newton.  Thus it converges locally superlinearly.
+\item If $A$ is M-matrix then converges globally, and iterates $k>1$ are admissible.
+\end{itemize}
 \end{theorem}
 \end{withpeople}
 \end{frame}
@@ -571,8 +600,8 @@ PDAS iterations & 5 & 7 & 12 & 22 & 43 & 83 & \alert{165} \\
 
 \begin{itemize}
 \item full approximation scheme (FAS; Brandt 1977): multigrid for \emph{nonlinear} problems, without global linearization
-\item constraint decomposition (Tai 2003): for a subspace decomposition $\cV = \sum_i \cV_i$, write
-    $$\cK = \sum_i \cK_i, \qquad \cK_i \subset \cV_i$$
+\item constraint decomposition (Tai 2003): for a subspace decomposition $V = \sum_i V_i$, write
+    $$K = \sum_i K_i, \qquad K_i \subset V_i$$
 \item FASCD (Bueler \& Farrell 2024) combines them, using mesh levels:
     \begin{itemize}
     \item[$\lc$] \alert{defect constraint} $\chi^J = \psi^J - w^J$ for the fine-level iterate $w^J$
