@@ -24,6 +24,40 @@
 \newsavebox{\algcodebox}  % so a column beside the pseudocode can match its height
 \newcommand{\legendswatch}[1]{\textcolor{#1}{\rule[-1mm]{5mm}{4mm}}}
 
+% minted highlightlines: full-width codegreen bands, except lines listed by
+% \codepinkline get tight codepink boxes
+\colorlet{codegreen}{green!15}
+\colorlet{codepink}{red!15}
+\makeatletter
+\newcommand{\codepinkline}[1]{\@namedef{codepink@#1}{}}
+\codepinkline{3}\codepinkline{15}\codepinkline{16}
+\let\codehl@full\FancyVerbHighlightLineFirst  % Middle, Last, Single are copies of First
+\newcommand{\codehl@pick}[1]{%
+  \ifcsname codepink@\the\value{FancyVerbLine}\endcsname
+    {\let\FancyVerbFormatText\codehl@fmt#1}\else\codehl@full{#1}\fi}
+% pass leading (active) spaces through, then box the rest; the color fills one
+% full line height (so boxes on consecutive lines touch), but the box reports the
+% text's natural height and depth, so line spacing matches the unhighlighted code
+\newsavebox{\codehl@text}
+\newcommand{\codehl@fmt}[1]{\codehl@strip#1\codehl@end}
+\def\codehl@box#1\codehl@end{%
+  \sbox{\codehl@text}{#1}%
+  \@tempdima=\ht\codehl@text \@tempdimb=\dp\codehl@text
+  \setbox\codehl@text=\hbox{\setlength{\fboxsep}{0pt}\colorbox{codepink}{%
+    \kern1pt\rule[-.3\baselineskip]{0pt}{\baselineskip}\usebox{\codehl@text}\kern1pt}}%
+  \ht\codehl@text=\@tempdima \dp\codehl@text=\@tempdimb
+  \kern-1pt\box\codehl@text\kern-1pt}
+\begingroup\catcode`\ =\active%
+\gdef\codehl@strip{\futurelet\codehl@next\codehl@strip@i}%
+\gdef\codehl@strip@i{\ifx\codehl@next \expandafter\codehl@eat\else\expandafter\codehl@box\fi}%
+\gdef\codehl@eat { \codehl@strip}%
+\endgroup
+\let\FancyVerbHighlightLineFirst\codehl@pick
+\let\FancyVerbHighlightLineMiddle\codehl@pick
+\let\FancyVerbHighlightLineLast\codehl@pick
+\let\FancyVerbHighlightLineSingle\codehl@pick
+\makeatother
+
 \newtheorem{proposition}[theorem]{Proposition}
 
 \newcommand{\bb}{\mathbf{b}}
@@ -108,15 +142,15 @@ This is the \alert{variational inequality} (VI) problem for the data $K$ and $F$
 \begin{itemize}
 \item $\ip{\cdot}{\cdot}$ denotes Hilbert space inner product or dual pairing, according to context
     \begin{itemize}
-    \item[$\lc$] $X$ will need to be complete (Banach) in practice
+    \item[$\lc$] $X$ is complete (Banach), in $\infty$-dimensional practice
     \end{itemize}
 \item this is a \alert{VI of the first kind} in some references
     \begin{itemize}
-    \item[$\lc$] second kind: $\ip{F(u)}{v-u} + \Phi(v) - \Phi(u) \ge 0 \, \forall v$, for some $\Phi:K\to \RR$
+    \item[$\lc$] second kind: $\ip{F(u)}{v-u} + \Phi(v) - \Phi(u) \ge 0 \, \forall v$, for some semi-smooth $\Phi:K\to \RR$
     \end{itemize}
 \item $K$ is generally given via inequalities (and/or equalities)
     \begin{itemize}
-    \item[$\lc$] libraries often restrict to \alert{box constraints}, lower \& upper bounds on each dof
+    \item[$\lc$] libraries may restrict to \alert{box constraints}, lower \& upper bounds on each dof
     \item[$\lc$] bounds might be $\pm\infty$, so unconstrained dofs are included
     \end{itemize}
 \end{itemize}
@@ -183,21 +217,23 @@ seek $u_h\in K_h$ so that
 
 
 \begin{frame}[fragile]
-\frametitle{demo: refine the mesh and count the Newton iterations}
+\frametitle{active-set method demo: refine and count Newton iterations}
 
 \begin{minipage}[t]{0.66\textwidth}
 \only<1>{
-\inputminted[fontsize=\fontsize{6}{7}\selectfont]{python}{code/copref.py}
+\inputminted[fontsize=\fontsize{6}{7}\selectfont,highlightlines={20},highlightcolor=codegreen]{python}{code/copref.py}
 }
 \only<2>{
-\inputminted[fontsize=\fontsize{6}{7}\selectfont]{python}{code/coprefTrue.py}
+\inputminted[fontsize=\fontsize{6}{7}\selectfont,highlightlines={3,15-16,20},highlightcolor=codegreen]{python}{code/coprefTrue.py}
 }
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.32\textwidth}
 \vspace{-4.5mm}
 
-\hspace{-15mm} \mbox{\includegraphics[valign=t,width=0.85\textwidth]{figs/cop.png}  \, \includegraphics[valign=t,width=0.4\textwidth]{figs/qrnanook.png}}
+% qrencode -o figs/qrcopref.png -s 10 -l L 'https://github.com/bueler/icl26/blob/main/talk2/code/copref.py'
+% mogrify -trim -transparent white figs/qrcopref.png
+\hspace{-15mm} \mbox{\includegraphics[valign=t,width=0.25\textwidth]{figs/qrcopref.png} \qquad \includegraphics[valign=t,width=0.85\textwidth]{figs/cop.png}}
 
 \bigskip
 {\small
@@ -221,14 +257,14 @@ $320\times 320$ & \only<1>{46}\only<2>{\alert{2}}
 \only<2>{
 \item \strikeThrough{iterations double at each refinement}
 }
-\item<2> resolved by \alert{grid sequencing}
+\item<2> resolved by \hlline{codepink}{\alert{grid sequencing}}
 \end{itemize}
 }
 \end{minipage}
 \end{frame}
 
 
-\begin{frame}{language: residual $=$ multipliers $=$ dual variables}
+\begin{frame}{language: \, residual $=$ multipliers $=$ dual variables}
 
 \hfill \includegraphics[width=0.45\textwidth]{figs/copactive.png}
 
