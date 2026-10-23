@@ -21,6 +21,12 @@
 \newcommand{\hlline}[2]{{\setlength{\fboxsep}{1.5pt}\hspace{-\fboxsep}\colorbox{#1}{\strut #2}\hspace{-\fboxsep}}}
 \newcommand{\hldefect}[1]{\hlline{algdefect}{#1}}
 \newcommand{\hlfas}[1]{\hlline{algfas}{#1}}
+% every pseudo environment sits on a light grey, faintly yellow, background
+%\definecolor{algbg}{HTML}{EEEDE0}
+\definecolor{algbg}{HTML}{F0F0E8}
+\newsavebox{\algbgbox}
+\pseudoset{begin-tabular={\begin{lrbox}{\algbgbox}\begin{tabular}{\pseudopreamble}},
+           end-tabular={\end{tabular}\end{lrbox}{\setlength{\fboxsep}{3pt}\colorbox{algbg}{\usebox{\algbgbox}}}}}
 \newsavebox{\algcodebox}  % so a column beside the pseudocode can match its height
 \newcommand{\legendswatch}[1]{\textcolor{#1}{\rule[-1mm]{5mm}{4mm}}}
 
@@ -323,12 +329,12 @@ for $i \in \{1,\dots,N\}$,
     \item[$\lc$] we expect to iterate
     \end{itemize}
 \item consider an admissible iterate $\bu^k \in \RR^N$, so that $u_i^k \ge \psi_i$
-\item its \alert{active set} is the index set
-   $$\cA^k = \{i\,:\,u_i^k - \psi_i \le \operatorname{tol}\} \quad \subset \{1,\dots,N\} \hspace{30mm}$$
+\item its \alert{active set} is the index set \quad \pcomm{white dots}
+   $$\alert{\cA^k = \{i\,:\,u_i^k = \psi_i\}} \quad \subset \{1,\dots,N\} \hspace{30mm}$$
 
     \begin{itemize}
-    \item[$\lc$] informally, $\cA^k = \{i\,:\,u_i^k = \psi_i\}$ \, \pcomm{white dots}
-    \item[$\lc$] \alert{inactive set} is complement $\cI^k = \{1,\dots,N\}\setminus\cA^k$ \pcomm{black dots}
+    \item[$\lc$] precise def uses tolerance: $\cA^k = \{i\,:\,u_i^k - \psi_i \le \operatorname{tol}\}$
+    \item[$\lc$] inactive set is complement $\cI^k = \{1,\dots,N\}\setminus\cA^k = \left(\cA^k\right)^C$ \quad \pcomm{black dots}
     \end{itemize}
 
 \vspace{-20mm}
@@ -339,7 +345,7 @@ for $i \in \{1,\dots,N\}$,
 \medskip
 \item \alert{if we knew $\cA^k$ then one linear solve would determine the correct $\bu=\bu^{k+1}$}:
     $$\bu_{\cA^k} = \bpsi_{\cA^k}, \qquad (A\bu - \bb)_{\cI^k} = 0 \hspace{40mm}$$
-\item however, at $k=0$ we \alert{do not know the active set}
+\item however, at $k=0$ we \alert{do not know} the active set
 \item what we see in practice \grey{$\to$}
 \end{itemize}
 
@@ -363,10 +369,9 @@ for $i \in \{1,\dots,N\}$,
 \begin{withpeople}{\photo{generic.png}{S.~Benson} \photo{munson.jpg}{T.~Munson}}
 
 \begin{itemize}
-\item PETSc has SNES type \,\alert{\texttt{vinewtonrsls}}
+\item PETSc has SNES type \,\alert{\texttt{vinewtonrsls}} \quad \pcomm{Benson \& Munson, 2006}
     \begin{itemize}
     \item[$\lc$] \texttt{rsls} = \underline{r}educed-\underline{s}pace with \underline{l}ine \underline{s}earch \quad \pcomm{reduced-space $=$ active-set}
-    \item[$\lc$] by Benson \& Munson (2006)
     \end{itemize}
 \item handles nonlinear $\bF:\RR^N \to \RR^N$ and box constraints $\underline{\bpsi} \le \bu \le \overline{\bpsi}$
     \begin{itemize}
@@ -383,31 +388,30 @@ for $i \in \{1,\dots,N\}$,
 
 {\footnotesize
 \begin{pseudo}[label=, left-margin=0pt, topsep=0pt, line-height=1.25, indent-length=2.2em]
-\texttt{rsls}$(\psi,\bu^0)$\texttt{:} \\+
+\texttt{rsls}$(\bpsi,\bu^0)$\texttt{:} \\+
 $\bu^0 = \pi(\bu^0) = \max\{u_i^0, \psi_i\}$ \quad \tn{\efcomm{truncate}} \\
 for $k=0,1,2,\dots$ \\+
-  \alert{$\cA^k = \{i : u_i^k = \psi_i \tn{ and } F_i(u^k) > 0\}$} \\
-  $\cI^k = \{1,\dots,N\} \setminus \cA^k$ \\
+  \alert{$\cA^k = \{i : u_i^k = \psi_i \tn{ and } F_i(u^k) > 0\}$} \tn{\&} $\cI^k = \left(\cA^k\right)^C$ \\
   $J_{\bF}(\bu^k)_{\cI^k,\cI^k}\, \bs_{\cI^k} = -\bF(\bu^k)_{\cI^k}$ \quad \tn{\efcomm{linear solve}} \\
   $\bs_{\cA^k} = 0$ \\
   $\bu^{k+1} = \pi(\bu^k+\alpha \bs)$ \quad \tn{\efcomm{truncated line search}} \\
-  stop if \tn{appropriate CP norm is $<\operatorname{tol}$} \\-
+  stop if \tn{(appropriate CP norm) $<\operatorname{tol}$} \\-
 \end{pseudo}
 }
 \end{column}
 \begin{column}{0.5\textwidth}
 {\small
 \begin{block}{RSLS = \texttt{vinewtonrsls}}
-Newton step in inactive (reduced) space
+Newton step in inactive (reduced) space, with
 
-line search on admissible states
+line search over admissible states
 \end{block}
 
 \begin{itemize}
-\item \grey{$\leftarrow$} shown in unilateral case $u\ge \psi$
-\item no parameter in setting $\cA^k$
+\item shown in unilateral case $u\ge \psi$
 \item \alert{user's $\bF$ only sees admissible iterates}
 \item linear solver is user's choice \pfcomm{CG, multigrid, \dots}
+\item no parameter needed in setting $\cA^k$
 \end{itemize}
 }
 \end{column}
@@ -418,18 +422,19 @@ line search on admissible states
 \begin{frame}{alternative(?) approach: semi-smooth Newton}
 
 \begin{itemize}
-\item complementarity is equivalent to a \alert{semi-smooth equation}: \quad \pcomm{parameter $\alert{c}>0$}
+\item complementarity is equivalent to a \alert{semi-smooth equation}:
     $$u_i\ge \psi_i, \,\, \lambda_i \ge 0, \,\, \lambda_i(u_i-\psi_i)=0 \quad \iff \quad \lambda_i - \max\{0,\lambda_i - \alert{c}\,(u_i-\psi_i)\} = 0$$
 
     \begin{itemize}
     \item[$\lc$] $\max\{0,x\}$ is semi-smooth, with a well-behaved directional derivative
+    \item[$\lc$] equivalent for any $\alert{c}>0$
     \end{itemize}
 
 \pause
 \medskip
-\item idea: to solve the VI by solving the nonlinear system $G(\bu,\blambda)=\bzero$:
-    $$G(\bu,\blambda) = \begin{pmatrix} \bF(\bu) - \blambda \\ \blambda - \max\{\bzero,\blambda - \alert{c}(\bu-\bpsi)\} \end{pmatrix}$$
-\item solve $\bG=\bzero$ using Newton's method, natch
+\item idea: solve the VI by solving the nonlinear system $\bG(\bu,\blambda)=\bzero$:
+    $$\bG(\bu,\blambda) = \begin{pmatrix} \bF(\bu) - \blambda \\ \blambda - \max\{\bzero,\blambda - \alert{c}(\bu-\bpsi)\} \end{pmatrix}$$
+\item solve $\bG(\bu,\blambda)=\bzero$ using Newton's method \quad \pcomm{naturally}
 \end{itemize}
 \end{frame}
 
@@ -437,40 +442,48 @@ line search on admissible states
 \begin{frame}{primal-dual active-set is a Newton method}
 
 \begin{itemize}
-\item restrict to linear \& symmetric case $\bF(\bu) = A\bu - \bb$ \, \pcomm{quadratic optimization; $\bF=\grad f$}
+\item restrict to linear case $\bF(\bu) = A\bu - \bb$, with symmetric $A$ \, \pcomm{quadratic optimization; $\bF=\grad f$}
 \end{itemize}
 
+\medskip
 \begin{columns}
 \begin{column}{0.6\textwidth}
 {\footnotesize
 \begin{pseudo}[label=, left-margin=0pt, topsep=0pt, line-height=1.25, indent-length=2.2em]
-\texttt{pdas}$(\psi,\bu^0)$\texttt{:} \\+
+\texttt{pdas}$(\bpsi,\bu^0,\alert{c})$\texttt{:} \\+
   $\cA^0=\emptyset$, $\cI^k=\{1,\dots,N\}$, $\blambda^0=\bzero$ \\
   for $k=0,1,2,\dots$ \\+
-    fixme \tn{\efcomm{linear solve}} \\
-    foo  \, \tn{\efcomm{so $\lambda^{k+1}_{\cI^k}=0$}} \\
-    \alert{$\cA^k = \{i : \lambda_i^k - c(u_i^k-\psi_i) > 0\}$} \\
-    $\cI^k = \{1,\dots,N\} \setminus \cA^k$ \\
-    stop if \tn{appropriate CP norm is $<\operatorname{tol}$}
+    $A_{\cI^k,\cI^k}\, \bs_{\cI^k} = \alert{-A_{\cI^k,\cA^k} (\bu^k - \bpsi)} -(A\bu^k-\bb)_{\cI^k}$ \quad \tn{\efcomm{linear solve}} \\
+    $\bu_{\cI^k}^{k+1}=\bu_{\cI^k}^{k}+\bs_{\cI^k}$ \tn{\,\&\,} $\bu_{\cA^k}^{k+1}=\bpsi_{\cA^k}$ \\
+    $\blambda^{k+1}_{\cA^k}=-(A\bu^{k+1}-\bb)_{\cA^k}$ \tn{\,\&\,} $\blambda^{k+1}_{\cI^k}=0$ \\
+    \alert{$\cA^k = \{i : \lambda_i^k - c(u_i^k-\psi_i) > 0\}$} \tn{\,\&\,} $\cI^k = \left(\cA^k\right)^C$ \\
+    stop if \tn{(appropriate CP norm) $<\operatorname{tol}$}
 \end{pseudo}
 }
 \end{column}
 \begin{column}{0.4\textwidth}
 {\small
 \begin{block}{PDAS = primal-dual active-set}
-FOO
+iterative quadratic optimization method which adjusts primal ($\bu$) and dual ($\blambda$) dofs via estimated active set
 \end{block}
+
+\begin{itemize}
+\item shown in unilateral
+
+\vspace{-1mm}
+case $u\ge \psi$
+\end{itemize}
 }
 \end{column}
 \end{columns}
 
 \pause
-\begin{withpeople}{\photo{hintermueller.jpg}{M.~Hinterm\"uller} \photo{generic.png}{K.~Ito} \photo{kunisch.jpg}{K.~Kunisch}}
+\begin{withpeople}{\photo[9mm]{hintermueller.jpg}{M.~Hinterm\"uller} \photo[8mm]{generic.png}{K.~Ito} \photo[9mm]{kunisch.jpg}{K.~Kunisch}}
 
 \bigskip
 \begin{theorem}[Hinterm\"uller, Ito \& Kunisch 2002]
 \begin{itemize}
-\item PDAS $=$ semismooth Newton.  Thus it converges locally superlinearly.
+\item PDAS $=$ (semismooth Newton).  Thus converges locally superlinearly.
 \item If $A$ is M-matrix then converges globally, and iterates $k>1$ are admissible.
 \end{itemize}
 \end{theorem}
@@ -478,82 +491,39 @@ FOO
 \end{frame}
 
 
-\begin{frame}{BM is a half-step off of HIK}
-\begin{withpeople}{\photo{papadopoulos.jpg}{I.~Papadopoulos} \photo{farrell.jpg}{P.~Farrell} \photo{surowiec.jpg}{T.~Surowiec}}
+\begin{frame}{clarity}
 
 \begin{itemize}
-\item FIXME
+\item returning to demo, recall RSLS iterations grew fast
+    \begin{itemize}
+    \item[$\lc$] that is, \emph{without} grid-sequencing
+    \end{itemize}
+\item what's going on?
+\item<2-> for the quadratic optimization case,
+
+{\alert{recent results provide clarity}}
 \end{itemize}
 
-\begin{theorem}[Papadopoulos, Farrell, \& Surowiec 2021]
-FIXME
-\end{theorem}
-\end{withpeople}
-\end{frame}
+\vspace{-15mm}
+\hfill \includegraphics[width=0.3\textwidth]{figs/copactive.png}
 
+\pause
+\vspace{4mm}
+\begin{withpeople}{\photo{papadopoulos.jpg}{I.~Papadopoulos} \photo{farrell.jpg}{P.~Farrell} \photo{surowiec.jpg}{T.~Surowiec} \photo{hintermueller.jpg}{M.~Hinterm\"uller}}
 
-\begin{frame}[fragile]
-\frametitle{why? the active set shrinks one layer at a time}
-
-\begin{itemize}
-\item initial iterate $u^0=0$ gives $u^1\approx\max\{0,\psi\}$, with much too large an active set
-\item each iteration only frees nodes at the edge of the current active set
-\item example: \texttt{-snes\_vi\_monitor} output on a $65\times 65$ grid, from Bueler (2021):
-\end{itemize}
-
-{\scriptsize
-\begin{Verbatim}[xleftmargin=10mm]
-  0 SNES VI Function norm 8.02729 Active lower constraints 729/885 ...
-  1 SNES VI Function norm 1.4556 Active lower constraints 629/729 ...
-  2 SNES VI Function norm 0.463479 Active lower constraints 553/629 ...
-...
-  6 SNES VI Function norm 2.44749e-08 Active lower constraints 421/421 ...
-\end{Verbatim}
-}
-
-\begin{itemize}
-\item Newton cannot converge quadratically until the active set is correct
-\item the free boundary moves about one cell per iteration, so iterations grow like $1/h$ or faster
-\end{itemize}
-
-\medskip
-\placeholder{0.6\textwidth}{18mm}{figure showing iterates peeling away from the obstacle?}
-\end{frame}
-
-
-\begin{frame}{a theorem explains the mesh dependence}
-\begin{withpeople}{\photo{papadopoulos.jpg}{I.~Papadopoulos} \photo{hintermueller.jpg}{M.~Hinterm\"uller}}
-
-\begin{itemize}
-\item consider PDAS for the $P_1$ classical obstacle problem, with $f>0$ and constant $\psi$
-\end{itemize}
-
-\begin{theorem}[Papadopoulos \& Hinterm\"uller 2026; sticky active sets]
-If node $i$ and all of its mesh neighbors are in $\cA^k$ then $i\in\cA^{k+1}$.
+\vspace{-4mm}
+\begin{theorem}[Papadopoulos, Farrell, \& Surowiec 2021, App.~A]
+RSLS is same as PDAS, but a half-step out of sync.
 \end{theorem}
 
-\begin{corollary}[peeling effect]
-A node can only leave the active set if it neighbors a node in the inactive set.
-\end{corollary}
+\pause
+\begin{theorem}[``peeling'' theorem; Papadopoulos \& Hinterm\"uller 2026]
+In PDAS, if $i\in\cA^k$, and its neighbors are in $\cA^k$, then $i\in\cA^{k+1}$.  \alert{A node can only de-activate if has an inactive set neighbor.}
+\end{theorem}
 
 \begin{itemize}
-\item they observe iteration counts on uniform $n\times n$ meshes in 2D:
-\end{itemize}
-
-{\small
-\centering
-\begin{tabular}{lccccccc}
-$n$        & $2^4$ & $2^5$ & $2^6$ & $2^7$ & $2^8$ & $2^9$ & $2^{10}$ \\
-\midrule
-PDAS iterations & 5 & 7 & 12 & 22 & 43 & 83 & \alert{165} \\
-\bottomrule
-\end{tabular}
-\par
-}
-
-\begin{itemize}
-\item in function space the iteration is not even well-defined \pcomm{they show}
-\item but Signorini problems only grow mildly
+\item thus obstacle problem iterations generically grow exponentially,
+\item but Signorini problem iterations only grow mildly
 \end{itemize}
 \end{withpeople}
 \end{frame}
@@ -572,7 +542,8 @@ PDAS iterations & 5 & 7 & 12 & 22 & 43 & 83 & \alert{165} \\
 \begin{frame}{Newton-multigrid}
 
 \begin{itemize}
-\item already seen effect of grid-sequencing
+\item we have already seen that one fix is \alert{grid sequencing}
+\item which is the simplest form of multigrid
 \item the reduced-space Newton step is an SPD linear system on the inactive set
 \item precondition it with multigrid: \alert{Newton-multigrid}
 \item combined with grid sequencing \pcomm{a nonlinear F-cycle}:
