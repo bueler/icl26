@@ -1,0 +1,9 @@
+% solver tree for "what's possible" table; needs \usepackage[edges]{forest}
+\begin{forest}
+  begin draw/.code={\begin{tikzpicture}[baseline=(r.base)]}, for root={name=r},
+  for tree={draw, font=\scriptsize, inner xsep=2pt, inner ysep=1.5pt, text height=1.5ex, text depth=0.4ex,
+    edge={thin}, grow'=0, anchor=west, child anchor=west, calign=first, l sep=1.5mm, s sep=1.5mm,
+    edge path'={([xshift=-4pt]!u.south east) |- (.child anchor)},
+    after packing node={for children={s-=3.6mm}}}
+  [Newton [GMRES [mg V-cycle]]]
+\end{forest}

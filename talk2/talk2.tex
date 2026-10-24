@@ -13,6 +13,7 @@
 \usepackage{minted}
 \usepackage[kw]{pseudo}
 \usepackage[export]{adjustbox}
+\usepackage[edges]{forest}
 
 % pseudocode: grey slanted comments, and highlights tight around the text of a line
 \newcommand{\algcomment}[1]{\textsl{\grey{#1}}}
@@ -539,11 +540,87 @@ In PDAS, if $i\in\cA^k$, and its neighbors are in $\cA^k$, then $i\in\cA^{k+1}$.
 \section{multilevel solvers}
 
 
-\begin{frame}{Newton-multigrid}
+\begin{frame}[fragile]
+\frametitle{issue: mesh-dependent iterations}
+
+\begin{block}{classical obstacle problem}
+find \alert{$u \in K = \{v\ge\psi\} \subset X = H_0^1(\Omega)$} so that
+    $$\alert{\int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u)} \quad \forall v\in K$$
+\end{block}
+
+recall where we stand:
+\begin{itemize}
+\item in Firedrake, we tried RSLS = \texttt{vinewtonrsls}, an active-set Newton solver
+\item Newton iterations \alert{grew fast} with mesh resolution
+
+\pause
+\medskip
+\item this was fixed by \alert{grid sequencing}
+    \begin{itemize}
+    \item[$\lc$] prolong the coarse solution to the finer grid, as the initial iterate:
+
+\begin{Verbatim}
+    prolong(uold, uh)
+\end{Verbatim}
+    \end{itemize}
+
+\item grid-sequencing is a simple form of \alert{multigrid}?
+    \begin{itemize}
+    \item[$\lc$] in any case we used \texttt{MeshHierarchy()} to advantage
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{what's the goal? \, optimal solver}
 
 \begin{itemize}
-\item we have already seen that one fix is \alert{grid sequencing}
-\item which is the simplest form of multigrid
+\item raise our aspirations to general VIs wherein $F:X \to X'$ is \alert{nonlinear}
+\end{itemize}
+
+\begin{definition}
+\alert{VI($K$,$F$)}: Given Banach space $X$, closed and convex admissible set $K\subset X$, and $F: K\to X'$ smooth, find $u\in K$ so that \,$\alert{\ip{F(u)}{v-u} \ge 0} \, \forall v\in K$.
+\end{definition}
+
+\begin{itemize}
+\item when I need to compare, \alert{PDE($F$)} means weak form \,$\ip{F(u)}{v}=0$ \, $\forall v\in X$
+
+\pause
+\medskip
+\item restrict to fixed element degree \pcomm{$P_1$ in examples}
+\item in this context there is a clear efficiency goal
+\end{itemize}
+
+\begin{definition}
+For a family of discrete problems $\{P_N\}$, a solver is \alert{optimal} if $O(N)$ arithmetic (or time) suffices to solve $P_N$, as $N\to\infty$.
+\end{definition}
+\end{frame}
+
+
+\newcommand{\rno}{{\color{red} no}}
+\newcommand{\gys}{{\color{green} yes}}
+
+\begin{frame}{what's possible: optimal solver}
+
+\begin{center}
+\begin{tabular}{lll}
+problem & solver & optimal \\
+\midrule
+PDE($F$) & \input{tikz/solver-newton-lu.tex} & no \\
+  & \input{tikz/solver-newton-mg.tex} & yes \\
+\midrule
+VI($K$,$F$) & \input{tikz/solver-rsls-lu.tex} & no \\
+   & \input{tikz/solver-rsls-mg.tex} & \rno \\
+   & \input{tikz/solver-fascd.tex} & \gys
+\end{tabular}
+
+\end{center}
+\end{frame}
+
+
+\begin{frame}{constraint decomposition and FAS}
+
+\begin{itemize}
 \item the reduced-space Newton step is an SPD linear system on the inactive set
 \item precondition it with multigrid: \alert{Newton-multigrid}
 \item combined with grid sequencing \pcomm{a nonlinear F-cycle}:
