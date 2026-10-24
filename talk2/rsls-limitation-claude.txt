@@ -1,0 +1,97 @@
+Making the transfers matrix-free would run into the Galerkin PtAP requirement from the first diagnosis, so that's the main thing to sort out when we get to matfree.
+
+❯ where is the ptap restriction coming from?
+
+PETSc's reduced-space VI solver forces it on, unconditionally, at the start of every solve, in
+  src/snes/impls/vi/rs/virs.c:319-322:
+
+  /* Multigrid must use Galerkin for coarse grids with active set/reduced space methods; cannot rediscretize on coarser grids*/
+  PetscCall(SNESGetKSP(snes, &ksp));
+  PetscCall(KSPGetPC(ksp, &pc));
+  PetscCall(PCMGSetGalerkin(pc, PC_MG_GALERKIN_BOTH));
+
+  On its own, PCMG defaults to PC_MG_GALERKIN_NONE (ksp/pc/impls/mg/mg.c:1998), and Firedrake
+  doesn't change that. Because this call runs inside SNESSolve_VINEWTONRSLS, after options are
+  processed, passing -pc_mg_galerkin none won't override it.
+
+  The reasoning in that comment is that each coarse level only knows the inactive set it got by
+  injection from the finer one. Rediscretizing on a coarse DM would assemble the full coarse
+  Jacobian, which doesn't match the reduced coarse space. Galerkin coarse operators, the restricted
+  P transposed times A times the restricted P, are reduced automatically. Both matrices in that
+  product must be assembled, and when either one is a MATSUBMATRIX wrapper around a matrix-free
+  matrix, PtAP fails. That was your original error.
+
+  This matters for going matrix-free:
+  - Matrix-free P: not possible with vinewtonrsls + pc_type mg as written.
+  - Matrix-free fine Jacobian A: also blocked. Cutting out the inactive rows and columns of a
+    matrix-free A gives the same kind of wrapper, and PtAP can't use it either.
+  - Ways around it: change PETSc so it rediscretizes the coarse operators on the coarse inactive
+    sets, or write your own Python PC that builds its own reduced coarse operators. Each is a real
+    project.
+
+  FASCD avoids all of this because it never forms reduced linear systems.
+
+❯ ok this is very helpful. use blame to determine who wrote those lines and when
+
+● Barry Smith wrote them, on 2015-03-01 (92e89061e2f). The commit message reads: "Make PCMG if used
+  in VINEWTONRSLS use Galerkin coarse grids since rediscretization doesn't work for reduced
+  space/active set methods". The same commit also fixed the scaling of the ex9.c example so it works
+  well with geometric multigrid.
+
+  Blame shows Satish Balay on the three code lines, dated 2022-08-22 (9371c9d470a). That commit is
+  only the clang-format conversion of the whole PETSc source tree. Since Barry's commit message
+  describes exactly this Galerkin forcing, the code itself very likely dates from 2015 as well; I
+  didn't dig past the reformat to confirm.
+
+❯ ha ha.  I am at fault, indirectly; I wanted my code ex9.c to run, and barry made it so
+
+● So the Galerkin-forcing line traces back to getting your ex9.c obstacle example running with
+  geometric multigrid, and ten years later it's what blocks the matrix-free path. That could make a
+  nice aside on the Newton-multigrid limitations slide.
+
+  It also fits the second bug. ex9.c uses DMDA, which builds fresh coarse DMs on every coarsening,
+  so leftover VI state on a reused coarse DM never came up there. Firedrake keeps its coarse DMs
+  alive, which is what exposed it.
+
+> regarding how RSLS restricts P via MatCreateSubMatrix, show me the relevant lines in virs.c
+
+● It happens in three steps in src/snes/impls/vi/rs/virs.c.
+
+  1. Each Newton step marks the fine DM with the current inactive set (virs.c:421), after cutting
+  the Jacobian down to it:
+
+  PetscCall(MatCreateSubMatrix(snes->jacobian, vi->IS_inact, vi->IS_inact, MAT_INITIAL_MATRIX,
+  &jac_inact_inact));
+  ...
+  PetscCall(DMSetVI(snes->dm, vi->IS_inact));
+
+  2. DMSetVI swaps in its own interpolation hook (virs.c:217-218). It saves the DM's original
+  function, which for you is Firedrake's create_interpolation, and installs the VI version:
+
+  dmsnesvi->createinterpolation = dm->ops->createinterpolation;
+  dm->ops->createinterpolation  = DMCreateInterpolation_SNESVI;
+
+  The coarse DMs are marked the same way, by DMSetVI(*dm2, inactive) inside DMCoarsen_SNESVI
+  (virs.c:160).
+
+  3. When PCMG asks for P, the hook builds the full P and cuts it down (virs.c:70-88):
+
+  static PetscErrorCode DMCreateInterpolation_SNESVI(DM dm1, DM dm2, Mat *mat, Vec *vec)
+  {
+    ...
+    PetscCall((*dmsnesvi1->createinterpolation)(dm1, dm2, &interp, NULL));
+    PetscCall(MatCreateSubMatrix(interp, dmsnesvi2->inactive, dmsnesvi1->inactive,
+  MAT_INITIAL_MATRIX, mat));
+    PetscCall(MatDestroy(&interp));
+    *vec = NULL;
+    ...
+  }
+
+  Here dm1 is the coarse DM and dm2 the fine one. So the rows of the reduced P are the fine inactive
+  nodes and the columns are the coarse inactive nodes.
+
+  When interp is a MATPYTHON, as in Firedrake's default, MatCreateSubMatrix returns a MATSUBMATRIX
+  wrapper instead of an actual matrix. The forced Galerkin PtAP then fails on that wrapper. Line 84
+  is also why the patch returns a (P, None) pair: that line calls Firedrake's original hook, which
+  has to return a matrix plus an optional scaling vector.
+
