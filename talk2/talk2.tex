@@ -636,7 +636,7 @@ solver & optimal \\
 
 \bigskip
 \begin{itemize}
-\item<2> grid-sequencing outer loop makes a \alert{FMG cycle}
+\item<2> outer grid-sequencing makes an \alert{FMG cycle}
 \end{itemize}
 \end{frame}
 
@@ -646,7 +646,7 @@ solver & optimal \\
 \begin{itemize}
 \item Newton active-set method like PDAS or RSLS \alert{already needs grid-sequencing}
     \begin{itemize}
-    \item[$\lc$] to give miNi = \underline{m}esh-\underline{i}ndependent \underline{N}ewton \underline{i}terations
+    \item[$\lc$] to give \alert{miNi = \underline{m}esh-\underline{i}ndependent \underline{N}ewton \underline{i}terations}
     \end{itemize}
 \item solving the linear problem by V-cycles (naive Newton-multigrid) is \alert{not} enough
 \end{itemize}
@@ -679,6 +679,9 @@ solver & miNi & optimal \\
 \end{column}
 \end{columns}
 \end{frame}
+
+
+% POSSIBLE SLIDE HERE: qrcode for code/copnm.py, with minimal table of results; note need for patch because of MatCreateSubMatrix and caching issues; these do not apply to FASCD
 
 
 \begin{frame}{different strategy}
