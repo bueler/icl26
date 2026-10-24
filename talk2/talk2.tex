@@ -555,19 +555,12 @@ recall where we stand:
 
 \pause
 \medskip
-\item this was fixed by \alert{grid sequencing}
+\item this was fixed by \alert{grid sequencing}:
     \begin{itemize}
-    \item[$\lc$] prolong the coarse solution to the finer grid, as the initial iterate:
-
-\begin{Verbatim}
-    prolong(uold, uh)
-\end{Verbatim}
+    \item[$\lc$] use \texttt{MeshHierarchy()}
+    \item[$\lc$] prolong coarse solution to next-finer grid, as initial iterate: \, \texttt{prolong(uold, uh)}
     \end{itemize}
-
-\item grid-sequencing is a simple form of \alert{multigrid}?
-    \begin{itemize}
-    \item[$\lc$] in any case we used \texttt{MeshHierarchy()} to advantage
-    \end{itemize}
+\item grid-sequencing is a simple form of \alert{multigrid}
 \end{itemize}
 \end{frame}
 
@@ -575,71 +568,150 @@ recall where we stand:
 \begin{frame}{what's the goal? \, optimal solver}
 
 \begin{itemize}
-\item raise our aspirations to general VIs wherein $F:X \to X'$ is \alert{nonlinear}
-\end{itemize}
+\item let's aspire to solving general VIs, wherein $F:X \to X'$ is \alert{nonlinear}
 
-\begin{definition}
-\alert{VI($K$,$F$)}: Given Banach space $X$, closed and convex admissible set $K\subset X$, and $F: K\to X'$ smooth, find $u\in K$ so that \,$\alert{\ip{F(u)}{v-u} \ge 0} \, \forall v\in K$.
-\end{definition}
+\begin{block}{Definition of \alert{VI($K$,$F$)}}
+Given a Banach space $X$, a closed and convex admissible set $K\subset X$, and $F: K\to X'$ smooth, find $u\in K$ so that \,$\alert{\ip{F(u)}{v-u} \ge 0} \, \forall v\in K$.
+\end{block}
 
-\begin{itemize}
-\item when I need to compare, \alert{PDE($F$)} means weak form \,$\ip{F(u)}{v}=0$ \, $\forall v\in X$
+    \begin{itemize}
+    \item[$\lc$] in $\infty$-dimensions, existence is nontrivial
+    \end{itemize}
+
+\item when I need to compare, \alert{PDE($F$)} denotes weak form problem \,$\ip{F(u)}{v}=0 \, \forall v\in X$
 
 \pause
 \medskip
-\item restrict to fixed element degree \pcomm{$P_1$ in examples}
-\item in this context there is a clear efficiency goal
-\end{itemize}
+\item in this context there is a clear efficiency goal:
 
 \begin{definition}
 For a family of discrete problems $\{P_N\}$, a solver is \alert{optimal} if $O(N)$ arithmetic (or time) suffices to solve $P_N$, as $N\to\infty$.
 \end{definition}
+
+    \begin{itemize}
+    \item[$\lc$] ``solve'' means to discretization accuracy
+    \item[$\lc$] this definition only makes sense for fixed element degree \pcomm{$P_1$ in examples}
+    \end{itemize}
+
+\end{itemize}
 \end{frame}
 
 
 \newcommand{\rno}{{\color{red} no}}
 \newcommand{\gys}{{\color{green} yes}}
 
-\begin{frame}{what's possible: optimal solver}
 
-\begin{center}
+\begin{frame}{what's possible for PDE($F$)?}
+
+\begin{itemize}
+\item recall that composing a multigrid solver can give an optimal PDE($F$) solver
+    \begin{itemize}
+    \item[$\lc$] assumes a well-behaved nonlinear elliptic $F$
+    \end{itemize}
+\item this is the \alert{Newton-multigrid} strategy
+\end{itemize}
+
+\bigskip
+
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\centering
+
+\vspace{14mm}
+\input{tikz/vcycle.tex}
+\onslide<2>{\input{tikz/fcycle.tex}}
+\end{column}
+\begin{column}{0.65\textwidth}
 \begin{tabular}{lll}
-problem & solver & optimal \\
+solver & optimal \\
 \midrule
-PDE($F$) & \input{tikz/solver-newton-lu.tex} & no \\
-  & \input{tikz/solver-newton-mg.tex} & yes \\
-\midrule
-VI($K$,$F$) & \input{tikz/solver-rsls-lu.tex} & no \\
-   & \input{tikz/solver-rsls-mg.tex} & \rno \\
-   & \input{tikz/solver-fascd.tex} & \gys
+\input{tikz/solver-newton-lu.tex} & no \\
+\input{tikz/solver-newton-mg.tex} & \only<1>{yes}\only<2>{\strikeThrough{yes} \grey{$O(N\log N)$}} \\
+\onslide<2>{
+\input{tikz/solver-gs-newton-mg.tex} & yes \grey{$O(N)$}
+}
 \end{tabular}
+\end{column}
+\end{columns}
 
-\end{center}
+\bigskip
+\begin{itemize}
+\item<2> grid-sequencing outer loop makes a \alert{FMG cycle}
+\end{itemize}
 \end{frame}
 
 
-\begin{frame}{constraint decomposition and FAS}
+\begin{frame}{what's possible for VI($K$,$F$)?}
 
 \begin{itemize}
-\item the reduced-space Newton step is an SPD linear system on the inactive set
-\item precondition it with multigrid: \alert{Newton-multigrid}
-\item combined with grid sequencing \pcomm{a nonlinear F-cycle}:
+\item Newton active-set method like PDAS or RSLS \alert{already needs grid-sequencing}
     \begin{itemize}
-    \item[$\lc$] mesh-independent Newton \emph{and} Krylov iterations
-    \item[$\lc$] optimal $O(N)$ work
+    \item[$\lc$] to give miNi = \underline{m}esh-\underline{i}ndependent \underline{N}ewton \underline{i}terations
     \end{itemize}
-\item example in PETSc, from Bueler (2021), Chapter 12: \hfill \grey{\small \texttt{-snes\_grid\_sequence}}
+\item solving the linear problem by V-cycles (naive Newton-multigrid) is \alert{not} enough
 \end{itemize}
 
-\medskip
-\includegraphics[height=0.33\textheight]{figs/obstacle-flops-per-n.png}
-\hfill
-\placeholder{0.45\textwidth}{25mm}{Firedrake version of this demo?}
+\bigskip
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\centering
 
-\medskip
+\vspace{15mm}
+\input{tikz/vcycle.tex}
+
+\onslide<2->{
+\input{tikz/gridseq.tex}
+
+\input{tikz/fcycle.tex}
+}
+\end{column}
+\begin{column}{0.65\textwidth}
+\begin{tabular}{lll}
+solver & miNi & optimal \\
+\midrule
+\input{tikz/solver-rsls-lu.tex} & no & no \\
+\input{tikz/solver-rsls-mg.tex} & \rno & no \\
+\onslide<2->{
+\input{tikz/solver-gs-rsls-lu.tex} & yes & \rno \\
+\input{tikz/solver-gs-rsls-mg.tex} & yes & yes
+}
+\end{tabular}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{different strategy}
+
+FIXME perspective: we want a more effective V-cycle for VIs
+
+FIXME just show FASCD structure, and one-row table
+
+FIXME add grid-sequenced FASCD tree
 \begin{itemize}
-\item but this needs a \emph{global} linearization on the finest mesh
+\item FIXME
 \end{itemize}
+
+\bigskip
+\begin{columns}
+\begin{column}{0.35\textwidth}
+\centering
+
+\input{tikz/vcycle.tex}
+
+\onslide<2>{\input{tikz/fcycle.tex}}
+\end{column}
+\begin{column}{0.65\textwidth}
+\begin{tabular}{lll}
+solver & miNi & optimal \\
+\midrule
+\input{tikz/solver-fascd.tex} & no & no \\
+\onslide<2>{
+\input{tikz/solver-fascd.tex} & yes & yes
+}
+\end{tabular}
+\end{column}
+\end{columns}
 \end{frame}
 
 

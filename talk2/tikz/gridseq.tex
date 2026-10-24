@@ -1,0 +1,16 @@
+\begin{tikzpicture}[scale=0.4]
+  \pgfmathsetmacro\hstep{0.5}
+  \pgfmathsetmacro\vstep{0.75}
+  \pgfmathsetmacro\ceps{0.08}   % size of square for coarse grid
+
+% just up side
+  \pgfmathsetmacro\hoff{12*\hstep}
+  \draw[shift={(\hoff,0)},black,thick] (3*\hstep,0.0) -- (4*\hstep,\vstep) -- (5*\hstep,2*\vstep) -- (6*\hstep,3*\vstep);
+  \draw[shift={(\hoff,0)}]     (3*\hstep-\ceps,-\ceps) rectangle (3*\hstep+\ceps,+\ceps);
+  \filldraw[shift={(\hoff,0)}]     (4*\hstep,\vstep) circle (2.5pt);
+  \filldraw[shift={(\hoff,0)}]     (5*\hstep,2*\vstep) circle (2.5pt);
+  \filldraw[shift={(\hoff,0)}]     (6*\hstep,3*\vstep) circle (2.5pt);
+
+  \draw[white] (0, -\vstep) circle (2.5pt);  % phantom: same bounding box as vcycle.tex
+\end{tikzpicture}
+
