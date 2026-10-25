@@ -230,7 +230,6 @@ seek $u_h\in K_h$ so that \quad $\displaystyle \int_\Omega \grad u_h\cdot\grad(v
 
 \section{active-set Newton methods}
 
-
 \begin{frame}[fragile]
 \frametitle{active-set method demo: refine and count Newton iterations}
 
@@ -376,7 +375,7 @@ for $i \in \{1,\dots,N\}$,
 
 
 \begin{frame}{the active-set method in PETSc}
-\begin{withpeople}{\photo{generic.png}{S.~Benson} \photo{munson.jpg}{T.~Munson}}
+\begin{withpeople}{\photo[9mm]{generic.png}{S.~Benson} \photo{munson.jpg}{T.~Munson}}
 
 \begin{itemize}
 \item PETSc has SNES type \,\alert{\texttt{vinewtonrsls}} $=$ \texttt{rsls} \quad \pcomm{Benson \& Munson, 2006}
@@ -536,13 +535,12 @@ In PDAS, if $i\in\cA^k$, and its neighbors are in $\cA^k$, then $i\in\cA^{k+1}$.
 
 \section{multilevel solvers}
 
-
-\begin{frame}{recall: grid-sequencing can fix mesh-dependent iterations}
+\begin{frame}{grid-sequencing can fix mesh-dependent iterations}
 
 \hfill%
 {\footnotesize
 \begin{tabular}{rcc}
-mesh & \quad without \quad & w grid seq \\
+mesh & \quad RSLS only \quad & w grid seq \\
 \midrule
 $10\times 10$   & 4  & 4 \\
 $20\times 20$   & 5  & 1 \\
@@ -553,26 +551,29 @@ $320\times 320$ & 46 & 2
 \end{tabular}
 }
 
-\vspace{-18mm}
+\vspace{-14mm}
 \begin{itemize}
-\item iterations in the Firedrake demo \, \grey{$\to$}
+\item recall iterations in the Firedrake demo \, \grey{$\to$}
     \begin{itemize}
-    \item[$\lc$] for the classical obstacle problem
+    \item[$\lc$] classical obstacle problem
+    \item[$\lc$] using PETSc's RSLS, active-set Newton solver
     \end{itemize}
-\item from PETSc's RSLS, an active-set Newton solver
 
-\vspace{10mm}
-\item Newton iterations \alert{grow fast} with refinement, but this is fixed by \alert{grid sequencing}:
+\vspace{2mm}
+\item active-set method alone: Newton iterations \alert{grow fast} with refinement
+\item with \alert{grid sequencing}: mesh-independent iteration counts
     \begin{itemize}
     \item[$\lc$] build \texttt{MeshHierarchy()}
     \item[$\lc$] prolong a coarse solution to the next-finer grid, as initial iterate
     \end{itemize}
-\item grid-sequencing is a precursor to \alert{multigrid}
+
+\bigskip
+\item grid-sequencing is a precursor to \alert{multigrid}, but it is not a V-cycle
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{notation for nonlinear weak form problems}
+\begin{frame}{notation for nonlinear problems}
 
 \begin{itemize}
 \item consider solving general VI in which $F:X \to X'$ is \alert{nonlinear}
@@ -588,11 +589,12 @@ Given a Banach space $X$ and $F: X\to X'$ smooth.
 \alert{VI($K$,$F$)}: \, For $K\subset X$ closed \& convex, find $u\in K$ s.t.~\,$\alert{\ip{F(u)}{v-u} \ge 0} \, \forall v\in K$.
 \end{definitions}
 
-\item note PDE($F$) $=$ VI($X$,$F$)
-\item functions \alert{$F: K\to X'$}, only defined on admissible inputs, are permitted in VI($K$,$F$)
+\smallskip
+\item PDE($F$) $=$ VI($X$,$F$)
+\item functions \alert{$F: K\to X'$} are permitted in VI($K$,$F$)
 
 \smallskip
-\item well-posedness, regularity are nontrivial \dots \, next slides aspirational in general cases
+\item well-posedness, regularity are nontrivial \dots \, next slides aspirational in general
 \end{itemize}
 \end{frame}
 
@@ -600,22 +602,22 @@ Given a Banach space $X$ and $F: X\to X'$ smooth.
 \begin{frame}{goal: optimal solvers for VIs}
 
 \begin{itemize}
-\item for PDE($F$) and VI($K$,$F$) there is a clear efficiency goal for FE solvers:
+\item for well-behaved PDE($F$) \& VI($K$,$F$), here is a sensible performance \alert{goal} for FE solvers
 
 \begin{definition}
-For a family of discrete problems $\{P_N\}$, a solver is \alert{optimal} if $O(N)$ arithmetic (or time) suffices to solve $P_N$, as $N\to\infty$.
+For a family of discrete problems $\{P_N\}$, where $P_N$ has $N$ dofs, a solver is \alert{optimal} if $O(N)$ arithmetic (or time) suffices to solve $P_N$.
 \end{definition}
 
     \begin{itemize}
+    \item[$\lc$] as $N\to\infty$, of course
     \item[$\lc$] ``solve'' means to discretization accuracy
+    \item[$\lc$] \alert{constant in $O(N)$ definitely matters in practice}
     \end{itemize}
 
-\item \alert{constant in $O(N)$ definitely matters}
-\item this definition only makes sense for fixed element degree \pcomm{$P_1$ in examples}
+\item this definition only makes sense for fixed element degree \hfill \pcomm{$P_1$ in examples}
     \begin{itemize}
     \item[$\lc$] spectral and $hp$-FE ``use dofs better'' under $p$-refinement
     \end{itemize}
-\item but this is a sensible \alert{goal}
 \end{itemize}
 \end{frame}
 
@@ -628,6 +630,9 @@ For a family of discrete problems $\{P_N\}$, a solver is \alert{optimal} if $O(N
     \item[$\lc$] assumes a well-behaved nonlinear elliptic $F$
     \end{itemize}
 \item here is the \alert{Newton-multigrid} strategy
+    \begin{itemize}
+    \item[$\lc$] principle: \alert{V-cycles are excellent preconditioners} \, \efcomm{e.g.~(B, 2021)}
+    \end{itemize}
 \end{itemize}
 
 \bigskip
@@ -655,7 +660,7 @@ solver & optimal \\
 
 \bigskip
 \begin{itemize}
-\item<2> outer grid-sequencing makes an \alert{FMG cycle}
+\item<2> adding outer grid-sequencing creates an \alert{FMG cycle}
 \end{itemize}
 \end{frame}
 
@@ -663,10 +668,11 @@ solver & optimal \\
 \begin{frame}{what's possible from Newton-multigrid for VI($K$,$F$)?}
 
 \begin{itemize}
-\item for VI($K$,$F$), solving linear Newton-step problems by V-cycles is \alert{not} enough
-\item a Newton active-set method like RSLS apparently \alert{already needs grid-sequencing} to give \alert{miNi}{\scriptsize $^{\operatorname{TM}}$} = \underline{m}esh-\underline{i}ndependent \underline{N}ewton \underline{i}terations
+\item solving the linear Newton-step problems by V-cycles is \alert{not} enough
+\item an active-set method \alert{needs grid-sequencing}, or similar, to give \alert{mii} on an obstacle problem (Papadapoulous \& Hinterm\"uller, 2026)
     \begin{itemize}
-    \item[$\lc$] miNi is necessary but not sufficient for optimality on final mesh
+    \item[$\lc$] \alert{mii} = \underline{m}esh-\underline{i}ndependent (Newton) \underline{i}terations
+    %\item[$\lc$] mii is necessary but not sufficient for final-mesh optimality
     \end{itemize}
 \end{itemize}
 
@@ -676,85 +682,133 @@ solver & optimal \\
 \centering
 
 \vspace{15mm}
-\input{tikz/gridseq.tex}
-
 \input{tikz/vcycle.tex}
+
+\input{tikz/gridseq.tex}
 
 \onslide<2->{
 \input{tikz/fcycle.tex}
 }
 \end{column}
 \begin{column}{0.65\textwidth}
-\begin{tabular}{lll}
-solver & miNi & optimal \\
+{\small
+\begin{tabular}{lcc}
+solver & \alert{mii} & optimal \\
 \midrule
 \input{tikz/solver-rsls-lu.tex} & no & no \\
-\input{tikz/solver-gs-rsls-lu.tex} & yes & no \\
 \input{tikz/solver-rsls-mg.tex} & \alert{no} & no \\
+\input{tikz/solver-gs-rsls-lu.tex} & yes? & no \\
 \onslide<2->{
-\input{tikz/solver-gs-rsls-mg.tex} & yes & \alert{yes?}
+\input{tikz/solver-gs-rsls-mg.tex} & yes? & yes?
 }
 \end{tabular}
+}
 \end{column}
 \end{columns}
 \end{frame}
 
 
-% POSSIBLE SLIDE HERE: qrcode for code/copnm.py, with minimal table of results; note need for patch because of MatCreateSubMatrix and caching issues; these do not apply to FASCD
+\begin{frame}{different strategy for VI($K$,$F$): \, V-cycles on the outside}
 
-
-\begin{frame}{different strategy}
-
-FIXME perspective: we want a more effective V-cycle for VIs
-
-FIXME just show FASCD structure, and one-row table
-
-FIXME add grid-sequenced FASCD tree
 \begin{itemize}
-\item FIXME
+\item Newton-multigrid depends on grid-sequencing to find the fine-level active set $\cA$
+    \begin{itemize}
+    \item[$\lc$] grid-sequencing is outer loop; only FMG cycles are any good
+    \end{itemize}
+\item FASCD V-cycle strategy puts a \alert{V-cycle on outside}  \hfill\pfcomm{explained on next slides}
+    \begin{itemize}
+    \item[$\lc$] allows \alert{nonlinear RSLS as a smoother on each level}
+    \end{itemize}
+\item ``?'' means good general evidence, but no proof
 \end{itemize}
 
 \bigskip
 \begin{columns}
-\begin{column}{0.35\textwidth}
+\begin{column}{0.25\textwidth}
 \centering
 
 \input{tikz/vcycle.tex}
 
-\onslide<2>{\input{tikz/fcycle.tex}}
+\vspace{6mm}
+\input{tikz/fcycle.tex}
 \end{column}
-\begin{column}{0.65\textwidth}
-\begin{tabular}{lll}
-solver & miNi & optimal \\
+\begin{column}{0.75\textwidth}
+\begin{tabular}{lcc}
+solver & optimal \\
 \midrule
-\input{tikz/solver-fascd.tex} & no & no \\
-\onslide<2>{
-\input{tikz/solver-fascd.tex} & yes & yes
-}
+\input{tikz/solver-fascd.tex} & \strikeThrough{yes} \grey{$O(N \log N)$?} \\
+\input{tikz/solver-gs-fascd.tex} & yes? \grey{$O(N)$?}
 \end{tabular}
 \end{column}
 \end{columns}
 \end{frame}
 
 
-\begin{frame}{constraint decomposition and FAS}
-\begin{withpeople}{\photo{abrandt.jpg}{A.~Brandt} \photo{tai.jpg}{X.-C.~Tai} \photo{farrell.jpg}{P.~Farrell}}
+\begin{frame}{FAS multigrid and constraint decomposition}
 
 \begin{itemize}
-\item full approximation scheme (FAS; Brandt 1977): multigrid for \emph{nonlinear} problems, without global linearization
-\item constraint decomposition (Tai 2003): for a subspace decomposition $V = \sum_i V_i$, write
-    $$K = \sum_i K_i, \qquad K_i \subset V_i$$
-\item FASCD (Bueler \& Farrell 2024) combines them, using mesh levels:
+\item FASCD combines 2 major ideas:
+
+\begin{withpeople}{\vspace{5mm} \par \photo[12mm]{abrandt.jpg}{A.~Brandt}}
+\begin{block}{FAS: full-approximation scheme V-cycle multigrid for PDE($F$)\, (Brandt, 1977)}
+At each level, restrict both residual and solution to generate a \alert{nonlinear coarse-mesh problem} for the coarse correction.
+\end{block}
+\end{withpeople}
+
     \begin{itemize}
-    \item[$\lc$] \alert{defect constraint} $\chi^J = \psi^J - w^J$ for the fine-level iterate $w^J$
-    \item[$\lc$] monotone restriction $\chi^{j-1} = R^\oplus \chi^j$ generates coarser constraints
-    \item[$\lc$] down-smoothing in sets $\cD^j$, up-smoothing in larger sets $\cU^j$
-    \item[$\lc$] smoother: a few reduced-space Newton steps on each level
+    \item[$\lc$] advantage: no global linearization
+    \end{itemize}
+
+\begin{withpeople}{\vspace{5mm} \par \photo[12mm]{tai.jpg}{X.-C.~Tai}}
+\begin{block}{CD: constraint decomposition for VI($K$,$F$) \, (Tai, 2003)}
+\alert{Decompose} the convex constraint set \alert{$K$} over the mesh hierarchy: \, $\displaystyle K = \sum_{i=0}^J K_i$.
+
+\vspace{-2mm}
+Compute corrections from each subproblem VI($K_i$,$F$).
+
+\smallskip
+Combine them multiplicatively or additively.
+\end{block}
+\end{withpeople}
+
+    \begin{itemize}
+    \item[$\lc$] advantage: general convergence concept/analysis
+    \item[$\lc$] impractical: subproblems evaluate $F$ on fine level
     \end{itemize}
 \end{itemize}
+\end{frame}
 
-\vspace{-5mm}
-\hfill \includegraphics[width=0.35\textwidth]{figs/fascd-vcycle.png}
+
+\begin{frame}{FASCD = monotone multigrid $+$ FAS $+$ CD}
+
+\begin{withpeople}{\vspace{3mm} \photo[12mm]{rkornhuber.jpg}{R.~Kornhuber}}
+\begin{itemize}
+\item need more ideas, from Kornhuber's (1994) \alert{monotone multigrid}
+\item define a \alert{defect constraint set} on the finest level $J$:
+    \begin{itemize}
+    \item[$\lc$] given admissible iterate $w \in K_h$, its defect constraint is \, $\alert{\chi^J = \psi_h - w} \le 0$
+    \item[$\lc$] let $\cU^J = \{y \,:\, y \ge \chi^J\}$, so \alert{$0\in \cU^J$}
+    \item[$\lc$] observe: \,$v \in K_h \, \iff \, v=w+z \, \text{ for } \, z \in \cU^J$
+    \end{itemize}
+\item also: \alert{monotone restrictions} $R^\oplus,R^\ominus$
+\end{itemize}
+\end{withpeople}
+
+\pause
+\vspace{7mm}
+\begin{withpeople}{\vspace{3mm} \photo[12mm]{farrell.jpg}{P.~Farrell}}
+\begin{itemize}
+\item \alert{FASCD} (B \& Farrell, 2024) \alert{combines everything}:
+    \begin{itemize}
+    \item[$\lc$] defect constraints are computed at start of V-cycle
+    \item[$\lc$] monotone restrictions generate defect constraints on each level
+    \item[$\lc$] down-smoothing in smaller sets $\cD^j$, up-smoothing in larger sets $\cU^j$
+    \item[$\lc$] coarse-corrections solve FAS formula
+    \item[$\lc$] $O(N)$ smoother: fixed RSLS iterations, fixed Krylov iterations
+    \item[$\lc$] coarsest solver: RSLS+LU to convergence
+    \item[$\lc$] box constraints \& FMG cycles implemented
+    \end{itemize}
+\end{itemize}
 \end{withpeople}
 \end{frame}
 
@@ -791,80 +845,49 @@ solver & miNi & optimal \\
 \bigskip
 \hfill \includegraphics[width=0.85\textwidth]{figs/fascd-vcycle.png}
 
-\vfill
+\bigskip
 \small
 \mbox{\legendswatch{algdefect} \, construct defect constraints}
 
 \bigskip
 \mbox{\legendswatch{algfas} \, apply FAS formulas}
+
+\vfill
+\normalsize
+\begin{itemize}
+\item nodes are \alert{activated on every level}, by the smoothers and coarsest-level solver
+\end{itemize}
+
+\bigskip
 \end{minipage}
-\end{frame}
-
-
-\begin{frame}{FASCD results: classical obstacle problem}
-
-\begin{itemize}
-\item ball and spiral problems; up to $3.4\times 10^7$ nodes
-\end{itemize}
-
-{\small
-\begin{center}
-\begin{tabular}{rrcccccc}
-     &       & \multicolumn{3}{c}{ball} & \multicolumn{3}{c}{spiral} \\
-levels & nodes & RS only & V-cycles & FMG & RS only & V-cycles & FMG \\
-\midrule
-3  & 545              & 3  & 6  & +2 & 6  & 5  & +2 \\
-5  & $8.3\times 10^3$ & 13 & 9  & +3 & 11 & 9  & +3 \\
-7  & $1.3\times 10^5$ & 46 & 11 & +3 & 35 & 11 & +4 \\
-9  & $2.1\times 10^6$ &    & 13 & +2 &    & 13 & +5 \\
-11 & $3.4\times 10^7$ &    & 14 & +1 &    & 18 & +5 \\
-\bottomrule
-\end{tabular}
-\end{center}
-}
-
-\begin{itemize}
-\item RS only: iterations grow like resolution
-\item V-cycles: slow growth; asymptotic rate about $0.1$
-\item FMG: one full multigrid cycle, plus a few V-cycles
-\end{itemize}
-
-\vspace{-14mm}
-\hfill \includegraphics[width=0.12\textwidth]{figs/ball-set.png} \includegraphics[width=0.12\textwidth]{figs/spiral-set.png}
 \end{frame}
 
 
 \begin{frame}{FASCD results: a glacier}
 
 \begin{itemize}
-\item shallow ice approximation: nonlinear, degenerate, and not an optimization
-\item FMG with $Q_1$ elements; weak scaling on ARCHER2
-\end{itemize}
+\item shallow ice approximation: \alert{$F$ is nonlinear, highly-degenerate, non-symmetric}
+    \begin{itemize}
+    \item[$\lc$] VI($K$,$F$) computes steady-state, directly from bed \& climate
+    \end{itemize}
+\item FASCD FMG (grid-sequenced V-cycles) with $Q_1$ elements
+\item example calculation with $N=4\times 10^8$ dofs (B \& Farrell, 2024; Ex 8.4):
 
-\begin{center}
-\includegraphics[width=0.55\textwidth]{figs/sialev8scene.png}
-\end{center}
+\vspace{3mm}
+\hfill \includegraphics[width=0.65\textwidth]{figs/sialev8scene.png} \quad
 
-{\small
-\begin{center}
-\begin{tabular}{rrrcc}
-processes & levels & nodes & V-cycles after FMG & time (s) \\
-\midrule
-1    & 6  & $641^2$   & +2 & 98 \\
-16   & 8  & $2561^2$  & +2 & 124 \\
-1024 & 11 & $20481^2$ & +1 & 177 \\
-\bottomrule
-\end{tabular}
-\end{center}
-}
-
-\begin{itemize}
-\item $4.1\times 10^8$ unknowns \pcomm{87.5 m resolution} in under 3 minutes
+\vspace{-8mm}
+    \begin{itemize}
+    \item[$\lc$] deep V-cycles ($J=11$)
+    \item[$\lc$] 1024 processes
+    \item[$\lc$] under 3 minutes wall clock
+    \item[$\lc$] 88 m resolution uniformly over Greenland-sized ice sheet
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\section[\emph{a posteriori} \& AMR]{\emph{a posteriori} estimates and adaptive refinement}
+\section[gloss]{gloss: AMR, higher-order, latent-variable methods}
 
 \begin{frame}{\emph{a posteriori} error estimates for PDEs}
 
@@ -1003,8 +1026,6 @@ FIXME
 \placeholder{0.8\textwidth}{12mm}{rerun at larger target; what is the take-away?}
 \end{frame}
 
-
-\section[higher-order \& latent-variable]{gloss: higher-order and latent-variable methods}
 
 \begin{frame}{high-order bounds via the Bernstein basis}
 \begin{withpeople}{\photo{kirby.jpg}{R.~Kirby} \photo{shapero.jpg}{D.~Shapero}}
