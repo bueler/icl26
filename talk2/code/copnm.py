@@ -1,23 +1,28 @@
-# solve a classical obstacle problem using a Newton-multigrid approach
+# solve a classical obstacle problem using a grid-sequenced Newton-multigrid approach
 # note: Newton = vinewtonrsls, an active-set method
 #       multigrid = linear geometric multigrid on the assembled linear systems
 
+MG_SOLVER = True  # if False, uses MUMPS direct solve on linear systems
+FANCY_ACTIVE = True  # if False, revert to f=0 and boring disk-like active set
+REFINEMENTS = 7  # will take more than a minute, but shows MG optimality beats MUMPS
+
 from firedrake import *
-import patch_vi_mg  # fix-up prolongation matrix (P) and coarse caching issues
+import patch_vi_mg  # fix prolongation matrix and coarse-caching issues
 import time
 
-MG_SOLVER = False  # if False, uses MUMPS direct solve on linear systems
-
 mesh0 = RectangleMesh(10, 10, 2, 2, -2, -2, diagonal="crossed")
-hierarchy = MeshHierarchy(mesh0, 5)
+print("generating mesh hierarchy ...")
+hierarchy = MeshHierarchy(mesh0, 7)
+
+print("solving by Newton-" + "multigrid ..." if MG_SOLVER else "LU ...")
 uh = None
 for mesh in hierarchy:
     x, y = SpatialCoordinate(mesh)
     r2 = x ** 2 + y ** 2
     V = FunctionSpace(mesh, "P", 1)
     psih = Function(V).interpolate(conditional(r2 < 1, sqrt(1 - r2), 0))
-    f = Function(V).interpolate(sin(20*(x+y**2)))  # more interesting active set
-    # f = Constant(0.0)  # boring active set
+    fufl = sin(20 * (x + y ** 2)) if FANCY_ACTIVE else Constant(0.0)
+    f = Function(V).interpolate(fufl)
     uold = uh
     uh, vh = Function(V), TestFunction(V)
     if uold is not None:
@@ -38,7 +43,7 @@ for mesh in hierarchy:
             "mg_levels_ksp_type": "chebyshev",
             "mg_levels_ksp_max_it": 2,
             "mg_levels_pc_type": "icc",
-            #"mg_levels_ksp_converged_reason": None,
+            #"mg_levels_ksp_converged_reason": None,  # see V-cycles at stdout
             })
     solver = NonlinearVariationalSolver(prob, solver_parameters=sp, options_prefix="s")
     INF = Function(V).interpolate(Constant(PETSc.INFINITY))
@@ -52,4 +57,5 @@ for mesh in hierarchy:
 uh.rename("uh")
 psih.rename("psih")
 active = Function(V, name="active").interpolate(conditional(uh - psih > 1.0e-8, 0.0, 1.0))
+print("writing result.pvd ...")
 VTKFile(f"result.pvd").write(uh, psih, active)
