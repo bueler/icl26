@@ -463,7 +463,7 @@ line search over admissible states
     $A_{\cI^k,\cI^k}\, \bs_{\cI^k} = \alert{-A_{\cI^k,\cA^k} (\bu^k - \bpsi)} -(A\bu^k-\bb)_{\cI^k}$ \quad \tn{\efcomm{linear solve}} \\
     $\bu_{\cI^k}^{k+1}=\bu_{\cI^k}^{k}+\bs_{\cI^k}$ \tn{\,\&\,} $\bu_{\cA^k}^{k+1}=\bpsi_{\cA^k}$ \\
     $\blambda^{k+1}_{\cA^k}=-(A\bu^{k+1}-\bb)_{\cA^k}$ \tn{\,\&\,} $\blambda^{k+1}_{\cI^k}=0$ \\
-    \alert{$\cA^k = \{i : \lambda_i^k - c(u_i^k-\psi_i) > 0\}$} \tn{\,\&\,} $\cI^k = \left(\cA^k\right)^C$ \\
+    \alert{$\cA^k = \{i : \lambda_i^k - c(u_i^k-\psi_i) > 0\}$} \tn{\,\&\,} $\cI^k = \big(\cA^k\big)^C$ \\
     stop if \tn{(appropriate CP norm) $<\operatorname{tol}$}
 \end{pseudo}
 }
@@ -475,7 +475,7 @@ iterative quadratic optimization method which adjusts primal ($\bu$) and dual ($
 \end{block}
 
 \begin{itemize}
-\item note \alert{$c$} used in setting $\cA^k$
+\item note \alert{$c$} is used in setting $\cA^k$
 \end{itemize}
 }
 \end{column}
@@ -497,10 +497,7 @@ iterative quadratic optimization method which adjusts primal ($\bu$) and dual ($
 \begin{frame}{recent clarity}
 
 \begin{itemize}
-\item returning to demo, recall RSLS iterations grew fast
-    \begin{itemize}
-    \item[$\lc$] that is, \emph{without} grid-sequencing
-    \end{itemize}
+\item in demo, RSLS iterations grew fast (w/o grid-sequencing)
 \item what's going on?
 \item for the quadratic optimization case,
 
@@ -540,49 +537,70 @@ In PDAS, if $i\in\cA^k$, and its neighbors are in $\cA^k$, then $i\in\cA^{k+1}$.
 \section{multilevel solvers}
 
 
-\begin{frame}[fragile]
-\frametitle{issue: mesh-dependent iterations}
+\begin{frame}{recall: grid-sequencing can fix mesh-dependent iterations}
 
-\begin{block}{classical obstacle problem}
-find \alert{$u \in K = \{v\ge\psi\} \subset X = H_0^1(\Omega)$} so that
-    $$\alert{\int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u)} \quad \forall v\in K$$
-\end{block}
+\hfill%
+{\footnotesize
+\begin{tabular}{rcc}
+mesh & \quad without \quad & w grid seq \\
+\midrule
+$10\times 10$   & 4  & 4 \\
+$20\times 20$   & 5  & 1 \\
+$40\times 40$   & 8  & 2 \\
+$80\times 80$   & 13 & 1 \\
+$160\times 160$ & 24 & 2 \\
+$320\times 320$ & 46 & 2
+\end{tabular}
+}
 
-recall where we stand:
+\vspace{-18mm}
 \begin{itemize}
-\item in Firedrake, we tried RSLS = \texttt{vinewtonrsls}, an active-set Newton solver
-\item Newton iterations \alert{grew fast} with mesh resolution
-
-\pause
-\medskip
-\item this was fixed by \alert{grid sequencing}:
+\item iterations in the Firedrake demo \, \grey{$\to$}
     \begin{itemize}
-    \item[$\lc$] use \texttt{MeshHierarchy()}
-    \item[$\lc$] prolong coarse solution to next-finer grid, as initial iterate: \, \texttt{prolong(uold, uh)}
+    \item[$\lc$] for the classical obstacle problem
     \end{itemize}
-\item grid-sequencing is a simple form of \alert{multigrid}
+\item from PETSc's RSLS, an active-set Newton solver
+
+\vspace{10mm}
+\item Newton iterations \alert{grow fast} with refinement, but this is fixed by \alert{grid sequencing}:
+    \begin{itemize}
+    \item[$\lc$] build \texttt{MeshHierarchy()}
+    \item[$\lc$] prolong a coarse solution to the next-finer grid, as initial iterate
+    \end{itemize}
+\item grid-sequencing is a precursor to \alert{multigrid}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{what's the goal? \, optimal solver}
+\begin{frame}{notation for nonlinear weak form problems}
 
 \begin{itemize}
-\item let's aspire to solving general VIs, wherein $F:X \to X'$ is \alert{nonlinear}
+\item consider solving general VI in which $F:X \to X'$ is \alert{nonlinear}
 
-\begin{block}{Definition of \alert{VI($K$,$F$)}}
-Given a Banach space $X$, a closed and convex admissible set $K\subset X$, and $F: K\to X'$ smooth, find $u\in K$ so that \,$\alert{\ip{F(u)}{v-u} \ge 0} \, \forall v\in K$.
-\end{block}
+\smallskip
+\begin{definitions}
+Given a Banach space $X$ and $F: X\to X'$ smooth.
 
-    \begin{itemize}
-    \item[$\lc$] in $\infty$-dimensions, existence is nontrivial
-    \end{itemize}
+\smallskip
+\alert{PDE($F$)}: \,  Find $u\in X$ s.t.~\,$\ip{F(u)}{v}=0 \, \forall v\in X$.
 
-\item when I need to compare, \alert{PDE($F$)} denotes weak form problem \,$\ip{F(u)}{v}=0 \, \forall v\in X$
+\smallskip
+\alert{VI($K$,$F$)}: \, For $K\subset X$ closed \& convex, find $u\in K$ s.t.~\,$\alert{\ip{F(u)}{v-u} \ge 0} \, \forall v\in K$.
+\end{definitions}
 
-\pause
-\medskip
-\item in this context there is a clear efficiency goal:
+\item note PDE($F$) $=$ VI($X$,$F$)
+\item functions \alert{$F: K\to X'$}, only defined on admissible inputs, are permitted in VI($K$,$F$)
+
+\smallskip
+\item well-posedness, regularity are nontrivial \dots \, next slides aspirational in general cases
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{goal: optimal solvers for VIs}
+
+\begin{itemize}
+\item for PDE($F$) and VI($K$,$F$) there is a clear efficiency goal for FE solvers:
 
 \begin{definition}
 For a family of discrete problems $\{P_N\}$, a solver is \alert{optimal} if $O(N)$ arithmetic (or time) suffices to solve $P_N$, as $N\to\infty$.
@@ -590,25 +608,26 @@ For a family of discrete problems $\{P_N\}$, a solver is \alert{optimal} if $O(N
 
     \begin{itemize}
     \item[$\lc$] ``solve'' means to discretization accuracy
-    \item[$\lc$] this definition only makes sense for fixed element degree \pcomm{$P_1$ in examples}
     \end{itemize}
 
+\item \alert{constant in $O(N)$ definitely matters}
+\item this definition only makes sense for fixed element degree \pcomm{$P_1$ in examples}
+    \begin{itemize}
+    \item[$\lc$] spectral and $hp$-FE ``use dofs better'' under $p$-refinement
+    \end{itemize}
+\item but this is a sensible \alert{goal}
 \end{itemize}
 \end{frame}
-
-
-\newcommand{\rno}{{\color{red} no}}
-\newcommand{\gys}{{\color{green} yes}}
 
 
 \begin{frame}{what's possible for PDE($F$)?}
 
 \begin{itemize}
-\item recall that composing a multigrid solver can give an optimal PDE($F$) solver
+\item geometric multigrid can be an optimal PDE($F$) solver
     \begin{itemize}
     \item[$\lc$] assumes a well-behaved nonlinear elliptic $F$
     \end{itemize}
-\item this is the \alert{Newton-multigrid} strategy
+\item here is the \alert{Newton-multigrid} strategy
 \end{itemize}
 
 \bigskip
@@ -626,7 +645,7 @@ For a family of discrete problems $\{P_N\}$, a solver is \alert{optimal} if $O(N
 solver & optimal \\
 \midrule
 \input{tikz/solver-newton-lu.tex} & no \\
-\input{tikz/solver-newton-mg.tex} & \only<1>{yes}\only<2>{\strikeThrough{yes} \grey{$O(N\log N)$}} \\
+\input{tikz/solver-newton-mg.tex} & \only<1>{yes \phantom{$O(N\log N)$}}\only<2>{\strikeThrough{yes} \grey{$O(N\log N)$}} \\
 \onslide<2>{
 \input{tikz/solver-gs-newton-mg.tex} & yes \grey{$O(N)$}
 }
@@ -641,14 +660,14 @@ solver & optimal \\
 \end{frame}
 
 
-\begin{frame}{what's possible for VI($K$,$F$)?}
+\begin{frame}{what's possible from Newton-multigrid for VI($K$,$F$)?}
 
 \begin{itemize}
-\item Newton active-set method like PDAS or RSLS \alert{already needs grid-sequencing}
+\item for VI($K$,$F$), solving linear Newton-step problems by V-cycles is \alert{not} enough
+\item a Newton active-set method like RSLS apparently \alert{already needs grid-sequencing} to give \alert{miNi}{\scriptsize $^{\operatorname{TM}}$} = \underline{m}esh-\underline{i}ndependent \underline{N}ewton \underline{i}terations
     \begin{itemize}
-    \item[$\lc$] to give \alert{miNi = \underline{m}esh-\underline{i}ndependent \underline{N}ewton \underline{i}terations}
+    \item[$\lc$] miNi is necessary but not sufficient for optimality on final mesh
     \end{itemize}
-\item solving the linear problem by V-cycles (naive Newton-multigrid) is \alert{not} enough
 \end{itemize}
 
 \bigskip
@@ -657,11 +676,11 @@ solver & optimal \\
 \centering
 
 \vspace{15mm}
+\input{tikz/gridseq.tex}
+
 \input{tikz/vcycle.tex}
 
 \onslide<2->{
-\input{tikz/gridseq.tex}
-
 \input{tikz/fcycle.tex}
 }
 \end{column}
@@ -670,10 +689,10 @@ solver & optimal \\
 solver & miNi & optimal \\
 \midrule
 \input{tikz/solver-rsls-lu.tex} & no & no \\
-\input{tikz/solver-rsls-mg.tex} & \rno & no \\
+\input{tikz/solver-gs-rsls-lu.tex} & yes & no \\
+\input{tikz/solver-rsls-mg.tex} & \alert{no} & no \\
 \onslide<2->{
-\input{tikz/solver-gs-rsls-lu.tex} & yes & \rno \\
-\input{tikz/solver-gs-rsls-mg.tex} & yes & yes
+\input{tikz/solver-gs-rsls-mg.tex} & yes & \alert{yes?}
 }
 \end{tabular}
 \end{column}
