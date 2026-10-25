@@ -148,28 +148,26 @@
 \end{frame}
 
 
-\begin{frame}{recall: definition of a variational inequality}
+\begin{frame}{recall: definition of a variational inequality (VI)}
 
 \begin{definition}
-Given a normed vector space $X$, a closed and convex \alert{admissible subset} $K\subset X$, and $F: K\to X'$ continuous, find $u\in K$ so that
+Given a \alert{Banach space $X$}, a closed and convex \alert{admissible subset $K\subset X$}, and \alert{$F: K\to X'$ continuous}, find $u\in K$ so that
   $$\boxed{\alert{\ip{F(u)}{v-u} \ge 0}} \qquad \text{for all } v\in K.$$
-This is the \alert{variational inequality} (VI) problem for the data $K$ and $F$.
+This is the \alert{variational inequality} for the data $K$ and $F$.
 \end{definition}
 
-\pause
 \begin{itemize}
-\item $\ip{\cdot}{\cdot}$ denotes Hilbert space inner product or dual pairing, according to context
-    \begin{itemize}
-    \item[$\lc$] $X$ is complete (Banach), in $\infty$-dimensional practice
-    \end{itemize}
-\item this is a \alert{VI of the first kind} in some references
-    \begin{itemize}
-    \item[$\lc$] second kind: $\ip{F(u)}{v-u} + \Phi(v) - \Phi(u) \ge 0 \, \forall v$, for some semi-smooth $\Phi:K\to \RR$
-    \end{itemize}
 \item $K$ is generally given via inequalities (and/or equalities)
     \begin{itemize}
     \item[$\lc$] libraries may restrict to \alert{box constraints}, lower \& upper bounds on each dof
-    \item[$\lc$] bounds might be $\pm\infty$, so unconstrained dofs are included
+    \end{itemize}
+
+\item $\ip{\cdot}{\cdot}$ denotes Hilbert space inner product, or dual pairing, according to context
+
+\smallskip
+\item this is a \alert{VI of the first kind} in some references
+    \begin{itemize}
+    \item[$\lc$] second kind: $\ip{F(u)}{v-u} + \Phi(v) - \Phi(u) \ge 0 \, \forall v$, for some semi-smooth $\Phi:K\to \RR$
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -190,7 +188,7 @@ for $X=H^1(\Omega)$, and an \alert{obstacle $\psi\in X$}, define the closed and 
 \end{column}
 \begin{column}{0.55\textwidth}
 \begin{definition}
-the solution $u$ defines subsets of $\Omega$:
+a solution $u$ defines subsets of $\Omega$:
 \begin{align*}
 &\text{\alert{inactive set} } & E_u &= \{x\,:\,u(x)>\psi(x)\} \\
 &\text{\alert{active (contact) set} } & C_u &= \Omega \setminus E_u \\
@@ -206,22 +204,21 @@ the solution $u$ defines subsets of $\Omega$:
 
 \begin{itemize}
 \item assume \alert{$X_h=P_1$}, continuous \& piecewise-linear \hfill \pcomm{I'll return to Ciarlet's gauntlet at end}
-\item $g=0$ for convenience
-\item define \alert{$\psi_h = I_h \psi$}, the interpolant
-\item define \alert{$K_h = \{v_h \in X_h : v_h \ge \psi_h \text{ and } v_h|_{\partial\Omega}=0\}$}
+\item define \alert{$\psi_h = I_h \psi$}, the nodal interpolant
+\item define \alert{$K_h = \{v_h \in X_h : v_h \ge \psi_h \text{ and } v_h|_{\partial\Omega}=g\}$}
+\item $K_h \subset X_h \subset X = H^1(\Omega)$, but generally \alert{$K_h \not\subset K$}
+
     \begin{itemize}
-    \item[$\lc$] $K_h \subset X_h \subset X$, but generally \alert{$K_h \not\subset K$}
-    \item[$\lc$] please use ``conforming'' with care!
+    \item[$\lc$] say ``conforming'' with care!
     \end{itemize}
 \end{itemize}
 
-\vspace{-17mm}
-\hfill \includegraphics[width=0.5\textwidth]{figs/cop.png}
+\vspace{-10mm}
+\hfill \includegraphics[width=0.6\textwidth]{figs/cop.png}
 
 \medskip
 \begin{block}{FE approximation of classical obstacle problem}
-seek $u_h\in K_h$ so that
-    $$\int_\Omega \grad u_h\cdot\grad(v_h-u_h) \ge \int_\Omega f\,(v_h-u_h) \quad \forall v_h\in K_h$$
+seek $u_h\in K_h$ so that \quad $\displaystyle \int_\Omega \grad u_h\cdot\grad(v_h-u_h) \ge \int_\Omega f\,(v_h-u_h) \quad \forall v_h\in K_h$
 \end{block}
 \end{frame}
 
@@ -283,28 +280,32 @@ $320\times 320$ & \only<1>{46}\only<2>{\alert{2}}
 \end{frame}
 
 
-\begin{frame}{language: \, residual $=$ multipliers $=$ dual variables; \, complementarity}
+\begin{frame}{language: \, residual $=$ multipliers $=$ dual variables}
 
-\hfill \includegraphics[width=0.45\textwidth]{figs/copactive.png}
-
-\vspace{-15mm}
 \begin{itemize}
-\item for $u_h\in X_h=P_1$, let \alert{$\bu\in\RR^N$}
-
-denote the nodal solution values
+\item for $u_h\in X_h=P_1$, let \alert{$\bu=(u_i)\in\RR^N$} denote the nodal values
 
 \smallskip
-\item for stiffness matrix $A$ and load vector $b$,
-
-the residual is \alert{$\bF(\bu) = A \bu - \bb \in \RR^N$}
+\item stiffness matrix $A$ and load vector $\bb$
+\item the residual is \alert{$\bF(\bu) = A \bu - \bb \in \RR^N$}
 
     \begin{itemize}
-    \item[$\lc$] in this classical obstacle problem, the residual is a \strikeThrough{linear} affine map
+    \item[$\lc$] in classical obstacle problem, the residual $\bF$ is a linear or affine map
     \end{itemize}
 \smallskip
-\item in optimization, \alert{$\lambda_i = F(\bu)_i$} are called the \alert{Lagrange multipliers} or \alert{dual variables}
+\item in optimization, $\alert{\lambda_i} = \bF(\bu)_i$ are the \alert{Lagrange multipliers} or \alert{dual variables}
+\end{itemize}
+\end{frame}
 
-\pause
+
+\begin{frame}{complementarity problem solvers}
+
+\hfill \includegraphics[width=0.4\textwidth]{figs/copactive.png}
+
+\vspace{-5mm}
+\begin{itemize}
+\item $\lambda_i = \bF(\bu)_i$ are the Lagrange multipliers
+
 \medskip
 \begin{block}{complementarity problem (CP)}
 for $i \in \{1,\dots,N\}$,
@@ -312,11 +313,17 @@ for $i \in \{1,\dots,N\}$,
 \end{block}
 
 \medskip
-\item this CP in $\RR^N$ is \alert{the VI solver goal}, not $\bF(\bu)=0$
+\item \alert{solving this CP} in $\RR^N$ is the goal in a FE VI problem
     \begin{itemize}
-    \item[$\lc$] at convergence, in exact arithmetic, generally \alert{$\blambda \ne 0$}
-    \item[$\lc$] $\lambda_i \ne 0 \implies u_i = \psi_i$ and $x_i\in C_{u_h}$ \hfill \pcomm{$x_i$ in contact set, white nodes}
+    \item[$\lc$] not \, ``$\lambda_i=0$'' or ``$\bF(\bu)=0$''
     \end{itemize}
+\item at convergence, in exact arithmetic, generally $\blambda \ne 0$
+    \begin{itemize}
+    \item[$\lc$] \alert{$\lambda_i \ne 0 \implies u_i = \psi_i$ and $x_i\in C_{u_h}$} \hfill \pcomm{$x_i$ in active/contact set, white nodes}
+    \end{itemize}
+
+\smallskip
+\item for bilateral bounds $\underline{\psi}_i \le u_i \le \overline{\psi}_i$ there is a straightforward CP generalization
 \end{itemize}
 \end{frame}
 
@@ -325,7 +332,7 @@ for $i \in \{1,\dots,N\}$,
 \frametitle{active-set method: basic idea}
 
 \begin{itemize}
-\item \alert{VI problems are nonlinear even when the residual operator is affine}
+\item \alert{VI problems are nonlinear}, even when the residual operator is linear or affine
     \begin{itemize}
     \item[$\lc$] we expect to iterate
     \end{itemize}
@@ -334,8 +341,8 @@ for $i \in \{1,\dots,N\}$,
    $$\alert{\cA^k = \{i\,:\,u_i^k = \psi_i\}} \quad \subset \{1,\dots,N\} \hspace{30mm}$$
 
     \begin{itemize}
-    \item[$\lc$] precise def uses tolerance: $\cA^k = \{i\,:\,u_i^k - \psi_i \le \operatorname{tol}\}$
-    \item[$\lc$] inactive set is complement $\cI^k = \{1,\dots,N\}\setminus\cA^k = \left(\cA^k\right)^C$ \quad \pcomm{black dots}
+    \item[$\lc$] precisely, use tolerance: $\cA^k = \{i\,:\,u_i^k - \psi_i \le \operatorname{tol}\}$
+    \item[$\lc$] inactive set is complement $\cI^k = \{1,\dots,N\}\setminus\cA^k$ \quad \pcomm{black dots}
     \end{itemize}
 
 \vspace{-20mm}
@@ -344,13 +351,15 @@ for $i \in \{1,\dots,N\}$,
 \vspace{5mm}
 \pause
 \medskip
-\item \alert{if we knew $\cA^k$ then one linear solve would determine the correct $\bu=\bu^{k+1}$}:
-    $$\bu_{\cA^k} = \bpsi_{\cA^k}, \qquad (A\bu - \bb)_{\cI^k} = 0 \hspace{40mm}$$
-\item however, at $k=0$ we \alert{do not know} the active set
+\item \alert{once one knows correct $\cA^k$, one solve determines correct $\bu=\bu^{k+1}$}
+    \begin{itemize}
+    \item[$\lc$] for classical obstacle problem: \quad $\bu_{\cA^k} = \bpsi_{\cA^k}, \quad (A\bu - \bb)_{\cI^k} = 0$
+    \end{itemize}
+\item of course, at $k=0$ we do not know the active set
 \item what we see in practice \grey{$\to$}
 \end{itemize}
 
-\vspace{-15mm}
+\vspace{-7mm}
 \hfill
 \begin{minipage}{0.2\textwidth}
 \begin{Verbatim}[fontsize=\tiny]
@@ -370,29 +379,28 @@ for $i \in \{1,\dots,N\}$,
 \begin{withpeople}{\photo{generic.png}{S.~Benson} \photo{munson.jpg}{T.~Munson}}
 
 \begin{itemize}
-\item PETSc has SNES type \,\alert{\texttt{vinewtonrsls}} \quad \pcomm{Benson \& Munson, 2006}
+\item PETSc has SNES type \,\alert{\texttt{vinewtonrsls}} $=$ \texttt{rsls} \quad \pcomm{Benson \& Munson, 2006}
     \begin{itemize}
     \item[$\lc$] \texttt{rsls} = \underline{r}educed-\underline{s}pace with \underline{l}ine \underline{s}earch \quad \pcomm{reduced-space $=$ active-set}
     \end{itemize}
-\item handles nonlinear $\bF:\RR^N \to \RR^N$ and box constraints $\underline{\bpsi} \le \bu \le \overline{\bpsi}$
+\item designed for nonlinear $\bF:\RR^N \to \RR^N$ and box constraints $\underline{\bpsi} \le \bu \le \overline{\bpsi}$
     \begin{itemize}
-    \item[$\lc$] reduces to \, \texttt{newtonls} \, if no constraints are active
+    \item[$\lc$] $\underline{\psi}_i = -\infty$ or $\overline{\psi}_i = +\infty$ permitted, so unconstrained dofs o.k.
+    \item[$\lc$] \texttt{rsls} reduces to \texttt{newtonls} if no constraints are active
     \end{itemize}
 \end{itemize}
 \end{withpeople}
 
-\pause
-%\begin{columns}[c,onlytextwidth]
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \bigskip
 
 {\footnotesize
 \begin{pseudo}[label=, left-margin=0pt, topsep=0pt, line-height=1.25, indent-length=2.2em]
-\texttt{rsls}$(\bpsi,\bu^0)$\texttt{:} \\+
+\texttt{rsls}$(\bpsi,\bu^0)$\texttt{:} \quad \tn{\efcomm{unilateral case}} \\+
 $\bu^0 = \pi(\bu^0) = \max\{u_i^0, \psi_i\}$ \quad \tn{\efcomm{truncate}} \\
 for $k=0,1,2,\dots$ \\+
-  \alert{$\cA^k = \{i : u_i^k = \psi_i \tn{ and } F_i(u^k) > 0\}$} \tn{\&} $\cI^k = \left(\cA^k\right)^C$ \\
+  \alert{$\cA^k = \{i : u_i^k = \psi_i \tn{ and } F_i(u^k) > 0\}$} \tn{\&} $\cI^k = \big(\cA^k\big)^C$ \\
   $J_{\bF}(\bu^k)_{\cI^k,\cI^k}\, \bs_{\cI^k} = -\bF(\bu^k)_{\cI^k}$ \quad \tn{\efcomm{linear solve}} \\
   $\bs_{\cA^k} = 0$ \\
   $\bu^{k+1} = \pi(\bu^k+\alpha \bs)$ \quad \tn{\efcomm{truncated line search}} \\
@@ -409,10 +417,9 @@ line search over admissible states
 \end{block}
 
 \begin{itemize}
-\item shown in unilateral case $u\ge \psi$
 \item \alert{user's $\bF$ only sees admissible iterates}
 \item linear solver is user's choice \pfcomm{CG, multigrid, \dots}
-\item no parameter needed in setting $\cA^k$
+\item no parameter used in setting $\cA^k$
 \end{itemize}
 }
 \end{column}
@@ -420,7 +427,7 @@ line search over admissible states
 \end{frame}
 
 
-\begin{frame}{alternative(?) approach: semi-smooth Newton}
+\begin{frame}{alternative view: semi-smooth Newton}
 
 \begin{itemize}
 \item complementarity is equivalent to a \alert{semi-smooth equation}:
@@ -431,11 +438,10 @@ line search over admissible states
     \item[$\lc$] equivalent for any $\alert{c}>0$
     \end{itemize}
 
-\pause
-\medskip
-\item idea: solve the VI by solving the nonlinear system $\bG(\bu,\blambda)=\bzero$:
+\smallskip
+\item idea: solve the VI by solving the \alert{primal-dual} nonlinear system $\bG(\bu,\blambda)=\bzero$:
     $$\bG(\bu,\blambda) = \begin{pmatrix} \bF(\bu) - \blambda \\ \blambda - \max\{\bzero,\blambda - \alert{c}(\bu-\bpsi)\} \end{pmatrix}$$
-\item solve $\bG(\bu,\blambda)=\bzero$ using Newton's method \quad \pcomm{naturally}
+\item solve $\bG(\bu,\blambda)=\bzero$ using Newton's method, naturally
 \end{itemize}
 \end{frame}
 
@@ -451,7 +457,7 @@ line search over admissible states
 \begin{column}{0.6\textwidth}
 {\footnotesize
 \begin{pseudo}[label=, left-margin=0pt, topsep=0pt, line-height=1.25, indent-length=2.2em]
-\texttt{pdas}$(\bpsi,\bu^0,\alert{c})$\texttt{:} \\+
+\texttt{pdas}$(\bpsi,\bu^0,\alert{c})$\texttt{:} \quad \tn{\efcomm{unilateral case}} \\+
   $\cA^0=\emptyset$, $\cI^k=\{1,\dots,N\}$, $\blambda^0=\bzero$ \\
   for $k=0,1,2,\dots$ \\+
     $A_{\cI^k,\cI^k}\, \bs_{\cI^k} = \alert{-A_{\cI^k,\cA^k} (\bu^k - \bpsi)} -(A\bu^k-\bb)_{\cI^k}$ \quad \tn{\efcomm{linear solve}} \\
@@ -469,17 +475,13 @@ iterative quadratic optimization method which adjusts primal ($\bu$) and dual ($
 \end{block}
 
 \begin{itemize}
-\item shown in unilateral
-
-\vspace{-1mm}
-case $u\ge \psi$
+\item note \alert{$c$} used in setting $\cA^k$
 \end{itemize}
 }
 \end{column}
 \end{columns}
 
-\pause
-\begin{withpeople}{\photo[9mm]{hintermueller.jpg}{M.~Hinterm\"uller} \photo[8mm]{generic.png}{K.~Ito} \photo[9mm]{kunisch.jpg}{K.~Kunisch}}
+\begin{withpeople}{\photo{hintermueller.jpg}{M.~Hinterm\"uller} \photo[9mm]{generic.png}{K.~Ito} \photo{kunisch.jpg}{K.~Kunisch}}
 
 \bigskip
 \begin{theorem}[Hinterm\"uller, Ito \& Kunisch 2002]
@@ -492,7 +494,7 @@ case $u\ge \psi$
 \end{frame}
 
 
-\begin{frame}{clarity}
+\begin{frame}{recent clarity}
 
 \begin{itemize}
 \item returning to demo, recall RSLS iterations grew fast
@@ -500,30 +502,28 @@ case $u\ge \psi$
     \item[$\lc$] that is, \emph{without} grid-sequencing
     \end{itemize}
 \item what's going on?
-\item<2-> for the quadratic optimization case,
+\item for the quadratic optimization case,
 
 {\alert{recent results provide clarity}}
 \end{itemize}
 
-\vspace{-15mm}
-\hfill \includegraphics[width=0.3\textwidth]{figs/copactive.png}
+\vspace{-20mm}
+\hfill \includegraphics[width=0.4\textwidth]{figs/copactive.png}
 
-\pause
 \vspace{4mm}
 \begin{withpeople}{\photo{papadopoulos.jpg}{I.~Papadopoulos} \photo{farrell.jpg}{P.~Farrell} \photo{surowiec.jpg}{T.~Surowiec} \photo{hintermueller.jpg}{M.~Hinterm\"uller}}
 
 \vspace{-4mm}
 \begin{theorem}[Papadopoulos, Farrell, \& Surowiec 2021, App.~A]
-RSLS is same as PDAS, but a half-step out of sync.
+PETSc's RSLS is same as PDAS, but a half-step out of sync.
 \end{theorem}
 
-\pause
 \begin{theorem}[``peeling'' theorem; Papadopoulos \& Hinterm\"uller 2026]
 In PDAS, if $i\in\cA^k$, and its neighbors are in $\cA^k$, then $i\in\cA^{k+1}$.  \alert{A node can only de-activate if has an inactive set neighbor.}
 \end{theorem}
 
 \begin{itemize}
-\item thus obstacle problem iterations generically grow exponentially,
+\item thus obstacle problem iterations (generically) grow exponentially
 \item but Signorini problem iterations only grow mildly
 \end{itemize}
 \end{withpeople}
