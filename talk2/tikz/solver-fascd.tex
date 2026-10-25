@@ -5,7 +5,7 @@
     edge={thin}, grow'=0, anchor=west, child anchor=west, calign=first, l sep=1.5mm, s sep=1.5mm,
     edge path'={([xshift=-4pt]!u.south east) |- (.child anchor)},
     after packing node={for children={s-=3.6mm}}}
-  [FASCD V-cycle
-    [{\grey{\textit{smoother:}} RSLS} [Jacobi]]
-    [{\grey{\textit{coarsest:}} RSLS} [LU]]]
+  [FASCD V-cycle \grey{$\times\ell$}
+    [\grey{\textit{smoother:}} RSLS \grey{$\times 1$} [Krylov \grey{$\times 3$}]]
+    [\grey{\textit{coarsest:}} RSLS \grey{$\times k$} [LU]]]
 \end{forest}
