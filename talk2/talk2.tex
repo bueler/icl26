@@ -798,8 +798,8 @@ Combine them multiplicatively or additively.
 \end{withpeople}
 
 \pause
-\vspace{7mm}
-\begin{withpeople}{\vspace{3mm} \photo[12mm]{farrell.jpg}{P.~Farrell}}
+\vspace{3mm}
+\begin{withpeople}{\vspace{3mm} \photo[12mm]{farrell.jpg}{P.~Farrell} \medskip \photo[15mm]{../qr/fascd.png}{{\large \phantom{|} \scriptsize FASCD}}}
 \begin{itemize}
 \item \alert{FASCD} (B \& Farrell, 2024) \alert{combines everything}:
     \begin{itemize}
@@ -844,26 +844,19 @@ Combine them multiplicatively or additively.
 \begin{minipage}[t][\dimexpr\ht\algcodebox+\dp\algcodebox-2mm\relax][t]{0.4\textwidth}
 \vspace{0pt}
 \small
-$\mitJ=3$ case:
-
-\vspace{-1mm}
-\hfill \includegraphics[width=0.7\textwidth]{figs/fascd-vcycle.png}
-
-\bigskip
 \mbox{\legendswatch{algdefect} \, construct defect constraints}
 
 \medskip
 \mbox{\legendswatch{algfas} \, apply FAS formulas}
 
-\medskip
+\bigskip\bigskip
+$\mitJ=3$ case:
+
+\hfill \includegraphics[width=0.7\textwidth]{figs/fascd-vcycle.png}
+
+\bigskip\bigskip
 \begin{itemize}
 \item nodes can \alert{activate on every level}, via RSLS smoothers
-
-\medskip
-\item FASCD repo:
-
-\vspace{-4mm}
-\hfill \includegraphics[width=0.3\textwidth]{figs/qr/fascd.png}
 \end{itemize}
 \end{minipage}
 \end{frame}
@@ -906,13 +899,12 @@ $\mitJ=3$ case:
     $$\text{solve} \to \text{estimate} \to \text{mark} \to \text{refine} \to \text{solve} \to \dots$$
 
 \pause
-\medskip
 \item for example, consider a classical PDE estimator
 
 \begin{block}{Babu\v{s}ka \& Rheinboldt (1978), for Poisson equation $-\grad^2 u = f$}
-For $\sigma_h=f+\grad^2 u_h$, compute \, $\displaystyle \alert{\eta_T^2 = h_T^2 \int_T |\sigma_h|^2 + \frac{h_T}{2} \int_{\partial T} \left[\!\left[ \grad u_h\cdot n \right]\!\right]^2}.$
+Let $\sigma_h=f+\grad^2 u_h$.  Compute \, $\displaystyle \eta_T^2 = h_T^2 \int_T |\sigma_h|^2 + \frac{h_T}{2} \int_{\partial T} \left[\!\left[ \grad u_h\cdot n \right]\!\right]^2$.
 
-If $\eta^2 = \sum_T \eta_T^2$ then there are constants so that \,$c\,\eta \le |u-u_h|_{H^1} \le C\, \eta$
+For $\eta^2 = \sum_T \eta_T^2$, there are positive constants so that \,\alert{$c\,\eta \le |u-u_h|_{H^1} \le C\, \eta$}
 \end{block}
     \begin{itemize}
     \item[$\lc$] \, lower bound: $\eta$ is \alert{efficient} \quad upper bound: $\eta$ is \alert{reliable}
@@ -962,7 +954,7 @@ Each term of $E_h$ is also locally efficient.
 \item often the \alert{free boundary location} is a VI model goal, so
 \item mark \& refine elements which are \alert{adjacent to the computed free boundary $\Gamma_{u_h}$}
     \begin{itemize}
-    \item[$\lc$] this not complicated, and it is cheap, for any VI($K$,$F$)
+    \item[$\lc$] this is cheap for any VI($K$,$F$)
     \end{itemize}
 \end{itemize}
 
@@ -981,35 +973,46 @@ Each term of $E_h$ is also locally efficient.
 \end{frame}
 
 
-\begin{frame}{VIAMR library}
-\begin{withpeople}{\photo{fochesatto.jpg}{S.~Fochesatto}}
+\begin{frame}{library for AMR on VIs}
 
-FIXME: AOL figures, comparison UDO+BR versus NSV03
+\vspace{-4mm}
 
-\hfill \includegraphics[width=0.1\textwidth]{figs/qr/viamr.png}
-
+\begin{withpeople}{\bigskip \photo{fochesatto.jpg}{S.~Fochesatto} \bigskip \photo[15mm]{../qr/viamr.png}{{\large \phantom{|} \scriptsize VIAMR}}}
 \begin{itemize}
-\item often the \alert{free boundary location} is the goal
-\item VIAMR: a Firedrake-based library
-\item separate two concerns, then recombine:
+\item with Stefano Fochesatto (MS UAF, now at CU Boulder)
+\item \alert{VIAMR}: a Firedrake library for easy exploration/comparison
+\item most general tool in library is ``UDOBR'':
     \begin{itemize}
-    \item[1.] \alert{UDO}: refine near the free boundary
-    \item[2.] \alert{BR}: estimator in the inactive set
+    \item[1.] refinement near computed free boundary $\Gamma_{u_h}$ {\footnotesize (\alert{unstructured dilation})}
+    \item[2.] PDE-type estimator in computed inactive set $E_{u_h}$
+    \item[$\lc$] union marks for 1 and 2, and refine
     \end{itemize}
-\item UDO $=$ unstructured dilation operator:
-    \begin{itemize}
-    \item[$\lc$] mark elements with both active and inactive vertices
-    \item[$\lc$] dilate the marking by $n$ layers of neighbors
-    \end{itemize}
-\item mark by the union, then refine
 \end{itemize}
 \end{withpeople}
+
+\vspace{-10mm}
+\begin{itemize}
+\item preliminary result on hemisphere classical obstacle problem:
+
+as good as NSV03's $E_h$ (left), but much cheaper (right)
+\end{itemize}
+
+\mbox{%
+\hspace{10mm}%
+\includegraphics[width=0.3\textwidth]{figs/viamr-supnorm.png} \hspace{5mm}%
+\includegraphics[width=0.3\textwidth]{figs/viamr-time.png}%
+}
+
+\vspace{-20mm}
+\hfill \includegraphics[width=0.25\textwidth]{figs/viamr-obstacle.png}
 \end{frame}
 
 
 \section[gloss]{gloss: higher-order elements, latent-variable methods}
 
 \begin{frame}{high-order bounds via the Bernstein basis}
+FIXME
+
 \begin{withpeople}{\photo{kirby.jpg}{R.~Kirby} \photo{shapero.jpg}{D.~Shapero}}
 
 \begin{itemize}
@@ -1034,6 +1037,8 @@ FIXME: AOL figures, comparison UDO+BR versus NSV03
 
 
 \begin{frame}{latent variable proximal point (LVPP)}
+FIXME
+
 \begin{withpeople}{\photo{dokken.jpg}{J.~Dokken} \photo{farrell.jpg}{P.~Farrell} \photo{keith.jpg}{B.~Keith} \photo{papadopoulos.jpg}{I.~Papadopoulos} \photo{surowiec.jpg}{T.~Surowiec}}
 
 \begin{itemize}
@@ -1054,6 +1059,7 @@ FIXME: AOL figures, comparison UDO+BR versus NSV03
 
 
 \begin{frame}{summary}
+FIXME
 
 \begin{itemize}
 \item active-set Newton methods (PDAS, RS) are Newton methods, but iterations grow under refinement
