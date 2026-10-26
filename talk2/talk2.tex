@@ -1010,28 +1010,45 @@ as good as NSV03's $E_h$ (left), but much cheaper (right)
 
 \section[gloss]{gloss: higher-order elements, latent-variable methods}
 
-\begin{frame}{high-order bounds via the Bernstein basis}
-FIXME
-
-\begin{withpeople}{\photo{kirby.jpg}{R.~Kirby} \photo{shapero.jpg}{D.~Shapero}}
+\begin{frame}{high-order elements for VIs}
 
 \begin{itemize}
-\item recall from last week: nodal values $\ge 0$ do not imply $v_h\ge 0$ for $P_k$, $k\ge 2$
-\item Bernstein basis on $[0,1]$: \, $B_i^n(x) = \binom{n}{i} x^i (1-x)^{n-i}$
+\item recall from last week
+\end{itemize}
+
+{\small
+\begin{block}{low-order gauntlet for VIs \, (Ciarlet 2002, p 289)}
+[Because of the low regularity in the obstacle problem], \emph{finite elements ``of low degree'' are sufficient for all practical purposes, a fact amply confirmed by numerical evidence.}
+\end{block}
+}
+
+\bigskip
+\begin{itemize}
+\item on the next two slides, ideas for higher-order FE
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{high-order elements in a bounded-solution PDE}
+
+\begin{itemize}
+\item there are advection-diffusion PDEs, for example, in which the \alert{exact solution satisfies $u(x)\in[a,b]$} for all $x$
+\item if we apply ordinary $P_k$ FE then $u_h$ generally will \alert{not} satisfy the same bounds
+
+\pause
+\medskip
+\item one can \alert{enforce the bounds} by having \alert{$u_h$ solve a VI}, at least in the right basis
+\item recall \alert{Bernstein basis} for $P_k$ on $x\in[0,1]$:  \quad $B_i^k(x) = \binom{k}{i} x^i (1-x)^{k-i}$, \quad $i=0,\dots,k$
     \begin{itemize}
     \item[$\lc$] nonnegative partition of unity
-    \item[$\lc$] $p = \sum_i p_i B_i^n$ lies in the convex hull of its coefficients (control net)
-    \item[$\lc$] so \alert{coefficients $\ge 0$ implies $p\ge 0$} \pcomm{converse false}
-    \item[$\lc$] extends to simplices via barycentric coordinates
+    \item[$\lc$] (coefficients) $\ge 0 \, \implies \, p\ge 0$\quad \pcomm{converse false}
     \end{itemize}
-\item Kirby \& Shapero (2024): solve a VI over bounds-satisfying $P_k$
-    \begin{itemize}
-    \item[$\lc$] e.g.~$0\le u\le 1$ for advection-diffusion
-    \item[$\lc$] C\'ea-type theorem; constrained $P_k$ approximates well
-    \item[$\lc$] bounds on Bernstein coefficients: optimal orders observed
-    \end{itemize}
-\item but the \emph{continuum} problem is a PDE, not a VI
 \end{itemize}
+
+\begin{withpeople}{\photo{kirby.jpg}{R.~Kirby} \photo{shapero.jpg}{D.~Shapero}}
+\begin{block}{high-order bounds-satisfying PDE solutions (Kirby \& Shapero, 2024)}
+Using the Bernstein basis, apply VI solver with bounds on coefficients.  The convergence rate is the same as ordinary $P_k$, but now $u_h(x)\in[a,b]$.
+\end{block}
 \end{withpeople}
 \end{frame}
 
@@ -1077,7 +1094,6 @@ FIXME
 \item new ideas: Bernstein bounds for high order, and LVPP
 \end{itemize}
 
-\pause
 \centering
 {\Large
 \bigskip\bigskip
