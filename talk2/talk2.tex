@@ -151,7 +151,7 @@
 \begin{frame}{recall: definition of a variational inequality (VI)}
 
 \begin{definition}
-Given a \alert{Banach space $X$}, a closed and convex \alert{admissible subset $K\subset X$}, and \alert{$F: K\to X'$ continuous}, find $u\in K$ so that
+Given a Banach space $X$, a closed and convex \alert{admissible subset $K\subset X$}, and \alert{$F: K\to X'$ continuous}, find $u\in K$ so that
   $$\boxed{\alert{\ip{F(u)}{v-u} \ge 0}} \qquad \text{for all } v\in K.$$
 This is the \alert{variational inequality} for the data $K$ and $F$.
 \end{definition}
@@ -159,7 +159,7 @@ This is the \alert{variational inequality} for the data $K$ and $F$.
 \begin{itemize}
 \item $K$ is generally given via inequalities (and/or equalities)
     \begin{itemize}
-    \item[$\lc$] libraries may restrict to \alert{box constraints}, lower \& upper bounds on each dof
+    \item[$\lc$] libraries may restrict to box constraints, lower \& upper bounds on each dof
     \end{itemize}
 
 \item $\ip{\cdot}{\cdot}$ denotes Hilbert space inner product, or dual pairing, according to context
@@ -176,7 +176,7 @@ This is the \alert{variational inequality} for the data $K$ and $F$.
 \begin{frame}{recall: classical obstacle problem as a VI}
 
 \begin{block}{classical obstacle problem}
-for $X=H^1(\Omega)$, and an \alert{obstacle $\psi\in X$}, define the closed and convex admissible subset \alert{$K= \{v\in X : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$}, and seek $u\in K$ solving
+for $X=H^1(\Omega)$, and an obstacle $\psi\in X$, define the closed and convex admissible subset \alert{$K= \{v\in X : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$}, and seek $u\in K$ solving
     $$\alert{\int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u)} \quad \forall v\in K$$
 \end{block}
 
@@ -204,16 +204,15 @@ a solution $u$ defines subsets of $\Omega$:
 
 \begin{itemize}
 \item assume \alert{$X_h=P_1$}, continuous \& piecewise-linear \hfill \pcomm{I'll return to Ciarlet's gauntlet at end}
-\item define \alert{$\psi_h = I_h \psi$}, the nodal interpolant
-\item define \alert{$K_h = \{v_h \in X_h : v_h \ge \psi_h \text{ and } v_h|_{\partial\Omega}=g\}$}
+\item define \alert{$\psi_h = I_h \psi$}, the nodal interpolant, and \alert{$K_h = \{v_h \in X_h : v_h \ge \psi_h \text{ and } v_h|_{\partial\Omega}=g\}$}
 \item $K_h \subset X_h \subset X = H^1(\Omega)$, but generally \alert{$K_h \not\subset K$}
 
     \begin{itemize}
-    \item[$\lc$] say ``conforming'' with care!
+    \item[$\lc$] use ``conforming'' with care!
     \end{itemize}
 \end{itemize}
 
-\vspace{-10mm}
+\vspace{-5mm}
 \hfill \includegraphics[width=0.6\textwidth]{figs/cop.png}
 
 \medskip
@@ -246,9 +245,9 @@ seek $u_h\in K_h$ so that \quad $\displaystyle \int_\Omega \grad u_h\cdot\grad(v
 \begin{minipage}[t]{0.32\textwidth}
 \vspace{-4.5mm}
 
-% qrencode -o figs/qrcopref.png -s 10 -l L 'https://github.com/bueler/icl26/blob/main/talk2/code/copref.py'
-% mogrify -trim -transparent white figs/qrcopref.png
-\hspace{-15mm} \mbox{\includegraphics[valign=t,width=0.25\textwidth]{figs/qrcopref.png} \qquad \includegraphics[valign=t,width=0.85\textwidth]{figs/cop.png}}
+% qrencode -o figs/qr/copref.png -s 10 -l L 'https://github.com/bueler/icl26/blob/main/talk2/code/copref.py'
+% mogrify -trim -transparent white figs/qr/copref.png
+\hspace{-15mm} \mbox{\includegraphics[valign=t,width=0.25\textwidth]{figs/qr/copref.png} \qquad \includegraphics[valign=t,width=0.85\textwidth]{figs/cop.png}}
 
 \bigskip
 {\small
@@ -781,9 +780,13 @@ Combine them multiplicatively or additively.
 
 \begin{frame}{FASCD = monotone multigrid $+$ FAS $+$ CD}
 
+\begin{itemize}
+\item FASCD uses ideas from one more source
+\end{itemize}
+
 \begin{withpeople}{\vspace{3mm} \photo[12mm]{rkornhuber.jpg}{R.~Kornhuber}}
 \begin{itemize}
-\item need more ideas, from Kornhuber's (1994) \alert{monotone multigrid}
+\item Kornhuber's (1994) \alert{monotone multigrid}
 \item define a \alert{defect constraint set} on the finest level $J$:
     \begin{itemize}
     \item[$\lc$] given admissible iterate $w \in K_h$, its defect constraint is \, $\alert{\chi^J = \psi_h - w} \le 0$
@@ -840,46 +843,48 @@ Combine them multiplicatively or additively.
 \hfill % column on right
 \begin{minipage}[t][\dimexpr\ht\algcodebox+\dp\algcodebox-2mm\relax][t]{0.4\textwidth}
 \vspace{0pt}
-{\small $\mitJ=3$ case:}
-
-\bigskip
-\hfill \includegraphics[width=0.85\textwidth]{figs/fascd-vcycle.png}
-
-\bigskip
 \small
+$\mitJ=3$ case:
+
+\vspace{-1mm}
+\hfill \includegraphics[width=0.7\textwidth]{figs/fascd-vcycle.png}
+
+\bigskip
 \mbox{\legendswatch{algdefect} \, construct defect constraints}
 
-\bigskip
+\medskip
 \mbox{\legendswatch{algfas} \, apply FAS formulas}
 
-\vfill
-\normalsize
+\medskip
 \begin{itemize}
-\item nodes are \alert{activated on every level}, by the smoothers and coarsest-level solver
-\end{itemize}
+\item nodes can \alert{activate on every level}, via RSLS smoothers
 
-\bigskip
+\medskip
+\item FASCD repo:
+
+\vspace{-4mm}
+\hfill \includegraphics[width=0.3\textwidth]{figs/qr/fascd.png}
+\end{itemize}
 \end{minipage}
 \end{frame}
 
 
-\begin{frame}{FASCD results: a glacier}
+\begin{frame}{example FASCD result: a steady-state glacier}
 
 \begin{itemize}
 \item shallow ice approximation: \alert{$F$ is nonlinear, highly-degenerate, non-symmetric}
     \begin{itemize}
-    \item[$\lc$] VI($K$,$F$) computes steady-state, directly from bed \& climate
+    \item[$\lc$] VI($K$,$F$) computes steady-state, directly from bed topography \& climate
+    \item[$\lc$] B \& Farrell (2024), Example 8.4
     \end{itemize}
-\item FASCD FMG (grid-sequenced V-cycles) with $Q_1$ elements
-\item example calculation with $N=4\times 10^8$ dofs (B \& Farrell, 2024; Ex 8.4):
+\item FASCD FMG cycles with $Q_1$ elements
+\item $N=4\times 10^8$ dofs, 1024 processes
 
-\vspace{3mm}
 \hfill \includegraphics[width=0.65\textwidth]{figs/sialev8scene.png} \quad
 
-\vspace{-8mm}
+\vspace{-3mm}
     \begin{itemize}
     \item[$\lc$] deep V-cycles ($J=11$)
-    \item[$\lc$] 1024 processes
     \item[$\lc$] under 3 minutes wall clock
     \item[$\lc$] 88 m resolution uniformly over Greenland-sized ice sheet
     \end{itemize}
@@ -889,80 +894,71 @@ Combine them multiplicatively or additively.
 
 \section[gloss]{gloss: AMR, higher-order, latent-variable methods}
 
-\begin{frame}{\emph{a posteriori} error estimates for PDEs}
+\begin{frame}{\emph{a posteriori} error estimates and AMR}
 
 \begin{itemize}
-\item for the Poisson problem $-\grad^2 u = f$, the error $u-u_h$ is unknown, but the \alert{residual} of $u_h$ is computable
-\item Babu\v{s}ka \& Rheinboldt (1978): on each element $T$,
-    $$\eta_T^2 = h_T^2 \int_T |f + \grad^2 u_h|^2 + \frac{h_T}{2} \int_{\partial T} \left[\!\left[ \grad u_h\cdot n \right]\!\right]^2$$
-\item then for $\eta^2 = \sum_T \eta_T^2$ there are constants so that
-    $$c\,\eta \le |u-u_h|_{H^1} \le C\, \eta$$
+\item large literature of \alert{\emph{a posteriori} estimators} for classical obstacle problem
     \begin{itemize}
-    \item[$\lc$] upper bound: \alert{reliability}
-    \item[$\lc$] lower bound: \alert{efficiency}
+    \item[$\lc$] results which have not to have made it into open software?
     \end{itemize}
-\item adaptive mesh refinement (AMR) loop:
+\item can we convert it into problem-robust AMR for VIs, in Firedrake of course?
+\item \alert{adaptive mesh refinement (AMR)} loop:
     $$\text{solve} \to \text{estimate} \to \text{mark} \to \text{refine} \to \text{solve} \to \dots$$
+
+\pause
+\medskip
+\item for example, consider a classical PDE estimator
+
+\begin{block}{Babu\v{s}ka \& Rheinboldt (1978), for Poisson equation $-\grad^2 u = f$}
+For $\sigma_h=f+\grad^2 u_h$, compute \, $\displaystyle \alert{\eta_T^2 = h_T^2 \int_T |\sigma_h|^2 + \frac{h_T}{2} \int_{\partial T} \left[\!\left[ \grad u_h\cdot n \right]\!\right]^2}.$
+
+If $\eta^2 = \sum_T \eta_T^2$ then there are constants so that \,$c\,\eta \le |u-u_h|_{H^1} \le C\, \eta$
+\end{block}
+    \begin{itemize}
+    \item[$\lc$] \, lower bound: $\eta$ is \alert{efficient} \quad upper bound: $\eta$ is \alert{reliable}
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{what is different for VIs?}
-\begin{withpeople}{\photo{generic.png}{A.~Veeser}}
+\begin{frame}{\emph{a posteriori} estimators for VIs: different character}
 
 \begin{itemize}
-\item recall the residual $\sigma = F(u) - \ell$, e.g.~$\sigma = -\grad^2 u - f$
+\item for VI($K$,$F$) consider the \alert{exact residual $\lambda = F(u)$}
     \begin{itemize}
-    \item[$\lc$] $\sigma \ge 0$ on the active set, and $\sigma = 0$ on the inactive set
-    \item[$\lc$] $\sigma$ is the \alert{multiplier}; generally a measure
+    \item[$\lc$] $\lambda \in X'$ is generally a measure supported in the active set
     \end{itemize}
-\item the map from data $f$ to solution $u$ is not one-to-one:
+\item expectation: \alert{the map from problem data to the solution pair $(u,\lambda)$ is one-to-one}
     \begin{itemize}
-    \item[$\lc$] changing $f$ inside the active set may not change $u$ at all
-    \item[$\lc$] the information lost from $u$ is recorded in $\sigma$
+    \item[$\lc$] for operators $F(u)=Lu-f$, changing $f$ inside active set may not change $u$ at all
     \end{itemize}
 \end{itemize}
 
-\begin{block}{Veeser's idea (2001)}
-For VIs, estimate the error in the \alert{pair} $(u,\sigma)$, not just in $u$.
+\begin{withpeople}{\bigskip \photo[9mm]{generic.png}{A.~Veeser} \photo{nochetto.jpg}{R.~Nochetto} \photo{siebert.jpg}{K.~Siebert}}
+\begin{block}{Veeser (2001), for classical obstacle problem}
+\emph{concept}: For VIs, estimate the error \emph{a posteriori} using the \alert{pair $(u,\lambda)$}.
+
+\smallskip
+\emph{result}: Reliable and efficient \alert{energy-norm estimators} for $(u-u_h,\lambda - \lambda_h)$.
 \end{block}
 
-\begin{itemize}
-\item Veeser (2001) proved reliable and efficient energy-norm estimators for $(u-u_h,\sigma-\sigma_h)$
-\item the interior residual is localized to the (discrete) inactive set
-\end{itemize}
+\medskip
+\begin{block}{Nochetto, Siebert \& Veeser (2003), for classical obstacle problem}
+Computable \alert{pointwise estimator} $E_h$ so that \,{\small $\max\left\{\|u-u_h\|_{L^\infty}, \,\, \|\lambda-\tilde\lambda_h\|_{W^{-2,\infty}}\right\} \le E_h$.}
+
+\smallskip
+Each term of $E_h$ is also locally efficient.
+\end{block}
 \end{withpeople}
 \end{frame}
 
 
-\begin{frame}{pointwise \emph{a posteriori} bounds (NSV03)}
-\begin{withpeople}{\photo{nochetto.jpg}{R.~Nochetto} \photo{siebert.jpg}{K.~Siebert} \photo{generic.png}{A.~Veeser}}
-
-\begin{itemize}
-\item Nochetto, Siebert \& Veeser (2003): maximum-norm bounds, with constraint imposed only at nodes
-\end{itemize}
-
-\begin{theorem}[NSV03]
-For the $P_1$ classical obstacle problem there is a computable $E_h$ so that
-    $$\max\left\{\|u-u_h\|_{L^\infty}, \,\, \|\sigma-\tilde\sigma_h\|_{W^{-2,\infty}}\right\} \le E_h,$$
-and each term of $E_h$ is also locally efficient.
-\end{theorem}
-
-\vspace{-1mm}
-{\small
-\begin{align*}
-E_h &= C_0 |\log h_{\min}|^2 \|h^2 R_\infty\|_\infty && \afcomm{residual, localized to inactive set} \\
-    &\quad + C_1 |\log h_{\min}|^2 \|h^2 \grad\sigma_h\|_{d} && \afcomm{quadrature} \\
-    &\quad + \|(\psi - u_h)^+\|_\infty + \|(u_h-\psi)^+\|_{\infty;\{\sigma_h>0\}} && \afcomm{obstacle approx.~and detachment} \\
-    &\quad + \|g - I_h g\|_{\infty;\partial\Omega} && \afcomm{boundary data}
-\end{align*}
-}
-\end{withpeople}
-\end{frame}
-
-
-\begin{frame}{VIAMR: AMR for the free boundary}
+\begin{frame}{VIAMR library}
 \begin{withpeople}{\photo{fochesatto.jpg}{S.~Fochesatto}}
+
+FIXME: AOL figures, comparison UDO+BR versus NSV03
+
+\hfill \includegraphics[width=0.1\textwidth]{figs/qr/viamr.png}
 
 \begin{itemize}
 \item often the \alert{free boundary location} is the goal
@@ -979,51 +975,7 @@ E_h &= C_0 |\log h_{\min}|^2 \|h^2 R_\infty\|_\infty && \afcomm{residual, locali
     \end{itemize}
 \item mark by the union, then refine
 \end{itemize}
-
-\vspace{-38mm}
-\hfill \includegraphics[width=0.24\textwidth]{figs/sphereudo.png}
 \end{withpeople}
-\end{frame}
-
-
-\begin{frame}[fragile]
-\frametitle{demo: VIAMR}
-
-\begin{itemize}
-\item after solving for $u_h$ \pcomm{as in \texttt{cop.py}}, refine by UDO+BR:
-\end{itemize}
-
-\begin{minted}[fontsize=\scriptsize]{python}
-from viamr import VIAMR
-amr = VIAMR()
-fbmark = amr.udomark(uh, psih, n=1)                 # near free boundary
-residual = -div(grad(uh))
-imark, _, _ = amr.brinactivemark(uh, psih, residual, theta=0.7)  # in inactive set
-mark = amr.unionmarks(fbmark, imark)
-refinedmesh = amr.refinemarkedelements(mesh, mark)
-\end{minted}
-
-\medskip
-\begin{itemize}
-\item repeat: solve on the refined mesh, using the previous solution as initial iterate
-\end{itemize}
-
-\medskip
-\placeholder{0.8\textwidth}{30mm}{live demo or figure: a few levels of UDO+BR refinement on the hemisphere obstacle}
-\end{frame}
-
-
-\begin{frame}{comparison: UDO+BR versus NSV03}
-
-\begin{itemize}
-\item FIXME NOT BILATERAL bilateral example again, both methods \hfill \grey{\small \texttt{viamr/examples/bilateral.py}}
-\end{itemize}
-
-\begin{center}
-FIXME
-\end{center}
-
-\placeholder{0.8\textwidth}{12mm}{rerun at larger target; what is the take-away?}
 \end{frame}
 
 
