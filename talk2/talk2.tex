@@ -892,7 +892,7 @@ $\mitJ=3$ case:
 \end{frame}
 
 
-\section[gloss]{gloss: AMR, higher-order, latent-variable methods}
+\section[AMR]{adaptive mesh refinement}
 
 \begin{frame}{\emph{a posteriori} error estimates and AMR}
 
@@ -942,7 +942,6 @@ If $\eta^2 = \sum_T \eta_T^2$ then there are constants so that \,$c\,\eta \le |u
 \emph{result}: Reliable and efficient \alert{energy-norm estimators} for $(u-u_h,\lambda - \lambda_h)$.
 \end{block}
 
-\medskip
 \begin{block}{Nochetto, Siebert \& Veeser (2003), for classical obstacle problem}
 Computable \alert{pointwise estimator} $E_h$ so that \,{\small $\max\left\{\|u-u_h\|_{L^\infty}, \,\, \|\lambda-\tilde\lambda_h\|_{W^{-2,\infty}}\right\} \le E_h$.}
 
@@ -950,6 +949,35 @@ Computable \alert{pointwise estimator} $E_h$ so that \,{\small $\max\left\{\|u-u
 Each term of $E_h$ is also locally efficient.
 \end{block}
 \end{withpeople}
+
+    \begin{itemize}
+    \item[$\lc$] $E_h$ is complicated \& expensive, even for easy classical obstacle problem
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{most-obvious AMR idea for VIs}
+
+\begin{itemize}
+\item often the \alert{free boundary location} is a VI model goal, so
+\item mark \& refine elements which are \alert{adjacent to the computed free boundary $\Gamma_{u_h}$}
+    \begin{itemize}
+    \item[$\lc$] this not complicated, and it is cheap, for any VI($K$,$F$)
+    \end{itemize}
+\end{itemize}
+
+\bigskip
+\centering
+\mbox{%
+\includegraphics[width=0.15\textwidth]{figs/aol-marked.png} \hspace{10mm}%
+\includegraphics[width=0.15\textwidth]{figs/aol-refinedmesh.png} \hspace{10mm}%
+\begin{tikzpicture}[font=\small]
+    \draw[red, thick] (0,0) -- (0.4,0);
+    \node[right] at (0.45,0) {(unknown) exact $\Gamma_u$};
+    \fill[black!60, draw=black] (0.08,-0.62) rectangle (0.32,-0.38);
+    \node[right] at (0.45,-0.5) {adjacent to $\Gamma_{u_h}$};
+  \end{tikzpicture}
+}
 \end{frame}
 
 
@@ -978,6 +1006,8 @@ FIXME: AOL figures, comparison UDO+BR versus NSV03
 \end{withpeople}
 \end{frame}
 
+
+\section[gloss]{gloss: higher-order elements, latent-variable methods}
 
 \begin{frame}{high-order bounds via the Bernstein basis}
 \begin{withpeople}{\photo{kirby.jpg}{R.~Kirby} \photo{shapero.jpg}{D.~Shapero}}
