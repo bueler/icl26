@@ -1076,23 +1076,27 @@ FIXME
 \end{frame}
 
 
-\begin{frame}{summary}
-FIXME
+\begin{frame}{summary: my take on numerics of VIs}
 
 \begin{itemize}
-\item active-set Newton methods (PDAS, RS) are Newton methods, but iterations grow under refinement
+\item active-set methods (e.g.~RSLS) suffer iteration growth under refinement
     \begin{itemize}
-    \item[$\lc$] the active set peels away one layer per iteration
+    \item[$\lc$] on obstacle problems, peel away one layer per iteration
+    \item[$\lc$] grid-sequencing is one way to recover mesh-independence
     \end{itemize}
-\item \emph{a posteriori} estimates for VIs control the pair $(u,\sigma)$
+\item multilevel strategies seek $O(N)$ optimal solver performance
     \begin{itemize}
-    \item[$\lc$] AMR should target the free boundary \emph{and} the PDE in the inactive set
+    \item[$\lc$] Newton-multigrid V-cycles put active-set method in outer loop
+        \begin{itemize}
+        \item grid sequencing still needed for mesh independence
+        \end{itemize}
+    \item[$\lc$] FASCD V-cycles put active-set Newton method on every level
     \end{itemize}
-\item multilevel methods give mesh-independence:
+\item AMR based on \emph{a posteriori} estimators or heuristic refinement near free boundary
     \begin{itemize}
-    \item[$\lc$] grid sequencing $+$ Newton-multigrid, or FASCD
+    \item[$\lc$] rigorous estimators mostly limited to classical obstacle problems
     \end{itemize}
-\item new ideas: Bernstein bounds for high order, and LVPP
+\item higher-order ideas: Bernstein polynomials and latent variables (LVPP)
 \end{itemize}
 
 \centering
