@@ -8,6 +8,11 @@
 \makeatother
 
 \usepackage{icl26}
+\deftranslation[to=English]{Theorem}{theorem}
+\deftranslation[to=English]{Definition}{definition}
+\deftranslation[to=English]{Definitions}{definitions}
+\newtheorem{proposition}[theorem]{proposition}
+
 \usepackage{verbatim,fancyvrb}
 \usepackage{ifthen}
 \usepackage{minted}
@@ -71,8 +76,6 @@
 \let\FancyVerbHighlightLineLast\codehl@pick
 \let\FancyVerbHighlightLineSingle\codehl@pick
 \makeatother
-
-\newtheorem{proposition}[theorem]{Proposition}
 
 \newcommand{\bb}{\mathbf{b}}
 \newcommand{\bs}{\mathbf{s}}
@@ -154,27 +157,31 @@
 \end{frame}
 
 
-\begin{frame}{recall: definition of a variational inequality (VI)}
+\begin{frame}{recall: variational inequalities}
 
 \begin{definition}
-Given a Banach space $X$, a closed and convex \alert{admissible subset $K\subset X$}, and \alert{$F: K\to X'$ continuous}, find $u\in K$ so that
+For a Banach space $X$, a closed and convex \alert{admissible set $K\subset X$}, and \alert{$F: K\to X'$ continuous}, find $u\in K$ so that
   $$\boxed{\alert{\ip{F(u)}{v-u} \ge 0}} \qquad \text{for all } v\in K.$$
-This is the \alert{variational inequality} for the data $K$ and $F$.
+This is the \alert{variational inequality} (VI) for the data $K$ and $F$.
 \end{definition}
 
+\hfill \input{tikz/solnsupport.tex}
+
+\vspace{-16mm}
 \begin{itemize}
-\item $K$ is generally given via inequalities (and/or equalities)
+\item $K$ given via inequalities and/or equalities
     \begin{itemize}
-    \item[$\lc$] libraries may restrict to box constraints, lower \& upper bounds on each dof
+    \item[$\lc$] libraries may restrict to box constraints (bounds on each dof)
     \end{itemize}
 
-\item $\ip{\cdot}{\cdot}$ denotes Hilbert space inner product, or dual pairing, according to context
+\item $\ip{\cdot}{\cdot}$ denotes Hilbert space inner product \alert{or dual pairing}
 
 \smallskip
 \item this is a \alert{VI of the first kind} in some references
     \begin{itemize}
-    \item[$\lc$] second kind: $\ip{F(u)}{v-u} + \Phi(v) - \Phi(u) \ge 0 \, \forall v$, for some semi-smooth $\Phi:K\to \RR$
+    \item[$\lc$] second kind: $\ip{F(u)}{v-u} + \Phi(v) - \Phi(u) \ge 0 \, \forall v$, for semi-smooth $\Phi:K\to \RR$
     \end{itemize}
+\item well-posedness: often nontrivial
 \end{itemize}
 \end{frame}
 
@@ -182,7 +189,7 @@ This is the \alert{variational inequality} for the data $K$ and $F$.
 \begin{frame}{recall: classical obstacle problem as a VI}
 
 \begin{block}{classical obstacle problem}
-for $X=H^1(\Omega)$, and an obstacle $\psi\in X$, define the closed and convex admissible subset \alert{$K= \{v\in X : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$}, and seek $u\in K$ solving
+for $\Omega\subset \RR^d$, $X=H^1(\Omega)$, and $\psi\in X$, define \alert{$K= \{v\in X : v\ge\psi \text{ and } v|_{\partial\Omega}=g\}$}, and seek $u\in K$ such that
     $$\alert{\int_\Omega \nabla u\cdot\nabla(v-u) \ge \int_\Omega f\,(v-u)} \quad \forall v\in K$$
 \end{block}
 
@@ -209,7 +216,7 @@ a solution $u$ defines subsets of $\Omega$:
 \begin{frame}{recall: FE approximation, a finite-dimensional VI}
 
 \begin{itemize}
-\item assume \alert{$X_h=P_1$}, continuous \& piecewise-linear \hfill \pcomm{I'll return to Ciarlet's gauntlet at end}
+\item assume \alert{$X_h=P_1$} $=$ continuous \& piecewise-linear \hfill \pcomm{I'll return to Ciarlet's gauntlet at end}
 \item define \alert{$\psi_h = I_h \psi$}, the nodal interpolant, and \alert{$K_h = \{v_h \in X_h : v_h \ge \psi_h \text{ and } v_h|_{\partial\Omega}=g\}$}
 \item $K_h \subset X_h \subset X = H^1(\Omega)$, but generally \alert{$K_h \not\subset K$}
 
@@ -272,7 +279,7 @@ $320\times 320$ & \only<1>{46}\only<2>{\alert{2}}
 \only<2>{
 \item \strikeThrough{iterations double at each refinement}
 }
-\item<2> resolved by \alert{grid sequencing}
+\item<2> fixed by \alert{grid sequencing}
 \end{itemize}
 }
 \end{minipage}
@@ -303,7 +310,7 @@ $320\times 320$ & \only<1>{46}\only<2>{\alert{2}}
 
 \vspace{-5mm}
 \begin{itemize}
-\item $\lambda_i = \bF(\bu)_i$ are the Lagrange multipliers
+\item residual values $\lambda_i = \bF(\bu)_i$ are the dual variables
 
 \medskip
 \begin{block}{complementarity problem (CP)}
@@ -314,15 +321,13 @@ for $i \in \{1,\dots,N\}$,
 \medskip
 \item \alert{solving this CP} in $\RR^N$ is the goal in a FE VI problem
     \begin{itemize}
-    \item[$\lc$] not \, ``$\lambda_i=0$'' or ``$\bF(\bu)=0$''
+    \item[$\lc$] not \, ``$\bF(\bu)=0$''
     \end{itemize}
-\item at convergence, in exact arithmetic, generally $\blambda \ne 0$
-    \begin{itemize}
-    \item[$\lc$] \alert{$\lambda_i \ne 0 \implies u_i = \psi_i$ and $x_i\in C_{u_h}$} \hfill \pcomm{$x_i$ in active/contact set, white nodes}
-    \end{itemize}
+\item at convergence, in exact arithmetic, generally $\blambda \ne 0$:
+    $$\hspace{10mm} \alert{\lambda_i > 0 \implies u_i = \psi_i} \hspace{10mm} \text{\pcomm{$x_i$ in active set $C_{u_h}$, white nodes}}$$
 
 \smallskip
-\item for bilateral bounds $\underline{\psi}_i \le u_i \le \overline{\psi}_i$ there is a straightforward CP generalization
+\item straightforward CP generalization exists for bilateral bounds $\underline{\psi}_i \le u_i \le \overline{\psi}_i$
 \end{itemize}
 \end{frame}
 
@@ -331,30 +336,26 @@ for $i \in \{1,\dots,N\}$,
 \frametitle{active-set method: basic idea}
 
 \begin{itemize}
-\item \alert{VI problems are nonlinear}, even when the residual operator is linear or affine
+\item \alert{VI problems are nonlinear}, even when residual operator $\bF$ is linear
     \begin{itemize}
-    \item[$\lc$] we expect to iterate
+    \item[$\lc$] so we expect to iterate
     \end{itemize}
 \item consider an admissible iterate $\bu^k \in \RR^N$, so that $u_i^k \ge \psi_i$
 \item its \alert{active set} is the index set \quad \pcomm{white dots}
    $$\alert{\cA^k = \{i\,:\,u_i^k = \psi_i\}} \quad \subset \{1,\dots,N\} \hspace{30mm}$$
 
-    \begin{itemize}
-    \item[$\lc$] precisely, use tolerance: $\cA^k = \{i\,:\,u_i^k - \psi_i \le \operatorname{tol}\}$
-    \item[$\lc$] inactive set is complement $\cI^k = \{1,\dots,N\}\setminus\cA^k$ \quad \pcomm{black dots}
-    \end{itemize}
-
-\vspace{-20mm}
+\vspace{-15mm}
 \hfill \includegraphics[width=0.3\textwidth]{figs/copactive.png}
 
-\vspace{5mm}
-\pause
-\medskip
-\item \alert{once one knows correct $\cA^k$, one solve determines correct $\bu=\bu^{k+1}$}
+    \begin{itemize}
+    \item[$\lc$] to be precise, use tolerance: $\cA^k = \{i\,:\,u_i^k - \psi_i \le \operatorname{tol}\}$
+    \item[$\lc$] inactive set is complement $\cI^k = \{1,\dots,N\}\setminus\cA^k$ \quad \pcomm{black dots}
+    \end{itemize}
+\item if \alert{correct $\cA^k$ is known} then a \alert{single solve determines the correct $\bu=\bu^{k+1}$}
     \begin{itemize}
     \item[$\lc$] for classical obstacle problem: \quad $\bu_{\cA^k} = \bpsi_{\cA^k}, \quad (A\bu - \bb)_{\cI^k} = 0$
+    \item[$\lc$] but initially we do not know the active set!
     \end{itemize}
-\item of course, at $k=0$ we do not know the active set
 \item what we see in practice \grey{$\to$}
 \end{itemize}
 
@@ -378,15 +379,15 @@ for $i \in \{1,\dots,N\}$,
 \begin{withpeople}{\photo[9mm]{generic.png}{S.~Benson} \photo{munson.jpg}{T.~Munson}}
 
 \begin{itemize}
-\item PETSc has SNES type \,\alert{\texttt{vinewtonrsls}} $=$ \texttt{rsls} \quad \pcomm{Benson \& Munson, 2006}
+\item SNES type \,\alert{\texttt{vinewtonrsls}} $=$ \texttt{rsls} \quad \pcomm{Benson \& Munson, 2006}
     \begin{itemize}
     \item[$\lc$] \texttt{rsls} = \underline{r}educed-\underline{s}pace with \underline{l}ine \underline{s}earch \quad \pcomm{reduced-space $=$ active-set}
     \end{itemize}
 \item designed for nonlinear $\bF:\RR^N \to \RR^N$ and box constraints $\underline{\bpsi} \le \bu \le \overline{\bpsi}$
     \begin{itemize}
     \item[$\lc$] $\underline{\psi}_i = -\infty$ or $\overline{\psi}_i = +\infty$ permitted, so unconstrained dofs o.k.
-    \item[$\lc$] \texttt{rsls} reduces to \texttt{newtonls} if no constraints are active
     \end{itemize}
+\item principle: \texttt{rsls} reduces to \texttt{newtonls} if no constraints are active
 \end{itemize}
 \end{withpeople}
 
@@ -400,7 +401,7 @@ for $i \in \{1,\dots,N\}$,
 $\bu^0 = \pi(\bu^0) = \max\{u_i^0, \psi_i\}$ \quad \tn{\efcomm{truncate}} \\
 for $k=0,1,2,\dots$ \\+
   \alert{$\cA^k = \{i : u_i^k = \psi_i \tn{ and } F_i(u^k) > 0\}$} \tn{\&} $\cI^k = \big(\cA^k\big)^C$ \\
-  $J_{\bF}(\bu^k)_{\cI^k,\cI^k}\, \bs_{\cI^k} = -\bF(\bu^k)_{\cI^k}$ \quad \tn{\efcomm{linear solve}} \\
+  $J_{\bF}(\bu^k)_{\cI^k,\cI^k}\, \bs_{\cI^k} = -\bF(\bu^k)_{\cI^k}$ \quad \tn{\efcomm{r.~s.~linear solve}} \\
   $\bs_{\cA^k} = 0$ \\
   $\bu^{k+1} = \pi(\bu^k+\alpha \bs)$ \quad \tn{\efcomm{truncated line search}} \\
   stop if \tn{(appropriate CP norm) $<\operatorname{tol}$} \\-
@@ -410,13 +411,13 @@ for $k=0,1,2,\dots$ \\+
 \begin{column}{0.5\textwidth}
 {\small
 \begin{block}{RSLS = \texttt{vinewtonrsls}}
-Newton step in inactive (reduced) space, with
+\mbox{Newton step in inactive dofs (reduced space), with}
 
 line search over admissible states
 \end{block}
 
 \begin{itemize}
-\item \alert{user's $\bF$ only sees admissible iterates}
+\item \alert{user's $\bF$, $J_{\bF}$ only see admissible iterates}
 \item linear solver is user's choice \pfcomm{CG, multigrid, \dots}
 \item no parameter used in setting $\cA^k$
 \end{itemize}
@@ -429,12 +430,12 @@ line search over admissible states
 \begin{frame}{alternative view: semi-smooth Newton}
 
 \begin{itemize}
-\item complementarity is equivalent to a \alert{semi-smooth equation}:
+\item CP is equivalent to a \alert{semi-smooth equation}:
     $$u_i\ge \psi_i, \,\, \lambda_i \ge 0, \,\, \lambda_i(u_i-\psi_i)=0 \quad \iff \quad \lambda_i - \max\{0,\lambda_i - \alert{c}\,(u_i-\psi_i)\} = 0$$
 
     \begin{itemize}
-    \item[$\lc$] $\max\{0,x\}$ is semi-smooth, with a well-behaved directional derivative
     \item[$\lc$] equivalent for any $\alert{c}>0$
+    \item[$\lc$] $\max\{0,x\}$ is semi-smooth, with a well-behaved directional derivative
     \end{itemize}
 
 \smallskip
@@ -472,10 +473,6 @@ line search over admissible states
 \begin{block}{PDAS = primal-dual active-set}
 iterative quadratic optimization method which adjusts primal ($\bu$) and dual ($\blambda$) dofs via estimated active set
 \end{block}
-
-\begin{itemize}
-\item note \alert{$c$} is used in setting $\cA^k$
-\end{itemize}
 }
 \end{column}
 \end{columns}
@@ -493,33 +490,30 @@ iterative quadratic optimization method which adjusts primal ($\bu$) and dual ($
 \end{frame}
 
 
-\begin{frame}{recent clarity}
+\begin{frame}{clarity on iterations}
 
 \begin{itemize}
-\item in demo, RSLS iterations grew fast (w/o grid-sequencing)
-\item what's going on?
-\item for the quadratic optimization case,
-
-{\alert{recent results provide clarity}}
+\item iteration counts for RSLS and PDAS have been confusing
+\item recent results provide clarity
 \end{itemize}
 
-\vspace{-20mm}
-\hfill \includegraphics[width=0.4\textwidth]{figs/copactive.png}
+\vspace{-11mm}
+\hfill \includegraphics[width=0.3\textwidth]{figs/copactive.png}
 
-\vspace{4mm}
+\vspace{3mm}
 \begin{withpeople}{\photo{papadopoulos.jpg}{I.~Papadopoulos} \photo{farrell.jpg}{P.~Farrell} \photo{surowiec.jpg}{T.~Surowiec} \photo{hintermueller.jpg}{M.~Hinterm\"uller}}
 
 \vspace{-4mm}
 \begin{theorem}[Papadopoulos, Farrell, \& Surowiec 2021, App.~A]
-PETSc's RSLS is same as PDAS, but a half-step out of sync.
+On quadratic optimization problems, where $\bF$ is linear, PETSc's \alert{RSLS is same as PDAS}, but a half-step out of sync.
 \end{theorem}
 
 \begin{theorem}[``peeling'' theorem; Papadopoulos \& Hinterm\"uller 2026]
-In PDAS, if $i\in\cA^k$, and its neighbors are in $\cA^k$, then $i\in\cA^{k+1}$.  \alert{A node can only de-activate if has an inactive set neighbor.}
+For PDAS on a quadratic opt.~problem, if $i\in\cA^k$, and if its neighbors are in $\cA^k$, then $i\in\cA^{k+1}$.  \alert{A node can only de-activate if has an inactive-set neighbor.}
 \end{theorem}
 
 \begin{itemize}
-\item thus obstacle problem iterations (generically) grow exponentially
+\item thus obstacle problem iterations grow exponentially
 \item but Signorini problem iterations only grow mildly
 \end{itemize}
 \end{withpeople}
@@ -556,7 +550,7 @@ $320\times 320$ & 46 & 2
 \item recall iterations in the Firedrake demo \, \grey{$\to$}
     \begin{itemize}
     \item[$\lc$] classical obstacle problem
-    \item[$\lc$] using PETSc's RSLS, active-set Newton solver
+    \item[$\lc$] using RSLS
     \end{itemize}
 
 \vspace{2mm}
@@ -567,16 +561,16 @@ $320\times 320$ & 46 & 2
     \item[$\lc$] prolong a coarse solution to the next-finer grid, as initial iterate
     \end{itemize}
 
-\bigskip
-\item grid-sequencing is a precursor to \alert{multigrid}, but it is not a V-cycle
+\medskip
+\item note that grid-sequencing is a precursor to \alert{multigrid}, but it is not a V-cycle
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{notation for nonlinear problems}
+\begin{frame}{notation for problems with nonlinear operators}
 
 \begin{itemize}
-\item consider solving general VI in which $F:X \to X'$ is \alert{nonlinear}
+\item consider solving general VI, in which $F:X \to X'$ is \alert{nonlinear}
 
 \smallskip
 \begin{definitions}
@@ -591,7 +585,7 @@ Given a Banach space $X$ and $F: X\to X'$ smooth.
 
 \smallskip
 \item PDE($F$) $=$ VI($X$,$F$)
-\item functions \alert{$F: K\to X'$} are permitted in VI($K$,$F$)
+\item functions \alert{$F: K\to X'$} are, in fact, permitted in VI($K$,$F$)
 
 \smallskip
 \item well-posedness, regularity are nontrivial \dots \, next slides aspirational in general
@@ -622,16 +616,16 @@ For a family of discrete problems $\{P_N\}$, where $P_N$ has $N$ dofs, a solver 
 \end{frame}
 
 
-\begin{frame}{what's possible for PDE($F$)?}
+\begin{frame}{recall: what's possible for PDE($F$)?}
 
 \begin{itemize}
 \item geometric multigrid can be an optimal PDE($F$) solver
     \begin{itemize}
-    \item[$\lc$] assumes a well-behaved nonlinear elliptic $F$
+    \item[$\lc$] assuming a well-behaved nonlinear elliptic $F$
     \end{itemize}
 \item here is the \alert{Newton-multigrid} strategy
     \begin{itemize}
-    \item[$\lc$] principle: \alert{V-cycles are excellent preconditioners} \, \efcomm{e.g.~(B, 2021)}
+    \item[$\lc$] principle: \alert{V-cycles are excellent linear preconditioners} \, \efcomm{e.g.~(B, 2021)}
     \end{itemize}
 \end{itemize}
 
@@ -668,15 +662,14 @@ solver & optimal \\
 \begin{frame}{what's possible from Newton-multigrid for VI($K$,$F$)?}
 
 \begin{itemize}
-\item solving the linear Newton-step problems by V-cycles is \alert{not} enough
-\item an active-set method \alert{needs grid-sequencing}, or similar, to give \alert{mii} on an obstacle problem (Papadapoulous \& Hinterm\"uller, 2026)
+\item an active-set method \alert{needs grid-sequencing} to give \alert{mii}
     \begin{itemize}
     \item[$\lc$] \alert{mii} = \underline{m}esh-\underline{i}ndependent (Newton) \underline{i}terations
-    %\item[$\lc$] mii is necessary but not sufficient for final-mesh optimality
     \end{itemize}
+\item solving the Newton-step problems by linear V-cycles is therefore \alert{not} enough
+\item<2> ``?'' means good general evidence, but no proof
 \end{itemize}
 
-\bigskip
 \begin{columns}
 \begin{column}{0.35\textwidth}
 \centering
@@ -684,9 +677,9 @@ solver & optimal \\
 \vspace{15mm}
 \input{tikz/vcycle.tex}
 
+\onslide<2->{
 \input{tikz/gridseq.tex}
 
-\onslide<2->{
 \input{tikz/fcycle.tex}
 }
 \end{column}
@@ -697,8 +690,8 @@ solver & \alert{mii} & optimal \\
 \midrule
 \input{tikz/solver-rsls-lu.tex} & no & no \\
 \input{tikz/solver-rsls-mg.tex} & \alert{no} & no \\
-\input{tikz/solver-gs-rsls-lu.tex} & yes? & no \\
 \onslide<2->{
+\input{tikz/solver-gs-rsls-lu.tex} & yes? & no \\
 \input{tikz/solver-gs-rsls-mg.tex} & yes? & yes?
 }
 \end{tabular}
@@ -711,15 +704,14 @@ solver & \alert{mii} & optimal \\
 \begin{frame}{different strategy for VI($K$,$F$): \, V-cycles on the outside}
 
 \begin{itemize}
-\item Newton-multigrid depends on grid-sequencing to find the fine-level active set $\cA$
+\item Newton-multigrid depends on grid-sequencing to find finest active set $\cA$
     \begin{itemize}
     \item[$\lc$] grid-sequencing is outer loop; only FMG cycles are any good
     \end{itemize}
-\item FASCD V-cycle strategy puts a \alert{V-cycle on outside}  \hfill\pfcomm{explained on next slides}
+\item FASCD strategy puts \alert{RSLS inside a V-cycle}  \hfill\pfcomm{explained on next slides}
     \begin{itemize}
-    \item[$\lc$] allows \alert{nonlinear RSLS as a smoother on each level}
+    \item[$\lc$] active-set Newton method applied as a smoother on each level
     \end{itemize}
-\item ``?'' means good general evidence, but no proof
 \end{itemize}
 
 \bigskip
@@ -750,7 +742,7 @@ solver & optimal \\
 \item FASCD combines 2 major ideas:
 
 \begin{withpeople}{\vspace{5mm} \par \photo[12mm]{abrandt.jpg}{A.~Brandt}}
-\begin{block}{FAS: full-approximation scheme V-cycle multigrid for PDE($F$)\, (Brandt, 1977)}
+\begin{block}{FAS: full-approximation scheme V-cycle multigrid for PDE($F$)\quad (Brandt, 1977)}
 At each level, restrict both residual and solution to generate a \alert{nonlinear coarse-mesh problem} for the coarse correction.
 \end{block}
 \end{withpeople}
@@ -760,7 +752,7 @@ At each level, restrict both residual and solution to generate a \alert{nonlinea
     \end{itemize}
 
 \begin{withpeople}{\vspace{5mm} \par \photo[12mm]{tai.jpg}{X.-C.~Tai}}
-\begin{block}{CD: constraint decomposition for VI($K$,$F$) \, (Tai, 2003)}
+\begin{block}{CD: constraint decomposition for VI($K$,$F$) \quad (Tai, 2003)}
 \alert{Decompose} the convex constraint set \alert{$K$} over the mesh hierarchy: \, $\displaystyle K = \sum_{i=0}^J K_i$.
 
 \vspace{-2mm}
@@ -773,7 +765,7 @@ Combine them multiplicatively or additively.
 
     \begin{itemize}
     \item[$\lc$] advantage: general convergence concept/analysis
-    \item[$\lc$] impractical: subproblems evaluate $F$ on fine level
+    \item[$\lc$] impractical: subproblems evaluate $F$ on finest level
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -782,7 +774,7 @@ Combine them multiplicatively or additively.
 \begin{frame}{FASCD = monotone multigrid $+$ FAS $+$ CD}
 
 \begin{itemize}
-\item FASCD uses ideas from one more source
+\item FASCD uses more ideas
 \end{itemize}
 
 \begin{withpeople}{\vspace{3mm} \photo[12mm]{rkornhuber.jpg}{R.~Kornhuber}}
@@ -809,7 +801,7 @@ Combine them multiplicatively or additively.
     \item[$\lc$] down-smoothing in smaller sets $\cD^j$, up-smoothing in larger sets $\cU^j$
     \item[$\lc$] coarse-corrections solve FAS formula
     \item[$\lc$] $O(N)$ smoother: fixed RSLS iterations, fixed Krylov iterations
-    \item[$\lc$] coarsest solver: RSLS+LU to convergence
+    \item[$\lc$] coarsest solve: RSLS+LU to convergence
     \item[$\lc$] box constraints \& FMG cycles implemented
     \end{itemize}
 \end{itemize}
@@ -858,6 +850,7 @@ $\mitJ=3$ case:
 \bigskip\bigskip
 \begin{itemize}
 \item nodes can \alert{activate on every level}, via RSLS smoothers
+\item subject to peeling theorem, but on every level!
 \end{itemize}
 \end{minipage}
 \end{frame}
@@ -868,10 +861,10 @@ $\mitJ=3$ case:
 \begin{itemize}
 \item shallow ice approximation: \alert{$F$ is nonlinear, highly-degenerate, non-symmetric}
     \begin{itemize}
-    \item[$\lc$] VI($K$,$F$) computes steady-state, directly from bed topography \& climate
+    \item[$\lc$] VI($K$,$F$) models steady-state glacier, directly from bed topography \& climate
     \item[$\lc$] B \& Farrell (2024), Example 8.4
     \end{itemize}
-\item FASCD FMG cycles with $Q_1$ elements
+\item FASCD FMG with $Q_1$ elements
 \item $N=4\times 10^8$ dofs, 1024 processes
 
 \hfill \includegraphics[width=0.65\textwidth]{figs/sialev8scene.png} \quad
@@ -891,16 +884,19 @@ $\mitJ=3$ case:
 \begin{frame}{\emph{a posteriori} error estimates and AMR}
 
 \begin{itemize}
-\item large literature of \alert{\emph{a posteriori} estimators} for classical obstacle problem
+\item $\exists$ large literature of \alert{\emph{a posteriori} estimators} for classical obstacle problem
     \begin{itemize}
-    \item[$\lc$] results which have not to have made it into open software?
+    \item[$\lc$] results which have not to have made it into much open software?
     \end{itemize}
-\item can we convert it into problem-robust AMR for VIs, in Firedrake of course?
-\item \alert{adaptive mesh refinement (AMR)} loop:
-    $$\text{solve} \to \text{estimate} \to \text{mark} \to \text{refine} \to \text{solve} \to \dots$$
+\item reasonable goal: problem-robust AMR for VIs, in Firedrake of course
 
 \pause
-\item for example, consider a classical PDE estimator
+\medskip
+\item recall \alert{adaptive mesh refinement (AMR)} loop:
+    $$\text{solve} \to \alert{\text{estimate}} \to \text{mark} \to \text{refine} \to \text{solve} \to \dots$$
+
+\pause
+\item for example, consider canonical PDE estimator
 
 \begin{block}{Babu\v{s}ka \& Rheinboldt (1978), for Poisson equation $-\grad^2 u = f$}
 Let $\sigma_h=f+\grad^2 u_h$.  Compute \, $\displaystyle \eta_T^2 = h_T^2 \int_T |\sigma_h|^2 + \frac{h_T}{2} \int_{\partial T} \left[\!\left[ \grad u_h\cdot n \right]\!\right]^2$.
@@ -917,9 +913,9 @@ For $\eta^2 = \sum_T \eta_T^2$, there are positive constants so that \,\alert{$c
 \begin{frame}{\emph{a posteriori} estimators for VIs: different character}
 
 \begin{itemize}
-\item for VI($K$,$F$) consider the \alert{exact residual $\lambda = F(u)$}
+\item for VI($K$,$F$) consider the \alert{exact residual $\lambda = F(u) \in X'$}
     \begin{itemize}
-    \item[$\lc$] $\lambda \in X'$ is generally a measure supported in the active set
+    \item[$\lc$] it is generally a measure supported in the active set
     \end{itemize}
 \item expectation: \alert{the map from problem data to the solution pair $(u,\lambda)$ is one-to-one}
     \begin{itemize}
@@ -927,19 +923,17 @@ For $\eta^2 = \sum_T \eta_T^2$, there are positive constants so that \,\alert{$c
     \end{itemize}
 \end{itemize}
 
+\pause
 \begin{withpeople}{\bigskip \photo[9mm]{generic.png}{A.~Veeser} \photo{nochetto.jpg}{R.~Nochetto} \photo{siebert.jpg}{K.~Siebert}}
 \begin{block}{Veeser (2001), for classical obstacle problem}
 \emph{concept}: For VIs, estimate the error \emph{a posteriori} using the \alert{pair $(u,\lambda)$}.
 
 \smallskip
-\emph{result}: Reliable and efficient \alert{energy-norm estimators} for $(u-u_h,\lambda - \lambda_h)$.
+\emph{theorem.} Reliable and efficient \alert{energy-norm estimators} for $(u-u_h,\lambda - \lambda_h)$.
 \end{block}
 
 \begin{block}{Nochetto, Siebert \& Veeser (2003), for classical obstacle problem}
-Computable \alert{pointwise estimator} $E_h$ so that \,{\small $\max\left\{\|u-u_h\|_{L^\infty}, \,\, \|\lambda-\tilde\lambda_h\|_{W^{-2,\infty}}\right\} \le E_h$.}
-
-\smallskip
-Each term of $E_h$ is also locally efficient.
+\emph{theorem.} Computable \alert{pointwise estimator} $E_h$ so that \,{\small $\max\left\{\|u-u_h\|_{L^\infty}, \,\, \|\lambda-\tilde\lambda_h\|_{W^{-2,\infty}}\right\} \le E_h$.}  Each term of $E_h$ is also locally efficient.
 \end{block}
 \end{withpeople}
 
@@ -980,12 +974,12 @@ Each term of $E_h$ is also locally efficient.
 
 \begin{withpeople}{\bigskip \photo{fochesatto.jpg}{S.~Fochesatto} \bigskip \photo[15mm]{../qr/viamr.png}{{\large \phantom{|} \scriptsize VIAMR}}}
 \begin{itemize}
-\item with Stefano Fochesatto (MS UAF, now at CU Boulder)
+\item WIP with Stefano Fochesatto (MS UAF, now at CU Boulder)
 \item \alert{VIAMR}: a Firedrake library for easy exploration/comparison
 \item most general tool in library is ``UDOBR'':
     \begin{itemize}
-    \item[1.] refinement near computed free boundary $\Gamma_{u_h}$ {\footnotesize (\alert{unstructured dilation})}
-    \item[2.] PDE-type estimator in computed inactive set $E_{u_h}$
+    \item[1.] mark near computed free boundary $\Gamma_{u_h}$ {\footnotesize (\alert{unstructured dilation})}
+    \item[2.] mark using PDE-type estimator in computed inactive set $E_{u_h}$
     \item[$\lc$] union marks for 1 and 2, and refine
     \end{itemize}
 \end{itemize}
@@ -1009,7 +1003,7 @@ as good as NSV03's $E_h$ (left), but much cheaper (right)
 \end{frame}
 
 
-\section[gloss]{gloss: higher-order elements, latent-variable methods}
+\section[Bernstein and LVPP]{gloss: higher-order elements, latent-variable methods}
 
 \begin{frame}{high-order elements for VIs}
 
@@ -1033,12 +1027,18 @@ as good as NSV03's $E_h$ (left), but much cheaper (right)
 \begin{frame}{high-order elements in a bounded-solution PDE}
 
 \begin{itemize}
-\item there are advection-diffusion PDEs, for example, in which the \alert{exact solution satisfies $u(x)\in[a,b]$} for all $x$
-\item if we apply ordinary $P_k$ FE then $u_h$ generally will \alert{not} satisfy the same bounds
+\item there are PDEs in which the \alert{exact solution satisfies $u(x)\in[a,b]$} for all $x$
+    \begin{itemize}
+    \item[$\lc$] advection-diffusion problems, for example
+    \end{itemize}
+\item if we apply ordinary $P_k$ FE with $k\ge 2$ then $u_h$ \alert{may not} satisfy the same bounds
+    \begin{itemize}
+    \item[$\lc$] because $P_2$ lacks nodal monotonicity
+    \end{itemize}
 
 \pause
 \medskip
-\item one can \alert{enforce the bounds} by having \alert{$u_h$ solve a VI}, at least in the right basis
+\item one can \alert{enforce the bounds} by having \alert{$u_h$ solve a VI}, in the right basis
 \item recall \alert{Bernstein basis} for $P_k$ on $x\in[0,1]$:  \quad $B_i^k(x) = \binom{k}{i} x^i (1-x)^{k-i}$, \quad $i=0,\dots,k$
     \begin{itemize}
     \item[$\lc$] nonnegative partition of unity
@@ -1048,7 +1048,10 @@ as good as NSV03's $E_h$ (left), but much cheaper (right)
 
 \begin{withpeople}{\photo{kirby.jpg}{R.~Kirby} \photo{shapero.jpg}{D.~Shapero}}
 \begin{block}{high-order bounds-satisfying PDE solutions (Kirby \& Shapero, 2024)}
-Using the Bernstein basis, apply VI solver with bounds on coefficients.  The convergence rate is the same as ordinary $P_k$, but now $u_h(x)\in[a,b]$.
+Using the Bernstein basis, apply VI solver with bounds on coefficients.
+
+\smallskip
+\emph{theorem.} Convergence rate is the same as $P_k$, but now $u_h(x)\in[a,b]$.
 \end{block}
 \end{withpeople}
 \end{frame}
@@ -1057,37 +1060,42 @@ Using the Bernstein basis, apply VI solver with bounds on coefficients.  The con
 \begin{frame}{latent variable proximal point (LVPP)}
 
 \begin{withpeople}{\bigskip \photo{dokken.jpg}{J.~Dokken} \photo{farrell.jpg}{P.~Farrell} \photo{keith.jpg}{B.~Keith} \photo{papadopoulos.jpg}{I.~Papadopoulos} \photo{surowiec.jpg}{T.~Surowiec}}
-\begin{block}{LVPP; Dokken, Farrell, Keith, Papadopoulos \& Surowiec, 2025}
-Use a Legendre transformation $R$ to map point values of $u\in K\subset X$ to $\RR^m$; $m=1$ for obstacle.  Induces \alert{latent variable} in vector space: $\phi = \grad R(u) \in W$.  Enforce latent eqn in $X$ as $\grad R^*(\phi)=u$.  Convert VI into sequence of nonlinear PDE systems (\alert{proximal point} alg).  Solve systems by Newton's method.
+\begin{block}{Dokken, Farrell, Keith, Papadopoulos \& Surowiec, 2025}
+Use a Legendre function $R$ to map constrained point values $u(x)$ to $\RR^m$; $m=1$ for obstacle.  Induces \alert{latent variable} in new vector space: $\phi = \grad R(u) \in W$.  Enforce latent equation as: $\grad R^*(\phi)=u \in K\subset X$.  Convert VI into \alert{proximal point} sequence of nonlinear PDEs.  Discretize, and solve by Newton's method.
 \end{block}
 \end{withpeople}
 
 \vspace{-35mm}
 
+\begin{overlayarea}{\textwidth}{45mm}
 \only<1>{
+\vspace*{-1mm}
 \hfill \includegraphics[width=0.75\textwidth]{figs/lvpp-tree.png} \hspace{15mm}
 
 \vspace{-5mm}
-\qquad \includegraphics[width=0.43\textwidth]{figs/lvpp-transform.png}
+\qquad \includegraphics[width=0.46\textwidth]{figs/lvpp-transform.png}
 }
 \only<2>{
+\vspace*{-3mm}
 \begin{itemize}
-\vspace{0pt}
-\item as formulas:
+\item as formulas, for $\alpha_k>0$ so that $\sum_{k=1}^m \alpha_k \to \infty$,
 
-\vspace{-7mm}
-$$\ip{F(u)}{v-u} \ge 0 \,\, \forall v\in K \, \iff \, \begin{matrix}
-\alpha_k \ip{F(u)}{v} + \ip{\phi^k-\phi^{k-1}}{v} = 0  \quad \forall v\in X \\ \hspace{15mm} \ip{u^k - \grad R^*(\phi^k)}{w} = 0 \quad \forall w\in W\end{matrix} \hspace{13mm}$$
+\vspace{-3mm}
+$$\ip{F(u)}{v-u} \ge 0 \quad \forall v\in K \,\, \iff \, \begin{matrix}
+\alpha_k \ip{F(u)}{v} + \big<\phi^k-\phi^{k-1},v\big> = 0  \quad \forall v\in X \\ \hspace{15mm} \big<u^k - \grad R^*(\phi^k),w\big> = 0 \quad \forall w\in W\end{matrix} \hspace{13mm}$$
 \item the constraint set $K$ does not need a discretization
 \item mesh-independent iterations observed
 \item general constraints beyond box bounds (e.g.~gradient constraints)
-\item widely applicable (Signorini contact, fracture, plasticity, \dots)
+\item wide applicability (Signorini contact, fracture, plasticity, \dots)
 \end{itemize}
 }
+\end{overlayarea}
 \end{frame}
 
 
-\begin{frame}{summary: my take on numerics of VIs}
+\setbeamertemplate{frame footer}{}
+
+\begin{frame}{summary: my take on numerics for VI($K$,$F$)}
 
 \begin{itemize}
 \item active-set methods (e.g.~RSLS) suffer iteration growth under refinement
@@ -1095,18 +1103,16 @@ $$\ip{F(u)}{v-u} \ge 0 \,\, \forall v\in K \, \iff \, \begin{matrix}
     \item[$\lc$] on obstacle problems, peel away one layer per iteration
     \item[$\lc$] grid-sequencing recovers mesh-independence
     \end{itemize}
-\item multilevel strategies seek $O(N)$ optimal solver performance
+\item multilevel strategies:
     \begin{itemize}
-    \item[$\lc$] Newton-multigrid V-cycles have active-set method in outer loop
+    \item[$\lc$] $\strut$seek $O(N)$ optimal solver performance
+    \item[$\lc$] $\strut$Newton-multigrid V-cycles unfortunately have active-set method in outer loop
         \begin{itemize}
-        \item grid sequencing again needed for mesh independence
+        \item grid sequencing still needed for mesh independence
         \end{itemize}
     \item[$\lc$] FASCD V-cycles put active-set method on every level
     \end{itemize}
-\item AMR: \emph{a posteriori} estimators, heuristic refinement near free boundary
-    \begin{itemize}
-    \item[$\lc$] rigorous estimators limited to model problems
-    \end{itemize}
+\item AMR: rigorous estimators vs heuristic refinement near free boundary
 \item higher-order ideas: Bernstein polynomials, latent-variable proximal point
 \end{itemize}
 
