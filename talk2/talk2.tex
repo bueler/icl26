@@ -1093,21 +1093,21 @@ $$\ip{F(u)}{v-u} \ge 0 \,\, \forall v\in K \, \iff \, \begin{matrix}
 \item active-set methods (e.g.~RSLS) suffer iteration growth under refinement
     \begin{itemize}
     \item[$\lc$] on obstacle problems, peel away one layer per iteration
-    \item[$\lc$] grid-sequencing is one way to recover mesh-independence
+    \item[$\lc$] grid-sequencing recovers mesh-independence
     \end{itemize}
 \item multilevel strategies seek $O(N)$ optimal solver performance
     \begin{itemize}
-    \item[$\lc$] Newton-multigrid V-cycles put active-set method in outer loop
+    \item[$\lc$] Newton-multigrid V-cycles have active-set method in outer loop
         \begin{itemize}
-        \item grid sequencing still needed for mesh independence
+        \item grid sequencing again needed for mesh independence
         \end{itemize}
-    \item[$\lc$] FASCD V-cycles put active-set Newton method on every level
+    \item[$\lc$] FASCD V-cycles put active-set method on every level
     \end{itemize}
-\item AMR based on \emph{a posteriori} estimators or heuristic refinement near free boundary
+\item AMR: \emph{a posteriori} estimators, heuristic refinement near free boundary
     \begin{itemize}
-    \item[$\lc$] rigorous estimators mostly limited to classical obstacle problems
+    \item[$\lc$] rigorous estimators limited to model problems
     \end{itemize}
-\item higher-order ideas: Bernstein polynomials and latent variables (LVPP)
+\item higher-order ideas: Bernstein polynomials, latent-variable proximal point
 \end{itemize}
 
 \centering
