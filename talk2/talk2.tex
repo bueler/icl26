@@ -1055,24 +1055,35 @@ Using the Bernstein basis, apply VI solver with bounds on coefficients.  The con
 
 
 \begin{frame}{latent variable proximal point (LVPP)}
-FIXME
 
-\begin{withpeople}{\photo{dokken.jpg}{J.~Dokken} \photo{farrell.jpg}{P.~Farrell} \photo{keith.jpg}{B.~Keith} \photo{papadopoulos.jpg}{I.~Papadopoulos} \photo{surowiec.jpg}{T.~Surowiec}}
-
-\begin{itemize}
-\item Dokken, Farrell, Keith, Papadopoulos \& Surowiec (2025)
-\item Bregman proximal point iteration, using a \alert{latent} variable $\phi$:
-    \, $u = \psi + e^{\phi} > \psi$
-\item classical obstacle problem: given $\phi^{k-1}$, solve a nonlinear PDE system for $(u^k,\phi^k)$:
-\begin{align*}
-\alpha_k \int_\Omega \grad u^k\cdot\grad v + \int_\Omega \phi^k v &= \alpha_k \int_\Omega f v + \int_\Omega \phi^{k-1} v \\
-\int_\Omega u^k w - \int_\Omega (\psi + e^{\phi^k})\, w &= 0
-\end{align*}
-\item no constraints to discretize: any FE spaces and degree, standard Newton
-\item mesh-independent iterations observed; $\tilde u_h = \psi + e^{\phi_h}$ satisfies the bound
-\item also contact, fracture, plasticity, Monge--Amp\`ere, \dots
-\end{itemize}
+\begin{withpeople}{\bigskip \photo{dokken.jpg}{J.~Dokken} \photo{farrell.jpg}{P.~Farrell} \photo{keith.jpg}{B.~Keith} \photo{papadopoulos.jpg}{I.~Papadopoulos} \photo{surowiec.jpg}{T.~Surowiec}}
+\begin{block}{LVPP; Dokken, Farrell, Keith, Papadopoulos \& Surowiec, 2025}
+Use a Legendre transformation $R$ to map point values of $u\in K\subset X$ to $\RR^m$; $m=1$ for obstacle.  Induces \alert{latent variable} in vector space: $\phi = \grad R(u) \in W$.  Enforce latent eqn in $X$ as $\grad R^*(\phi)=u$.  Convert VI into sequence of nonlinear PDE systems (\alert{proximal point} alg).  Solve systems by Newton's method.
+\end{block}
 \end{withpeople}
+
+\vspace{-35mm}
+
+\only<1>{
+\hfill \includegraphics[width=0.75\textwidth]{figs/lvpp-tree.png} \hspace{15mm}
+
+\vspace{-5mm}
+\qquad \includegraphics[width=0.43\textwidth]{figs/lvpp-transform.png}
+}
+\only<2>{
+\begin{itemize}
+\vspace{0pt}
+\item as formulas:
+
+\vspace{-7mm}
+$$\ip{F(u)}{v-u} \ge 0 \,\, \forall v\in K \, \iff \, \begin{matrix}
+\alpha_k \ip{F(u)}{v} + \ip{\phi^k-\phi^{k-1}}{v} = 0  \quad \forall v\in X \\ \hspace{15mm} \ip{u^k - \grad R^*(\phi^k)}{w} = 0 \quad \forall w\in W\end{matrix} \hspace{13mm}$$
+\item the constraint set $K$ does not need a discretization
+\item mesh-independent iterations observed
+\item general constraints beyond box bounds (e.g.~gradient constraints)
+\item widely applicable (Signorini contact, fracture, plasticity, \dots)
+\end{itemize}
+}
 \end{frame}
 
 
