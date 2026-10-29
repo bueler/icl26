@@ -12,7 +12,7 @@ The lecture series introduces variational inequalities (VIs) to a general applie
 
 See [slides-oct20.pdf](slides-oct20.pdf), with LaTeX sources in [talk1/](talk1/).
 
-## lecture 2 on 27 October: A survey of new solvers for variational inequalities
+## lecture 2 on 27 October: New solvers for variational inequalities
 
 See [slides-oct27.pdf](slides-oct27.pdf), with LaTeX sources in [talk2/](talk1/).
 
