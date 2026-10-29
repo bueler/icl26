@@ -12,9 +12,13 @@ The lecture series introduces variational inequalities (VIs) to a general applie
 
 See [slides-oct20.pdf](slides-oct20.pdf), with LaTeX sources in [talk1/](talk1/).
 
+A [video of the talk](https://www.youtube.com/watch?v=z6Rhpzk2j8E) is at the [Firedrake YouTube page](https://www.youtube.com/@FiredrakeFEM/videos).
+
 ## lecture 2 on 27 October: New solvers for variational inequalities
 
 See [slides-oct27.pdf](slides-oct27.pdf), with LaTeX sources in [talk2/](talk1/).
+
+A [video of the talk](https://www.youtube.com/watch?v=hJ1zuOk1ywA) is at the [Firedrake YouTube page](https://www.youtube.com/@FiredrakeFEM/videos).
 
 ## lecture 3 on 3 November: Stokes glacier models with Firedrake: A tutorial
 
