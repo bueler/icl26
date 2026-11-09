@@ -1,10 +1,10 @@
 Draft a talk in style of talk2/.
 
-Main thread is to first introduce glaciers by pictures (see figs/; find better if you have an opinion; note that UK and northern hemisphere glaciation are of interest to audience).  Then pose problem of glaciation abstractly, i.e. without any stress balance details for flux or velocity, with VI problems for thickness (ref bueler 2021) and surface elevation (ref bueler 2026).  Point out equivalence of weak form of surface motion and flux integral (see bueler 2026 for the calculation using incompressibilty).  Then look at well posedness in SIA, including calvo et al 2003 (flat 1D time-dep), then Piesanti & Temam 2023 (flat 2D time-dep, w weird assumptionos), then jouvet & bueler 2012 (2D bumpy steady), then uniqueness failure for steady bumpy (app B bueler 2026).  Then transition to Stokes stress balance version.  Then coerciveness question and numerical evidence (from bueler 2026, incl app c), and consequences (a priori bound) for implicit step of surface-Stokes solver.  Then tominec et al bound in L^2 norm, and their valuable stabilized semi-implicit solver.  Then scaling argument for implicit-vs-explicit from Bueler 2023, including better news from tominec et al solver.
+Main thread: first introduce glaciers by pictures (see figs/; find better if you have an opinion; note that UK and northern hemisphere glaciation are of interest to audience).  Then pose problem of glaciation abstractly, i.e. without any stress balance details for flux or velocity, with VI problems for thickness (ref bueler 2021) and surface elevation (ref bueler 2026).  Point out equivalence of weak form of surface motion and flux integral (see bueler 2026 for the calculation using incompressibilty).  Then look at well posedness in SIA, including calvo et al 2003 (flat 1D time-dep), then Piesanti & Temam 2023 (flat 2D time-dep, w weird assumptionos), then jouvet & bueler 2012 (2D bumpy steady), then uniqueness failure for steady bumpy (app B bueler 2026).  Then transition to Stokes stress balance version.  Then coerciveness question and numerical evidence (from bueler 2026, incl app c), and consequences (a priori bound) for implicit step of surface-Stokes solver.  Then tominec et al bound in L^2 norm, and their valuable stabilized semi-implicit solver.  Then scaling argument for implicit-vs-explicit from Bueler 2023, including better news from tominec et al solver.
 
 Note: use latest draft of bueler 2026 in ~/repos/glacier-fe-estimate/paper/
 
-Look in ~/Desktop/Eds_oevre/ and ~/Desktop/appmath_PDFs/ for refs.
+Look in ~/Desktop/Eds_oevre/ and ~/Desktop/{ice|appmath}_PDFs/ for refs; I have them all I think.
 
 Build references.tex early so I can check you are using right papers.
 
@@ -12,10 +12,10 @@ Re the tominec et al solver, what I really mean is the one implemented in stage4
 
 Use figs/uafbw.png in corner of title slide.
 
-If possible, extract excerpt of video at https://www.youtube.com/watch?v=9h-bQKiX7nQ showing the pism simulation for the alps and put in PDF slides.  If not, tell me about the best tools for this.
+If possible, extract excerpt of video at https://www.youtube.com/watch?v=9h-bQKiX7nQ showing the pism simulation for the alps and put in PDF slides.  If not, tell me about the best tools for this; a worst I stop the slides and show the video, but I would love to have a local copy.
 
 Reuse people pics from talk1/ and talk2/
 
-Cite all pics with grey small (tiny?) underneath, but not in references.tex.  The latter gets theory works in main thread.
+Cite all pics with grey small (tiny?) underneath, but not in references.tex.  The latter gets theory stuff from main thread.
 
 Goal is 35 slides, but overlays can increase page count to 50.
