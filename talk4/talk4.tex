@@ -324,13 +324,11 @@ Aschwanden et al (2016), Nature Commun.~7, 10524
 
 \hfill \includegraphics[width=0.35\textwidth]{figs/notation2.pdf}
 
-\vspace{-12mm}
+\vspace{-9mm}
 \begin{itemize}
 \item how does the glacier (and the glaciation) \alert{evolve}?
     \begin{itemize}
-    \item[$\lc$] for the moment, let's say nothing about the
-
-stress balance in $\Lambda(t)$
+    \item[$\lc$] for the moment, ignoring the stress balance in $\Lambda(t)$
     \end{itemize}
 
 \pause
@@ -359,7 +357,7 @@ s - b &\ge 0 \\
 \item using thickness $H(t,x)=s(t,x)-b(x)$?
 \item define \alert{ice flux} $\bq(t,x)=\int_{b(x)}^{s(t,x)} \bU(t,x,z)\,dz$
     \begin{itemize}
-    \item[$\lc$] $\bU$ is the horizontal ice velocity, within in $\Lambda(t)$
+    \item[$\lc$] $\bU$ is the horizontal ice velocity within $\Lambda(t)$
     \end{itemize}
 \item again an NCP on $[0,T]\times\Omega$:
 
@@ -372,10 +370,9 @@ H\left(\frac{\partial H}{\partial t} + \Div\bq - a\right) &= 0
 
     \begin{itemize}
     \item[$\lc$] but at ice-free locations ($H=0$, $\bq=\bzero$) we have $a\le 0$
-    \item[$\lc$] again an obstacle problem, zero as the obstacle
+    \item[$\lc$] again an obstacle problem
     \end{itemize}
 
-\pause
 \item[$\lc$] \alert{where ice is present mass is conserved}: $\displaystyle \frac{\partial H}{\partial t} + \Div\bq = a$
 \end{itemize}
 \end{frame}
@@ -383,13 +380,21 @@ H\left(\frac{\partial H}{\partial t} + \Div\bq - a\right) &= 0
 
 \begin{frame}{why prefer surface elevation?}
 
-\centerline{\includegraphics[height=0.56\textheight]{figs/giscross.pdf}}
+\centering
+\mbox{%
+\hspace{20mm}
+\includegraphics[height=0.56\textheight]{figs/giscross.pdf} \,
+\begin{minipage}{0.3\textwidth}
+\grey{\scriptsize Greenland cross-section at $70^\circ$N
 
-\figcite{Greenland cross-section at $70^\circ$N; data from Morlighem et al.~2017}
+data from Morlighem et al.~2017}
+\end{minipage}
+}
 
+\medskip
 \begin{itemize}
-\item ice flow causes surface $s(t,x)$ to become smoother
-\item meanwhile $H(t,x)=s(t,x)-b(x)$ \alert{inherits the (spatial) low regularity of the bed}
+\item \alert{ice flow causes surface $s(t,x)$ to become smoother}
+\item meanwhile $H(t,x)=s(t,x)-b(x)$ inherits the (spatial) low regularity of the bed
 \end{itemize}
 \end{frame}
 
