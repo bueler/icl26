@@ -1,4 +1,7 @@
 \documentclass[aspectratio=169,10pt]{beamer}
+% build with   lualatex -shell-escape
+% see makefile
+
 
 % fallback search path for ../theme/ when TEXINPUTS is not set (e.g. texmaker
 % quick build); the makefile's TEXINPUTS takes precedence, so no conflict
@@ -55,8 +58,9 @@
 \newcommand{\pcomm}[1]{\grey{\small (#1)}}
 \newcommand{\pfcomm}[1]{\grey{\footnotesize (#1)}}
 
-% source of a picture: tiny grey, at right, underneath; NOT in references.tex
+% source of a picture: tiny grey, at right, underneath
 \newcommand{\figcite}[1]{\par\nointerlineskip\vskip0.5mm\hbox to \linewidth{\hss\scriptsize\grey{#1}}}
+
 
 % author photos, stacked at the far right of a frame; paths are relative to talk4/:
 %   \begin{withpeople}{\photo{figs/people/a.jpg}{A.~Name} \photo{../talk2/figs/people/b.jpg}{B.~Name}} ... frame body ... \end{withpeople}
@@ -127,80 +131,107 @@
 \vspace{-2mm}
 \figcite{best-estimate extent at Marine Isotope Stage 6 ($\sim$140,000 years before present)}
 
-\figcite{Fig.~1b from Batchelor et al (2019), Nature Commun.~10, 3713}
+\figcite{Fig.~1b from Batchelor et al (2019), Nature Commun.~10, 3713; added \alert{red} labels}
 \end{frame}
 
 
-\begin{frame}{Northern Hemisphere ice sheets come and go}
-
-\noindent \mbox{\hspace{-5mm} \includegraphics[height=0.65\textheight]{figs/british-clark2022.png} \quad \includegraphics[height=0.6\textheight]{figs/laurentide-margold2018.png}}
-
-\figcite{British-Irish ice sheet at 26 ka BP; Clark et al (2022), Boreas 51}
-
-\figcite{Laurentide ice sheet, and ice streams, at Last Glacial Maximum 22 ka BP}
-
-\figcite{Margold et al (2018), Quat.~Sci.~Rev.~189}
+\begin{frame}{North American glaciation from 18ka BP to near present}
+\centering
+\mbox{%
+\foreach \n in {1,...,13}{%
+  \includegraphics<\n>[height=0.85\textheight,page=\n]{figs/dalton2020-every3.pdf}%
+}
+% optional: auto-advance in fullscreen mode instead of clicking
+%\transduration<1-11>{0.7}
+\begin{minipage}{0.3\textwidth}
+\grey{\scriptsize from Dalton et al (2020), \par Quaternary Science Reviews 234}
+\end{minipage}
+}
 \end{frame}
 
 
-\begin{frame}{a glacier is a thin, slow, viscous flow, with a margin}
+\begin{frame}{nearer: British-Irish ice sheet at 26 ka BP}
 
-\centerline{\includegraphics[height=0.6\textheight]{figs/polaris.png}}
+\centering
+\mbox{%
+\includegraphics[height=0.8\textheight]{figs/british-clark2022.png} \,
+\begin{minipage}{0.3\textwidth}
+\grey{\scriptsize Clark et al (2022), Boreas 51}
+\end{minipage}
+}
+\end{frame}
+
+
+\begin{frame}{glaciers as gravity- and climate-driven driven flows}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\includegraphics[width=\textwidth]{figs/polaris.png}
 \figcite{Polaris Glacier, Greenland; Post \& LaChappelle 2000}
-
-\medskip
+\end{column}
+\begin{column}{0.5\textwidth}
 \begin{itemize}
-\item where does the ice stop? \,\alert{the margin is a free boundary}
+\item a \alert{glacier} is water ice in a very-viscous, gravity-driven flow
     \begin{itemize}
-    \item[$\circ$] location determined by climate, bed topography, and ice flow in combination
+    \item[$\circ$] ice in a glacier is just compressed snow
+    \item[$\circ$] an \alert{ice sheet} is just a big, continent-scale glacier
+    \item[$\circ$] \emph{sea ice is something quite different!}
     \end{itemize}
-\item an \alert{ice sheet} is just a glacier
+\item \alert{glaciation} is the glacier-covered, time-dependent 2D domain
+\item the \alert{glacier margin} is a free boundary
     \begin{itemize}
-    \item[$\circ$] while \emph{sea ice} is something quite different
+    \item[$\circ$] its location is determined by climate, bed topography, boundary stresses, and ice flow \emph{in combination}
+    \item[$\circ$] at small scale, fracture can dominate it
     \end{itemize}
 \end{itemize}
-\centerline{}
+\end{column}
+\end{columns}
 \end{frame}
 
 
-\begin{frame}{present-day ice sheets}
+\begin{frame}{qualitative observations (shown for present-day ice sheets)}
 
-\centerline{\includegraphics[height=0.65\textheight]{figs/gis-aschwanden2016.png}}
-\figcite{Greenland surface speed; Aschwanden et al (2016), Nature Commun.~7, 10524}
+\includegraphics[width=\textwidth]{figs/ant-schoofhewitt2013.png}
 
 \medskip
-\centerline{fast flow in narrow outlets near fractal boundary}
-\end{frame}
-
-
-\begin{frame}{present-day ice sheets}
-
-\centerline{\includegraphics[width=0.95\textwidth]{figs/ant-schoofhewitt2013.png}}
 \figcite{cross-section of East Antarctica, with 80$\times$ vertical exaggeration}
 
 \figcite{Schoof \& Hewitt (2013), Annu.~Rev.~Fluid Mech.~45, 217--239}
 
 \medskip
-\centerline{smooth surface over a rough bed \, $\mid$ \, very thin}
+\begin{itemize}
+\item large ice sheets are very thin
+\item generally smooth surface over rough bed
+\item steep near-margin slopes
+\end{itemize}
 \end{frame}
 
 
-\begin{frame}{simulating an advance and retreat: the Alps}
+\begin{frame}{qualitative observations (shown for present-day ice sheets)}
 
-\begin{center}
-\IfFileExists{figs/alps.mp4}{%
-  \movie[width=0.52\textwidth,height=0.39\textwidth,poster,showcontrols]{\includegraphics[width=0.52\textwidth]{figs/alps-thumb.jpg}}{figs/alps.mp4}%
-}{%
-  \href{https://www.youtube.com/watch?v=9h-bQKiX7nQ}{\includegraphics[width=0.52\textwidth]{figs/alps-thumb.jpg}}%
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\hfill \includegraphics[width=0.93\textwidth]{figs/gis-aschwanden2016.png}
+\end{column}
+\begin{column}{0.4\textwidth}
+\vspace{20mm}
+
+\begin{itemize}
+\item large velocity contrasts
+\item fast flow concentrated in narrow outlets \dots
+\item near fractal boundary
+\end{itemize}
+
+\vspace{20mm}
+\grey{\scriptsize Greenland surface speed
+
+left: observed, \, right: modeled
+
+Aschwanden et al (2016), Nature Commun.~7, 10524
+
 }
-\end{center}
-
-\figcite{G.~Jouvet, \emph{Glaciers in the Alps from the last ice age to 2100}}
-
-\figcite{\href{https://www.youtube.com/watch?v=9h-bQKiX7nQ}{youtube.com/watch?v=9h-bQKiX7nQ}}
-
-\medskip
-\centerline{the ice-covered area changes completely \dots a PISM simulation solves for it at every time step}
+\end{column}
+\end{columns}
 \end{frame}
 
 
@@ -211,28 +242,56 @@
   \end{frame}
 }
 
-\section{problem of glaciation}
 
-\begin{frame}{the problem of glaciation}
+\section{mathematical problem of glaciation}
 
-\centerline{\includegraphics[width=0.62\textwidth]{figs/stokesdomain.pdf}}
-\figcite{from B (2026)}
+\begin{frame}{the problem of glaciation: notation}
+
+\hfill \includegraphics[width=0.57\textwidth]{figs/stokesdomain.pdf}
+
+\begin{overprint}
+\onslide<1>
+\vspace{-5mm}
 
 \begin{itemize}
-\item \alert{data:} \, on a fixed land domain $\Omega\subset\RR^2$, the bed elevation $b(x)$ and the surface mass balance $a(t,x)$ (climate)
+\item fixed land domain \alert{$\Omega\subset\RR^2$}
     \begin{itemize}
-    \item[$\lc$] $a>0$ is accumulation and $a<0$ is ablation; $a$ is defined even where there is no ice
+    \item[$\lc$] $x = (x_1,x_2) \in \Omega$
+    \item[$\lc$] a subset of $\Omega$ is ice-covered
     \end{itemize}
-\item \alert{solution:} \, the surface elevation $s(t,x)\ge b(x)$, equivalently the thickness $H=s-b\ge 0$
+\item \alert{surface mass balance} $a(t,x)$, the climate \hfill \grey{$\leftarrow$ data}
     \begin{itemize}
-    \item[$\lc$] ice is present on \alert{the set $\{H>0\}$, which is an output}
+    \item[$\lc$] $a>0$ is accumulation and $a<0$ is ablation
+    \item[$\lc$] $a$ is defined everywhere in $\Omega$, \emph{even where there is no ice}
     \end{itemize}
-\item for now, say nothing about stress balance: the ice has \emph{some} velocity $\bu=(\bU,w)$
+\item \alert{bed elevation} $b(x)$ \hfill \grey{$\leftarrow$ data}
+    \begin{itemize}
+    \item[$\lc$] also defined everywhere in $\Omega$
+    \end{itemize}
 \end{itemize}
+\onslide<2>
+\begin{itemize}
+\item \alert{surface elevation} $s(t,x)$ \hfill \grey{$\leftarrow$ solution}
+    \begin{itemize}
+    \item[$\lc$] equivalent geometry variable: \alert{thickness} $H(t,x)=s(t,x)-b(x)$
+    \item[$\lc$] required:\, $\alert{s(t,x)\ge b(x)} \, \iff \, H(t,x)\ge 0$
+    \end{itemize}
+\item \alert{ice domain} $\displaystyle \Lambda(t) = \left\{(x,z) \,:\, b(x) < z < s(t,x)\right\} \subset \RR^3$  \hfill \grey{$\leftarrow$ solution}
+    \begin{itemize}
+    \item[$\lc$] this 3D set is an output, \emph{not data}
+    \item[$\lc$] \alert{glaciation} is \, $\Lambda(t)^\perp = \left\{x \,:\, b(x) < s(t,x)\right\} \subset \Omega$
+    \end{itemize}
+\end{itemize}
+\end{overprint}
 \end{frame}
 
 
-\begin{frame}{thickness form: mass conservation with a constraint}
+%\item for now we are saying nothing about the stress balance: the ice has \emph{some} velocity $\bu=(\bU,w)$
+
+
+\begin{frame}{surface elevation form: advection with inequality constraint}
+
+FIXME
 
 \begin{itemize}
 \item let $\bq=\int_b^s \bU\,dz$ be the ice flux; where ice is present, mass is conserved:
@@ -249,6 +308,73 @@ H\left(\frac{\partial H}{\partial t} + \Div\bq - a\right) &= 0
 \end{itemize}
 \end{frame}
 
+
+\begin{frame}{thickness form: scalar conservation with inequality constraint}
+
+\begin{itemize}
+\item let $\bq=\int_b^s \bU\,dz$ be the ice flux; where ice is present, mass is conserved:
+    $$\frac{\partial H}{\partial t} + \Div\bq = a$$
+\item this is incomplete: where does it apply? \pfcomm{it cannot hold on bare ground where $a<0$}
+\item the complete statement is a \alert{nonlinear complementarity problem} (NCP) on $[0,T]\times\Omega$:
+\begin{align*}
+H &\ge 0 \\
+\frac{\partial H}{\partial t} + \Div\bq - a &\ge 0 \\
+H\left(\frac{\partial H}{\partial t} + \Div\bq - a\right) &= 0
+\end{align*}
+\item ice-free locations ($H=0$, $\bq=\bzero$) have $a\le 0$
+\item this is an \alert{obstacle problem}, with the obstacle at $H=0$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{why prefer surface elevation?}
+
+\centerline{\includegraphics[height=0.56\textheight]{figs/giscross.pdf}}
+
+\figcite{Greenland cross-section at $70^\circ$N; data from Morlighem et al.~2017}
+
+\begin{itemize}
+\item flow smooths $s$; meanwhile $H=s-b$ \alert{inherits the low regularity of the bed}
+    \begin{itemize}
+    \item[$\lc$] seek a function space for the smoother field, and let the obstacle be rough
+    \end{itemize}
+\item a discrete bed $b_h$ appears explicitly in the FE theory, so bed error can be identified
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{as VI weak forms}
+
+FIXME
+\end{frame}
+
+
+\begin{frame}{fundamental equivalence: weak surface motion equals weak flux}
+
+FIXME by incompressibility
+
+\begin{itemize}
+\item define the \alert{surface motion map} \quad $\Phi(s)[\omega]=-\int_\Omega \bu|_s\cdot\bn_s\,\omega\,dx$
+\item extend $\omega$ to the ice domain $\Lambda(b,s)=\{b<z<s\}$ by $\tilde\omega(x,z)=\omega(x)$, and assume $\bu=\bzero$ on the base
+\end{itemize}
+
+\vspace{-2mm}
+\begin{align*}
+\Phi(s)[\omega] &= -\int_{\partial\Lambda(b,s)} \tilde\omega\,\bu\cdot\hat\bn\,dS && \afcomm{only the top contributes; $\bn_s\,dx=\hat\bn\,dS$} \\
+\uncover<2->{&= -\int_{\Lambda(b,s)} \Div\left(\tilde\omega\,\bu\right) && \afcomm{divergence theorem} \\}
+\uncover<3->{&= -\int_{\Lambda(b,s)} \bu\cdot\grad\tilde\omega && \afcomm{\alert{incompressibility} $\Div\bu=0$} \\}
+\uncover<3->{&= -\int_\Omega \left(\int_b^s \bU\,dz\right)\cdot\grad\omega\,dx = \alert{-\int_\Omega \bq(s)\cdot\grad\omega} && \afcomm{$\tilde\omega$ independent of $z$}}
+\end{align*}
+
+\uncover<3->{
+\begin{block}{conclusion}
+since $\sigma-s=\eta-H$ and $s^n-s^{n-1}=H^n-H^{n-1}$, the surface and thickness VIs are \alert{the same problem}
+\end{block}
+}
+\end{frame}
+
+
+\section{well-posedness (coercivity?)}
 
 \begin{frame}{thickness form: an implicit step is a VI}
 
@@ -291,47 +417,6 @@ let $\cK=\{\sigma\in\cX : \sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{
 \end{itemize}
 \end{frame}
 
-
-\begin{frame}{surface motion equals flux, by incompressibility}
-
-\begin{itemize}
-\item define the \alert{surface motion map} \quad $\Phi(s)[\omega]=-\int_\Omega \bu|_s\cdot\bn_s\,\omega\,dx$
-\item extend $\omega$ to the ice domain $\Lambda(b,s)=\{b<z<s\}$ by $\tilde\omega(x,z)=\omega(x)$, and assume $\bu=\bzero$ on the base
-\end{itemize}
-
-\vspace{-2mm}
-\begin{align*}
-\Phi(s)[\omega] &= -\int_{\partial\Lambda(b,s)} \tilde\omega\,\bu\cdot\hat\bn\,dS && \afcomm{only the top contributes; $\bn_s\,dx=\hat\bn\,dS$} \\
-\uncover<2->{&= -\int_{\Lambda(b,s)} \Div\left(\tilde\omega\,\bu\right) && \afcomm{divergence theorem} \\}
-\uncover<3->{&= -\int_{\Lambda(b,s)} \bu\cdot\grad\tilde\omega && \afcomm{\alert{incompressibility} $\Div\bu=0$} \\}
-\uncover<3->{&= -\int_\Omega \left(\int_b^s \bU\,dz\right)\cdot\grad\omega\,dx = \alert{-\int_\Omega \bq(s)\cdot\grad\omega} && \afcomm{$\tilde\omega$ independent of $z$}}
-\end{align*}
-
-\uncover<3->{
-\begin{block}{conclusion}
-since $\sigma-s=\eta-H$ and $s^n-s^{n-1}=H^n-H^{n-1}$, the surface and thickness VIs are \alert{the same problem}
-\end{block}
-}
-\end{frame}
-
-
-\begin{frame}{then why prefer surface elevation?}
-
-\centerline{\includegraphics[height=0.56\textheight]{figs/giscross.pdf}}
-
-\figcite{Greenland cross-section at $70^\circ$N; data from Morlighem et al.~2017}
-
-\begin{itemize}
-\item flow smooths $s$; meanwhile $H=s-b$ \alert{inherits the low regularity of the bed}
-    \begin{itemize}
-    \item[$\lc$] seek a function space for the smoother field, and let the obstacle be rough
-    \end{itemize}
-\item a discrete bed $b_h$ appears explicitly in the FE theory, so bed error can be identified
-\end{itemize}
-\end{frame}
-
-
-\section{well-posedness}
 
 \begin{frame}{shallow ice approximation (SIA): flux from a formula}
 
@@ -508,8 +593,6 @@ $F_{\Delta t}(s)[\omega]=\Delta t\,\Phi(s)[\omega]+\int_\Omega s\,\omega$; the \
 \end{frame}
 
 
-\section{coercivity}
-
 \begin{frame}{the coercivity question}
 
 \begin{definition}
@@ -638,7 +721,7 @@ assume the conjectures, and that $s\in\cK$, $s_h\in\cK_h$ solve the regularized 
 \end{frame}
 
 
-\section{explicit vs implicit?}
+\section{state of play: explicit vs implicit?}
 
 \begin{frame}{the $L^2$ bound of Tominec et al (2026)}
 
