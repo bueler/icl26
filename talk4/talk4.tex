@@ -149,7 +149,7 @@
 \end{frame}
 
 
-\begin{frame}{nearer: British-Irish ice sheet at 26 ka BP}
+\begin{frame}{nearby: British-Irish ice sheet at 26 ka BP}
 
 \centering
 \mbox{%
@@ -161,7 +161,7 @@
 \end{frame}
 
 
-\begin{frame}{glaciers as gravity- and climate-driven driven flows}
+\begin{frame}{glaciers are gravity- and climate-driven flows}
 
 \begin{columns}
 \begin{column}{0.5\textwidth}
@@ -176,17 +176,17 @@
 \end{column}
 \begin{column}{0.5\textwidth}
 \begin{itemize}
-\item a \alert{glacier} is water ice forming a very-viscous, gravity-driven flow
+\item a \alert{glacier} is a mass of water ice forming a very-viscous, gravity-driven flow
     \begin{itemize}
     \item[$\circ$] ice from compressed snow
     \item[$\circ$] an \alert{ice sheet} is just a big, continent-scale glacier
     \item[$\circ$] \emph{sea ice is something quite different!}
     \end{itemize}
 \item \alert{glaciation} means the glacier-covered, time-dependent 2D domain
-\item<2> \alert{glacier margin} $=$ free boundary
+\item<2> the \alert{glacier margin} is the free boundary of glaciation
     \begin{itemize}
-    \item[$\circ$] location determined by climate, bed topography, boundary stresses, and ice flow \emph{in combination}
-    \item[$\circ$] fractures and crevasses often dominate at small scale
+    \item[$\circ$] location determined by combined effects of climate, bed topography, boundary stresses, and ice flow
+    \item[$\circ$] fractures and crevasses dominate margins at small scale
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -199,15 +199,15 @@
 \includegraphics[width=\textwidth]{figs/ant-schoofhewitt2013.png}
 
 \medskip
-\figcite{cross-section of East Antarctica, with 80$\times$ vertical exaggeration}
+\figcite{cross-section of East Antarctica, with \alert{80$\times$ vertical exaggeration}}
 
 \figcite{Schoof \& Hewitt (2013), Annu.~Rev.~Fluid Mech.~45, 217--239}
 
 \medskip
 \begin{itemize}
 \item large ice sheets are very thin
-\item generally smooth surface over rough bed
-\item steep near-margin slopes
+\item smooth surface over rough bed
+\item relatively steep surface slopes near margins
 \end{itemize}
 \end{frame}
 
@@ -223,14 +223,14 @@
 
 \begin{itemize}
 \item large velocity contrasts
-\item fast flow concentrated in narrow outlets \dots
-\item near fractal boundary
+\item fast flow concentrated in narrow outlets near boundary
+\item near-fractal boundaries
 \end{itemize}
 
 \vspace{20mm}
 \grey{\scriptsize Greenland surface speed
 
-left: observed, \, right: modeled
+\alert{left: observed}, \, right: modeled
 
 Aschwanden et al (2016), Nature Commun.~7, 10524
 
@@ -250,13 +250,14 @@ Aschwanden et al (2016), Nature Commun.~7, 10524
 
 \section{mathematical problem of glaciation}
 
-\begin{frame}{the problem of glaciation: notation}
+\begin{frame}{notation for evolving glacier models}
 
-\hfill \includegraphics[width=0.57\textwidth]{figs/stokesdomain.pdf}
+\hfill\includegraphics<1>[width=0.57\textwidth]{figs/notation1.pdf}%
+\includegraphics<2>[width=0.57\textwidth]{figs/notation2.pdf}
 
 \begin{overprint}
 \onslide<1>
-\vspace{-5mm}
+\vspace{-10mm}
 
 \begin{itemize}
 \item fixed land domain \alert{$\Omega\subset\RR^2$}
@@ -264,10 +265,10 @@ Aschwanden et al (2016), Nature Commun.~7, 10524
     \item[$\lc$] $x = (x_1,x_2) \in \Omega$
     \item[$\lc$] a subset of $\Omega$ is ice-covered
     \end{itemize}
-\item \alert{surface mass balance} $a(t,x)$, the climate \hfill \grey{$\leftarrow$ data}
+\item \alert{surface mass balance} $a(t,x)$, the climate seen by the glacier \hfill \grey{$\leftarrow$ data}
     \begin{itemize}
-    \item[$\lc$] $a>0$ is accumulation and $a<0$ is ablation
-    \item[$\lc$] $a$ is defined everywhere in $\Omega$, \emph{even where there is no ice}
+    \item[$\lc$] $a>0$ is accumulation of snow, and $a<0$ is ablation by melt
+    \item[$\lc$] assuming: $a$ is defined everywhere in $\Omega$, \emph{even where there is no ice}
     \end{itemize}
 \item \alert{bed elevation} $b(x)$ \hfill \grey{$\leftarrow$ data}
     \begin{itemize}
@@ -276,6 +277,8 @@ Aschwanden et al (2016), Nature Commun.~7, 10524
 \end{itemize}
 \onslide<2>
 \begin{itemize}
+\vspace{-3mm}
+
 \item \alert{surface elevation} $s(t,x)$ \hfill \grey{$\leftarrow$ solution}
     \begin{itemize}
     \item[$\lc$] equivalent geometry variable: \alert{thickness} $H(t,x)=s(t,x)-b(x)$
@@ -284,50 +287,96 @@ Aschwanden et al (2016), Nature Commun.~7, 10524
 \item \alert{ice domain} $\displaystyle \Lambda(t) = \left\{(x,z) \,:\, b(x) < z < s(t,x)\right\} \subset \RR^3$  \hfill \grey{$\leftarrow$ solution}
     \begin{itemize}
     \item[$\lc$] this 3D set is an output, \emph{not data}
-    \item[$\lc$] \alert{glaciation} is \, $\Lambda(t)^\perp = \left\{x \,:\, b(x) < s(t,x)\right\} \subset \Omega$
+    \item[$\lc$] \alert{glaciation} is \, $\Lambda(t)^\perp = \left\{x \,:\, b(x) < s(t,x)\right\} \subset \Omega$, also an output
     \end{itemize}
 \end{itemize}
 \end{overprint}
 \end{frame}
 
 
-%\item for now we are saying nothing about the stress balance: the ice has \emph{some} velocity $\bu=(\bU,w)$
-
-
-\begin{frame}{surface elevation form: advection with inequality constraint}
-
-FIXME
+\begin{frame}{surface elevation view: how does the surface move?}
 
 \begin{itemize}
-\item let $\bq=\int_b^s \bU\,dz$ be the ice flux; where ice is present, mass is conserved:
-    $$\frac{\partial H}{\partial t} + \Div\bq = a$$
-\item this is incomplete: where does it apply? \pfcomm{it cannot hold on bare ground where $a<0$}
-\item the complete statement is a \alert{nonlinear complementarity problem} (NCP) on $[0,T]\times\Omega$:
-\begin{align*}
-H &\ge 0 \\
-\frac{\partial H}{\partial t} + \Div\bq - a &\ge 0 \\
-H\left(\frac{\partial H}{\partial t} + \Div\bq - a\right) &= 0
-\end{align*}
-\item ice-free locations ($H=0$, $\bq=\bzero$) have $a\le 0$
-\item this is an \alert{obstacle problem}, with the obstacle at $H=0$
+\item at a point on the surface of the ice this is well-known
+    \begin{itemize}
+    \item[$\lc$] e.g.~apply pillbox mass-conservation argument?
+    \end{itemize}
+
+\item \alert{surface kinematical equation}:
+\begin{equation*}
+\frac{\partial s}{\partial t} + \bu|_s \cdot \bn_s - a = 0
+\end{equation*}
+
+    \begin{itemize}
+    \item[$\lc$] $\bu|_s$ is the \alert{surface trace of ice velocity}
+    \item[$\lc$] $\bn_s = \left<-\tfrac{\partial s}{\partial x_1}, -\tfrac{\partial s}{\partial x_1}, 1\right>$ is the upward \alert{surface normal vector}
+    \end{itemize}
+
+\medskip
+\pause
+\item this applies at $z=s(t,x)$ \alert{only if  $s(t,x) > b(x)$}
+\item it therefore \alert{cannot} describe the evolution of glaciation
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{thickness form: scalar conservation with inequality constraint}
+\begin{frame}{surface elevation view: advection with inequality constraint}
 
+\hfill \includegraphics[width=0.35\textwidth]{figs/notation2.pdf}
+
+\vspace{-12mm}
 \begin{itemize}
-\item let $\bq=\int_b^s \bU\,dz$ be the ice flux; where ice is present, mass is conserved:
-    $$\frac{\partial H}{\partial t} + \Div\bq = a$$
-\item this is incomplete: where does it apply? \pfcomm{it cannot hold on bare ground where $a<0$}
-\item the complete statement is a \alert{nonlinear complementarity problem} (NCP) on $[0,T]\times\Omega$:
+\item how does the glacier (and the glaciation) \alert{evolve}?
+    \begin{itemize}
+    \item[$\lc$] for the moment, let's say nothing about the
+
+stress balance in $\Lambda(t)$
+    \end{itemize}
+
+\pause
+\item via a \alert{nonlinear complementarity problem} (NCP) on $[0,T]\times\Omega$:
+\begin{align*}
+s - b &\ge 0 \\
+\frac{\partial s}{\partial t} + \bu|_s \cdot \bn_s - a &\ge 0 \\
+(s-b) \left(\frac{\partial s}{\partial t} + \bu|_s \cdot \bn_s - a\right) &= 0
+\end{align*}
+
+    \begin{itemize}
+    \item[$\lc$] assuming: $\bu|_s$ is extended by zero to ice-free land
+    \item[$\lc$] at ice-free locations ($s=b$, $\bu|_s=\bzero$) we have $a\le 0$
+    \end{itemize}
+\item this is an \alert{obstacle problem}, with $b$ as the obstacle
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{thickness view: scalar conservation with inequality constraint}
+
+\hfill \includegraphics[width=0.35\textwidth]{figs/notation2.pdf}
+
+\vspace{-12mm}
+\begin{itemize}
+\item using thickness $H(t,x)=s(t,x)-b(x)$?
+\item define \alert{ice flux} $\bq(t,x)=\int_{b(x)}^{s(t,x)} \bU(t,x,z)\,dz$
+    \begin{itemize}
+    \item[$\lc$] $\bU$ is the horizontal ice velocity, within in $\Lambda(t)$
+    \end{itemize}
+\item again an NCP on $[0,T]\times\Omega$:
+
+\vspace{-10mm}
 \begin{align*}
 H &\ge 0 \\
 \frac{\partial H}{\partial t} + \Div\bq - a &\ge 0 \\
 H\left(\frac{\partial H}{\partial t} + \Div\bq - a\right) &= 0
 \end{align*}
-\item ice-free locations ($H=0$, $\bq=\bzero$) have $a\le 0$
-\item this is an \alert{obstacle problem}, with the obstacle at $H=0$
+
+    \begin{itemize}
+    \item[$\lc$] but at ice-free locations ($H=0$, $\bq=\bzero$) we have $a\le 0$
+    \item[$\lc$] again an obstacle problem, zero as the obstacle
+    \end{itemize}
+
+\pause
+\item[$\lc$] \alert{where ice is present mass is conserved}: $\displaystyle \frac{\partial H}{\partial t} + \Div\bq = a$
 \end{itemize}
 \end{frame}
 
@@ -339,11 +388,8 @@ H\left(\frac{\partial H}{\partial t} + \Div\bq - a\right) &= 0
 \figcite{Greenland cross-section at $70^\circ$N; data from Morlighem et al.~2017}
 
 \begin{itemize}
-\item flow smooths $s$; meanwhile $H=s-b$ \alert{inherits the low regularity of the bed}
-    \begin{itemize}
-    \item[$\lc$] seek a function space for the smoother field, and let the obstacle be rough
-    \end{itemize}
-\item a discrete bed $b_h$ appears explicitly in the FE theory, so bed error can be identified
+\item ice flow causes surface $s(t,x)$ to become smoother
+\item meanwhile $H(t,x)=s(t,x)-b(x)$ \alert{inherits the (spatial) low regularity of the bed}
 \end{itemize}
 \end{frame}
 
@@ -356,7 +402,7 @@ FIXME
 
 \begin{frame}{translation}
 
-FIXME two column equivalence: glaciatiated area $\iff$ inactive set,  ice-free area $\iff$ active, glacier margin $\iff$ free boundary
+FIXME two column equivalence: glaciated area $\iff$ inactive set,  ice-free area $\iff$ active, glacier margin $\iff$ free boundary
 \end{frame}
 
 

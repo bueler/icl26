@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-# generates stokesdomain.pdf:  Stokes domain Lambda(t) inside Omega, with
-# surface z=s(t,x), bed z=b(x), and climate a(t,x)
+# generates notation1.pdf, notation2.pdf (overlays):  Stokes domain Lambda(t) inside Omega, with
+# surface z=s(t,x), bed z=b(x), and climate a(t,x); second adds thickness H
+# and the label Lambda(t)
 # labels are typeset by lualatex in Fira Sans/Fira Math to match the slides
 # adapted from glacier-fe-estimate/talk/UW26/figs/stokesdomainusual.py
 
@@ -55,17 +56,40 @@ def drawclimate(x,s):
         plt.arrow(xarr, s.max()+0.3, 0.0, magarr,
                   lw=1.5, head_width=0.1, color='k')
 
-plt.figure(figsize=(10,4.6))
-x, s, b = genbasicfig()
-plt.text(x[550] - 1.0, b[600] + 0.4 * s[600], r'$\Lambda(t)$',
-         fontsize=bigfsize, color='k')
-drawclimate(x,s)
-plt.text(x[150], s[300] + 0.7, r'$z=s(t,x)$', fontsize=bigfsize, color='k')
-plt.text(x[650], b[650] - 0.5, r'$z=b(x)$', fontsize=bigfsize, color='k')
-yR = min(b) - 0.5
-plt.plot([min(x),max(x)],[yR,yR],color='k',lw=1.0,clip_on=False)  # bottom of Omega
-plt.text(x[875], yR+0.2, r'$\Omega$', fontsize=bigfsize, color='k')
-plt.axis([0.0,10.0,yR,4.5])
-plt.axis('off')
-print('writing file stokesdomain.pdf')
-plt.savefig('stokesdomain.pdf', bbox_inches='tight', pad_inches=0.0, transparent=True)
+greycolor = '0.5'
+
+def notationfig(filename, second=False):
+    # both figures draw everything, so bounding boxes agree for overlays;
+    # in the first figure the H arrow and Lambda label are fully transparent
+    alpha = 1.0 if second else 0.0
+    plt.figure(figsize=(10,4.6))
+    x, s, b = genbasicfig()
+    plt.text(x[550] + 0.2, b[600] + 0.4 * s[600], r'$\Lambda(t)$',
+             fontsize=bigfsize, color='k', alpha=alpha)
+    jH = 350  # thickness arrow location
+    plt.annotate('', xy=(x[jH], s[jH]), xytext=(x[jH], b[jH]),
+                 arrowprops=dict(arrowstyle='<->', color=greycolor, lw=2.0,
+                                 shrinkA=0, shrinkB=0, alpha=alpha))
+    plt.text(x[jH] + 0.1, 0.5 * (b[jH] + s[jH]) - 0.15, r'$H(t,x)$',
+             fontsize=bigfsize, color=greycolor, alpha=alpha)
+    drawclimate(x,s)
+    plt.text(x[150], s[300] + 0.7, r'$z=s(t,x)$', fontsize=bigfsize, color='k')
+    plt.text(x[650], b[650] - 0.5, r'$z=b(x)$', fontsize=bigfsize, color='k')
+    yR = min(b) - 0.5
+    plt.plot([min(x),max(x)],[yR,yR],color='k',lw=1.0,clip_on=False)  # bottom of Omega
+    plt.text(x[875], yR+0.2, r'$\Omega$', fontsize=bigfsize, color='k')
+    # glaciated region Lambda(t)^perp, as thicker grey segment along Omega
+    glac = (s - b > 0.0)
+    xg = x[glac]
+    plt.plot([xg.min(), xg.max()], [yR, yR], color=greycolor, lw=5.0,
+             solid_capstyle='butt', clip_on=False, alpha=alpha)
+    plt.text(0.5 * (xg.min() + xg.max()) - 0.5, yR - 0.55, r'$\Lambda(t)^\perp$',
+             fontsize=bigfsize, color=greycolor, alpha=alpha)
+    plt.axis([0.0,10.0,yR,4.5])
+    plt.axis('off')
+    print('writing file %s' % filename)
+    plt.savefig(filename, bbox_inches='tight', pad_inches=0.0, transparent=True)
+    plt.close()
+
+notationfig('notation1.pdf')
+notationfig('notation2.pdf', second=True)
