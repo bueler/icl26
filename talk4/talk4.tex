@@ -2,7 +2,6 @@
 % build with   lualatex -shell-escape
 % see makefile
 
-
 % fallback search path for ../theme/ when TEXINPUTS is not set (e.g. texmaker
 % quick build); the makefile's TEXINPUTS takes precedence, so no conflict
 \makeatletter
@@ -166,22 +165,28 @@
 
 \begin{columns}
 \begin{column}{0.5\textwidth}
+\only<1>{
 \includegraphics[width=\textwidth]{figs/polaris.png}
 \figcite{Polaris Glacier, Greenland; Post \& LaChappelle 2000}
+}
+\only<2>{
+\includegraphics[width=\textwidth]{figs/truffertaku2016.jpg}
+\figcite{M.~Truffer photo; Taku Glacier 2016}
+}
 \end{column}
 \begin{column}{0.5\textwidth}
 \begin{itemize}
-\item a \alert{glacier} is water ice in a very-viscous, gravity-driven flow
+\item a \alert{glacier} is water ice forming a very-viscous, gravity-driven flow
     \begin{itemize}
-    \item[$\circ$] ice in a glacier is just compressed snow
+    \item[$\circ$] ice from compressed snow
     \item[$\circ$] an \alert{ice sheet} is just a big, continent-scale glacier
     \item[$\circ$] \emph{sea ice is something quite different!}
     \end{itemize}
-\item \alert{glaciation} is the glacier-covered, time-dependent 2D domain
-\item the \alert{glacier margin} is a free boundary
+\item \alert{glaciation} means the glacier-covered, time-dependent 2D domain
+\item<2> \alert{glacier margin} $=$ free boundary
     \begin{itemize}
-    \item[$\circ$] its location is determined by climate, bed topography, boundary stresses, and ice flow \emph{in combination}
-    \item[$\circ$] at small scale, fracture can dominate it
+    \item[$\circ$] location determined by climate, bed topography, boundary stresses, and ice flow \emph{in combination}
+    \item[$\circ$] fractures and crevasses often dominate at small scale
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -189,7 +194,7 @@
 \end{frame}
 
 
-\begin{frame}{qualitative observations (shown for present-day ice sheets)}
+\begin{frame}{qualitative observations}
 
 \includegraphics[width=\textwidth]{figs/ant-schoofhewitt2013.png}
 
@@ -207,7 +212,7 @@
 \end{frame}
 
 
-\begin{frame}{qualitative observations (shown for present-day ice sheets)}
+\begin{frame}{qualitative observations}
 
 \begin{columns}
 \begin{column}{0.6\textwidth}
