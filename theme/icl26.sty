@@ -92,6 +92,12 @@
   \inserttocsection\par}
 \setbeamertemplate{section in toc shaded}[default][25]
 \setbeamerfont{section in toc}{size=\large}
+% subsections: blue like sections, labelled a) b) ..., indented 1em past section titles
+\setbeamercolor{subsection in toc}{parent=section in toc}
+\setbeamertemplate{subsection in toc}{%
+  \leavevmode{\usebeamerfont{section in toc}\hspace*{2.6em}}%
+  \@alph{\inserttocsubsectionnumber})\ \inserttocsubsection\par}
+\setbeamertemplate{subsection in toc shaded}[default][25]
 
 % ---------- misc ----------
 \RequirePackage{appendixnumberbeamer}  % backup slides not counted in n / N
