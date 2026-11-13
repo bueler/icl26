@@ -73,7 +73,7 @@
 
 \title{The mathematical problem of glaciation}
 
-\subtitle{and a little bit of its numerics}
+\subtitle{and a bit of its numerics}
 
 \author{Ed Bueler}
 
@@ -340,7 +340,7 @@ s - b &\ge 0 \\
 \end{align*}
 
     \begin{itemize}
-    \item[$\lc$] assuming: $\bu|_s$ is extended by zero to ice-free land
+    \item[$\lc$] assuming: \,\alert{$\bu|_s$ is extended by zero to ice-free land}
     \item[$\lc$] at ice-free locations ($s=b$, $\bu|_s=\bzero$) we have $a\le 0$
     \end{itemize}
 \item this is an \alert{obstacle problem}, with $b$ as the obstacle
@@ -352,28 +352,27 @@ s - b &\ge 0 \\
 
 \hfill \includegraphics[width=0.35\textwidth]{figs/notation2.pdf}
 
-\vspace{-12mm}
+\vspace{-15mm}
 \begin{itemize}
-\item using thickness $H(t,x)=s(t,x)-b(x)$?
-\item define \alert{ice flux} $\bq(t,x)=\int_{b(x)}^{s(t,x)} \bU(t,x,z)\,dz$
-    \begin{itemize}
-    \item[$\lc$] $\bU$ is the horizontal ice velocity within $\Lambda(t)$
-    \end{itemize}
-\item again an NCP on $[0,T]\times\Omega$:
+\item using thickness $H(t,x)=s(t,x)-b(x)$
+\item $\bU=$ (horizontal ice velocity in $\Lambda(t)$)
+\item define the \alert{ice flux}:
+$$\alert{\bq(t,x)=\int_{b(x)}^{s(t,x)} \bU(t,x,z)\,dz} \hspace{30mm}$$
+\item again an NCP, an obstacle problem:
 
-\vspace{-10mm}
+\vspace{-5mm}
+{\small
 \begin{align*}
 H &\ge 0 \\
 \frac{\partial H}{\partial t} + \Div\bq - a &\ge 0 \\
 H\left(\frac{\partial H}{\partial t} + \Div\bq - a\right) &= 0
 \end{align*}
+}
 
     \begin{itemize}
-    \item[$\lc$] but at ice-free locations ($H=0$, $\bq=\bzero$) we have $a\le 0$
-    \item[$\lc$] again an obstacle problem
+    \item[$\lc$] \alert{where ice is present mass is conserved}: \,$\frac{\partial H}{\partial t} + \Div\bq - a = 0$
+    \item[$\lc$] at ice-free locations ($H=0$, $\bq=\bzero$) we have $a\le 0$
     \end{itemize}
-
-\item[$\lc$] \alert{where ice is present mass is conserved}: $\displaystyle \frac{\partial H}{\partial t} + \Div\bq = a$
 \end{itemize}
 \end{frame}
 
@@ -399,88 +398,74 @@ data from Morlighem et al.~2017}
 \end{frame}
 
 
-\begin{frame}{as VI weak forms}
+\begin{frame}{translation: glaciers $\leftrightarrow$ optimization}
 
-FIXME
-\end{frame}
-
-
-\begin{frame}{translation}
-
-FIXME two column equivalence: glaciated area $\iff$ inactive set,  ice-free area $\iff$ active, glacier margin $\iff$ free boundary
-\end{frame}
-
-
-\begin{frame}{fundamental equivalence: weak surface motion equals weak flux}
-
-FIXME by incompressibility
-
+\begin{columns}
+\begin{column}{0.63\textwidth}
 \begin{itemize}
-\item define the \alert{surface motion map} \quad $\Phi(s)[\omega]=-\int_\Omega \bu|_s\cdot\bn_s\,\omega\,dx$
-\item extend $\omega$ to the ice domain $\Lambda(b,s)=\{b<z<s\}$ by $\tilde\omega(x,z)=\omega(x)$, and assume $\bu=\bzero$ on the base
+\item some language from inequality-constrained optimization is useful
+
+\begin{definition}
+An inequality constraint ``$f(x)\ge c$'' is \alert{active} on $\{x\,:\,f(x)=c\}$ and \alert{inactive} otherwise, on $\{x\,:\,f(x)>c\}$.
+\end{definition}
+
+\medskip
+\item<2> equivalences for map-plane subsets of $\Omega$, at $t$:
 \end{itemize}
+\end{column}
+\begin{column}{0.37\textwidth}
+\hfill \includegraphics<1->[width=\textwidth]{figs/notation2.pdf}
 
-\vspace{-2mm}
-\begin{align*}
-\Phi(s)[\omega] &= -\int_{\partial\Lambda(b,s)} \tilde\omega\,\bu\cdot\hat\bn\,dS && \afcomm{only the top contributes; $\bn_s\,dx=\hat\bn\,dS$} \\
-\uncover<2->{&= -\int_{\Lambda(b,s)} \Div\left(\tilde\omega\,\bu\right) && \afcomm{divergence theorem} \\}
-\uncover<3->{&= -\int_{\Lambda(b,s)} \bu\cdot\grad\tilde\omega && \afcomm{\alert{incompressibility} $\Div\bu=0$} \\}
-\uncover<3->{&= -\int_\Omega \left(\int_b^s \bU\,dz\right)\cdot\grad\omega\,dx = \alert{-\int_\Omega \bq(s)\cdot\grad\omega} && \afcomm{$\tilde\omega$ independent of $z$}}
-\end{align*}
+\vspace{10mm}
+\vspace{0pt}
+\end{column}
+\end{columns}
 
-\uncover<3->{
-\begin{block}{conclusion}
-since $\sigma-s=\eta-H$ and $s^n-s^{n-1}=H^n-H^{n-1}$, the surface and thickness VIs are \alert{the same problem}
-\end{block}
+\onslide<2>{
+\begin{center}
+\begin{tabular}{rcl|c}
+glaciology     &                   & optimization  & subset \\ \hline
+glaciated area & $\leftrightarrow$ & inactive set  & $\Lambda(t)^\perp${\Large \strut} \\
+ice-free area  & $\leftrightarrow$ & active set    & \,\,$\Omega \setminus \Lambda(t)^\perp${\large \strut} \\
+glacier margin & $\leftrightarrow$ & free boundary & \,\, $\Omega \cap \partial\Lambda(t)^\perp${\large \strut}
+\end{tabular}
+\end{center}
 }
 \end{frame}
 
 
-\section{well-posedness (coercivity?)}
-
-\begin{frame}{thickness form: an implicit step is a VI}
+\begin{frame}{equivalence: weak surface motion equals weak flux divergence}
 
 \begin{itemize}
-\item apply backward Euler, with $a^n$ the average climate over the step
+\item recall equivalent equations, applying only on the inactive set $\Lambda(t)^\perp$:
+   $$\frac{\partial s}{\partial t} + \bu|_s \cdot \bn_s - a = 0 \qquad \leftrightarrow \qquad \frac{\partial H}{\partial t} + \Div\bq - a=0$$
 \end{itemize}
 
-\begin{definition}[B 2021]
-let $\cX=W_0^{1,p}(\Omega)$ and $\cK=\{\eta\in\cX : \eta\ge 0\}$; the \alert{time-step problem} seeks $H^n\in\cK$ so that
-    $$\int_\Omega \left(H^n - H^{n-1} - \Delta t\, a^n\right)(\eta-H^n) \alert{\,-\, \Delta t \int_\Omega \bq(H^n)\cdot\grad(\eta-H^n)} \ge 0 \quad \text{for all } \eta\in\cK$$
-\end{definition}
+\begin{lemma}
+If \,\alert{$\bu|_b\cdot \hat\bn = 0$} (non-penetrating at base) then for test function $\omega(x)$ on $\Omega$:
 
-\begin{itemize}
-\item the margin \alert{is not an input}, and the stress balance is hidden in the flux term
-\end{itemize}
+\hspace{30mm} $\displaystyle \alert{\int_\Omega (\bu|_s\cdot \bn_s)\, \omega \,dx = \int_\Omega \bq \cdot \grad \omega\,dx}$.
+\end{lemma}
 
-\begin{theorem}[B 2021]
-suppose $\bq=\bq(\grad v,v,x)$ is a \alert{local} flux, with standard assumptions, and $a^n$ does not depend on thickness; if for some $c>0$, $r>1$,
-\,$\int_\Omega \left(\bq(v)-\bq(w)\right)\cdot\grad(v-w) \le -c\|v-w\|_{W^{1,p}}^r$ on $\cK$,
-then the problem has a unique solution
-\end{theorem}
+\pause
+{\footnotesize
+\begin{proof}
+Extend $\omega(x)=\tilde\omega(x,z)$ to $\Lambda(t)\subset \RR^3$.  Recall \alert{$\bn_s = \left<-\grad s,1\right>$}.  Then
+\begin{align*}
+\int_\Omega (\bu|_s\cdot \bn_s)\, \omega\,dx &= \int_{\partial\Lambda(t)} \tilde\omega\,\bu\cdot\hat\bn\,ds && \afcomm{only top contributes;\, \alert{$\bn_s\,dx=\hat\bn\,ds$}} \\
+&= \int_{\Lambda(t)} \Div\left(\tilde\omega\,\bu\right)\,dx\,dz = \int_{\Lambda(t)} \bu\cdot\grad\tilde\omega\,dx\,dz && \afcomm{div theorem;\, \alert{incompressibility}} \\
+&= \int_\Omega \bq \cdot\grad\omega\,dx && \afcomm{$\tilde\omega$ indep of $z$;\, def of $\bq$} \hspace{15mm} \qedhere
+\end{align*}
+\end{proof}
+}
 \end{frame}
 
 
-\begin{frame}{surface elevation form: an implicit step is also a VI}
+\section{well-posedness, and coercivity confusion}
 
-\begin{itemize}
-\item the surface kinematical equation (SKE) says that the surface is moved by the ice velocity and the climate:
-    $$\frac{\partial s}{\partial t} - \bu|_s\cdot\bn_s - a = 0 \qquad \bn_s=\left<-\grad s,1\right>$$
-\item extend the surface velocity trace $\bu|_s$ by zero to bare ground; again the complete statement is an NCP: \quad $s-b\ge 0$, \quad residual $\ge 0$, \quad product $=0$
-\end{itemize}
+\subsection{shallow ice approximation}
 
-\begin{definition}[B 2026]
-let $\cK=\{\sigma\in\cX : \sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{\partial\Omega}\}$ and $\ell^n=s^{n-1}+\Delta t\,a^n$; the \alert{implicit time-step problem} seeks $s=s^n\in\cK$ so that
-    $$\int_\Omega \left(s - \Delta t\,\bu|_s\cdot\bn_s - \ell^n\right)(\sigma-s) \ge 0 \quad \text{for all } \sigma\in\cK$$
-\end{definition}
-
-\begin{itemize}
-\item derivation: on $\{s>b\}$ the integrand is zero; on $\{s=b\}$ the residual $b-\ell^n$ and $\sigma-b$ are both $\ge 0$
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{shallow ice approximation (SIA): flux from a formula}
+\begin{frame}{shallow ice approximation (SIA): velocity and flux from a formula}
 
 \begin{itemize}
 \item in the small aspect-ratio limit, with no sliding and isothermal ice, Glen exponent $\nn\approx 3$, the flux is \alert{local}:
@@ -491,6 +476,44 @@ let $\cK=\{\sigma\in\cX : \sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{
     $$\frac{\partial}{\partial t}\left(w^{1/m}\right) - \mu \Div\left(|\grad w|^{\pp-2}\grad w\right) - a \ge 0$$
 \item if the bed is not flat, there is a solution-dependent ``tilt'': \, $\grad w \to \grad w - \Phi_b(w)$
 \item this is the only place where we have well-posedness theorems for glacier geometry
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Jouvet \& B (2012): bumpy 2D, steady}
+
+FIXME steady
+
+\begin{withpeople}{\photo[13mm]{figs/people/gjouvet.png}{G.~Jouvet}}
+\begin{theorem}[Jouvet \& B 2012]
+for $\Omega\subset\RR^2$, $\pp>2$, general bed $b\in W^{1,\pp}(\Omega)$, plus sliding, variable softness, and elevation-dependent $a$, the steady SIA as a VI over $\cK=\{v\in W_0^{1,\pp}(\Omega):v\ge 0\}$,
+    $$\int_\Omega \left(\mu(x,w)|\grad w-\Phi_b(x,w)|^{\pp-2}\left(\grad w-\Phi_b(x,w)\right) - \Psi(x,w)\right)\cdot\grad(v-w) \ge \int_\Omega \alpha(x,w)\,(v-w)$$
+for all $v\in\cK$, has \alert{at least one solution}, and every solution satisfies $\|w\|_{W^{1,\pp}}<C$
+\end{theorem}
+
+\begin{itemize}
+\item proof: a fixed point argument; freezing the nonlinearities gives a monotone problem
+\item uniqueness in the flat, no-sliding, elevation-independent case (convex minimization)
+\item for general beds: \alert{uniqueness left open}
+\item steady state corresponds to $\Delta t\to\infty$
+\end{itemize}
+\end{withpeople}
+\end{frame}
+
+
+\begin{frame}{uniqueness fails for steady states on bumpy beds}
+
+\centerline{\includegraphics[width=0.38\textwidth]{figs/filled.pdf} \quad \includegraphics[width=0.38\textwidth]{figs/icefree.pdf}}
+\figcite{$s_1$ fills basins with flat ice, $s_2=b$ is ice-free; from B (2026), Appendix B}
+
+\begin{proposition}[B 2026]
+let $b$ be smooth with strict local minima, and let $a=0$ on the basins and $a\le 0$ elsewhere; then the steady glacier model, in \alert{any} stress balance for which flat ice does not flow, has more than one solution
+\end{proposition}
+
+\begin{itemize}
+\item proof: both $s_1,s_2$ have $\bu|_{s_i}=\bzero$, so both solve $s-b\ge 0$, \, $-\bu|_s\cdot\bn_s\ge 0$, \, complementarity
+\item resolves the open question, for elevation-\emph{in}dependent climates; generally infinitely many solutions
+\item consequence: the surface motion map is \alert{not strictly monotone}
 \end{itemize}
 \end{frame}
 
@@ -538,42 +561,6 @@ for $\Omega\subset\RR^2$ and $2.8\le\pp\le 5$, under the assumptions below, a ti
 \end{frame}
 
 
-\begin{frame}{Jouvet \& B (2012): bumpy 2D, steady}
-
-\begin{withpeople}{\photo[13mm]{figs/people/gjouvet.png}{G.~Jouvet}}
-\begin{theorem}[Jouvet \& B 2012]
-for $\Omega\subset\RR^2$, $\pp>2$, general bed $b\in W^{1,\pp}(\Omega)$, plus sliding, variable softness, and elevation-dependent $a$, the steady SIA as a VI over $\cK=\{v\in W_0^{1,\pp}(\Omega):v\ge 0\}$,
-    $$\int_\Omega \left(\mu(x,w)|\grad w-\Phi_b(x,w)|^{\pp-2}\left(\grad w-\Phi_b(x,w)\right) - \Psi(x,w)\right)\cdot\grad(v-w) \ge \int_\Omega \alpha(x,w)\,(v-w)$$
-for all $v\in\cK$, has \alert{at least one solution}, and every solution satisfies $\|w\|_{W^{1,\pp}}<C$
-\end{theorem}
-
-\begin{itemize}
-\item proof: a fixed point argument; freezing the nonlinearities gives a monotone problem
-\item uniqueness in the flat, no-sliding, elevation-independent case (convex minimization)
-\item for general beds: \alert{uniqueness left open}
-\item steady state corresponds to $\Delta t\to\infty$
-\end{itemize}
-\end{withpeople}
-\end{frame}
-
-
-\begin{frame}{uniqueness fails for steady states on bumpy beds}
-
-\centerline{\includegraphics[width=0.38\textwidth]{figs/filled.pdf} \quad \includegraphics[width=0.38\textwidth]{figs/icefree.pdf}}
-\figcite{$s_1$ fills basins with flat ice, $s_2=b$ is ice-free; from B (2026), Appendix B}
-
-\begin{proposition}[B 2026]
-let $b$ be smooth with strict local minima, and let $a=0$ on the basins and $a\le 0$ elsewhere; then the steady glacier model, in \alert{any} stress balance for which flat ice does not flow, has more than one solution
-\end{proposition}
-
-\begin{itemize}
-\item proof: both $s_1,s_2$ have $\bu|_{s_i}=\bzero$, so both solve $s-b\ge 0$, \, $-\bu|_s\cdot\bn_s\ge 0$, \, complementarity
-\item resolves the open question, for elevation-\emph{in}dependent climates; generally infinitely many solutions
-\item consequence: the surface motion map is \alert{not strictly monotone}
-\end{itemize}
-\end{frame}
-
-
 \begin{frame}{summary of SIA well-posedness}
 
 \begin{center}
@@ -604,6 +591,49 @@ B (2026), App.~B & any & bumpy & steady & -- & \alert{no} \\
 \end{itemize}
 \end{frame}
 
+
+\subsection{surface-Stokes}
+
+\begin{frame}{thickness form: an implicit step is a VI}
+
+\begin{itemize}
+\item apply backward Euler, with $a^n$ the average climate over the step
+\end{itemize}
+
+\begin{definition}[B 2021]
+let $\cX=W_0^{1,p}(\Omega)$ and $\cK=\{\eta\in\cX : \eta\ge 0\}$; the \alert{time-step problem} seeks $H^n\in\cK$ so that
+    $$\int_\Omega \left(H^n - H^{n-1} - \Delta t\, a^n\right)(\eta-H^n) \alert{\,-\, \Delta t \int_\Omega \bq(H^n)\cdot\grad(\eta-H^n)} \ge 0 \quad \text{for all } \eta\in\cK$$
+\end{definition}
+
+\begin{itemize}
+\item the margin \alert{is not an input}, and the stress balance is hidden in the flux term
+\end{itemize}
+
+\begin{theorem}[B 2021]
+suppose $\bq=\bq(\grad v,v,x)$ is a \alert{local} flux, with standard assumptions, and $a^n$ does not depend on thickness; if for some $c>0$, $r>1$,
+\,$\int_\Omega \left(\bq(v)-\bq(w)\right)\cdot\grad(v-w) \le -c\|v-w\|_{W^{1,p}}^r$ on $\cK$,
+then the problem has a unique solution
+\end{theorem}
+\end{frame}
+
+
+\begin{frame}{surface elevation form: an implicit step is also a VI}
+
+\begin{itemize}
+\item the surface kinematical equation (SKE) says that the surface is moved by the ice velocity and the climate:
+    $$\frac{\partial s}{\partial t} - \bu|_s\cdot\bn_s - a = 0 \qquad \bn_s=\left<-\grad s,1\right>$$
+\item extend the surface velocity trace $\bu|_s$ by zero to bare ground; again the complete statement is an NCP: \quad $s-b\ge 0$, \quad residual $\ge 0$, \quad product $=0$
+\end{itemize}
+
+\begin{definition}[B 2026]
+let $\cK=\{\sigma\in\cX : \sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{\partial\Omega}\}$ and $\ell^n=s^{n-1}+\Delta t\,a^n$; the \alert{implicit time-step problem} seeks $s=s^n\in\cK$ so that
+    $$\int_\Omega \left(s - \Delta t\,\bu|_s\cdot\bn_s - \ell^n\right)(\sigma-s) \ge 0 \quad \text{for all } \sigma\in\cK$$
+\end{definition}
+
+\begin{itemize}
+\item derivation: on $\{s>b\}$ the integrand is zero; on $\{s=b\}$ the residual $b-\ell^n$ and $\sigma-b$ are both $\ge 0$
+\end{itemize}
+\end{frame}
 
 \begin{frame}{non-shallow: Stokes on the unknown domain}
 
@@ -783,7 +813,7 @@ assume the conjectures, and that $s\in\cK$, $s_h\in\cK_h$ solve the regularized 
 \end{frame}
 
 
-\section{state of play: explicit vs implicit?}
+\section{state of play: explicit vs implicit}
 
 \begin{frame}{the $L^2$ bound of Tominec et al (2026)}
 
