@@ -114,14 +114,14 @@
 \begin{tikzpicture}
   \node[anchor=south west,inner sep=0] (map) {\includegraphics[height=0.76\textheight]{figs/nh-batchelor2019.png}};
   \begin{scope}[x={(map.south east)},y={(map.north west)}]
-    \fill[icAccent] (0.494,0.057) circle (1.8pt);
+    \fill[icAccent] (0.494,0.045) circle (1.8pt);
     \node[icAccent,font=\footnotesize\bfseries,anchor=west] at (0.57,0.15) (lon) {London};
-    \draw[icAccent,thin] (lon.west) -- (0.494,0.057);
+    \draw[icAccent,thin] (lon.west) -- (0.494,0.045);
     \fill[icAccent] (0.382,0.762) circle (1.8pt);
-    \node[icAccent,font=\footnotesize\bfseries,anchor=west] at (0.43,0.66) (fbk) {Fairbanks};
-    \draw[icAccent,thin] (fbk.west) -- (0.382,0.762);
+    \node[icAccent,font=\footnotesize\bfseries,anchor=west] at (0.45,0.85) (fbk) {Fairbanks};
+    \draw[icAccent,thin] (0.45, 0.84) -- (0.382,0.762);
     \fill[icAccent] (0.500,0.503) circle (1.8pt);
-    \node[icAccent,font=\footnotesize\bfseries,anchor=west] at (0.60,0.42) (np) {North Pole};
+    \node[icAccent,font=\footnotesize\bfseries,anchor=west] at (0.57,0.42) (np) {North Pole};
     \draw[icAccent,thin] (np.west) -- (0.500,0.503);
   \end{scope}
 \end{tikzpicture}
@@ -176,9 +176,9 @@
 \end{column}
 \begin{column}{0.5\textwidth}
 \begin{itemize}
-\item a \alert{glacier} is a mass of water ice forming a very-viscous, gravity-driven flow
+\item a \alert{glacier} is a mass of water ice, as a very-viscous, gravity-driven flow
     \begin{itemize}
-    \item[$\circ$] ice from compressed snow
+    \item[$\circ$] formed from compressed snow
     \item[$\circ$] an \alert{ice sheet} is just a big, continent-scale glacier
     \item[$\circ$] \emph{sea ice is something quite different!}
     \end{itemize}
@@ -186,7 +186,8 @@
 \item<2> the \alert{glacier margin} is the free boundary of glaciation
     \begin{itemize}
     \item[$\circ$] location determined by combined effects of climate, bed topography, boundary stresses, and ice flow
-    \item[$\circ$] fractures and crevasses dominate margins at small scale
+    \item[$\circ$] fractures and crevasses \emph{may} dominate margins at small scale
+    \item[$\circ$] steeper surface slopes near margins
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -194,7 +195,7 @@
 \end{frame}
 
 
-\begin{frame}{qualitative observations}
+\begin{frame}{qualitative observations about ice sheets}
 
 \includegraphics[width=\textwidth]{figs/ant-schoofhewitt2013.png}
 
@@ -205,14 +206,17 @@
 
 \medskip
 \begin{itemize}
-\item large ice sheets are very thin
-\item smooth surface over rough bed
-\item relatively steep surface slopes near margins
+\item there are two present-day ice sheets: Antarctica (big!), Greenland (modest)
+
+\pause
+\item very thin
+\item smooth surface, often above a rough bed
+\item steeper surface slopes near margins
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{qualitative observations}
+\begin{frame}{qualitative observations about ice sheets}
 
 \begin{columns}
 \begin{column}{0.6\textwidth}
@@ -252,34 +256,34 @@ Aschwanden et al (2016), Nature Commun.~7, 10524
 
 \begin{frame}{notation for evolving glacier models}
 
-\hfill\includegraphics<1>[width=0.57\textwidth]{figs/notation1.pdf}%
-\includegraphics<2>[width=0.57\textwidth]{figs/notation2.pdf}
+\hfill\includegraphics<1>[width=0.54\textwidth]{figs/notation1.pdf}%
+\includegraphics<2>[width=0.54\textwidth]{figs/notation2.pdf}
 
 \begin{overprint}
 \onslide<1>
-\vspace{-10mm}
+\vspace{-8mm}
 
 \begin{itemize}
 \item fixed land domain \alert{$\Omega\subset\RR^2$}
     \begin{itemize}
     \item[$\lc$] $x = (x_1,x_2) \in \Omega$
-    \item[$\lc$] a subset of $\Omega$ is ice-covered
     \end{itemize}
-\item \alert{surface mass balance} $a(t,x)$, the climate seen by the glacier \hfill \grey{$\leftarrow$ data}
+\item \alert{surface mass balance} $a(t,x)$ \grey{[m$\,$a$^{-1}$;\, the climate as seen by the glacier]} \hfill \grey{$\leftarrow$ data}
     \begin{itemize}
-    \item[$\lc$] $a>0$ is accumulation of snow, and $a<0$ is ablation by melt
+    \item[$\lc$] $a>0$ is accumulation of snow
+    \item[$\lc$] $a<0$ is ablation by melt
     \item[$\lc$] assuming: $a$ is defined everywhere in $\Omega$, \emph{even where there is no ice}
     \end{itemize}
-\item \alert{bed elevation} $b(x)$ \hfill \grey{$\leftarrow$ data}
+\item \alert{bed elevation} $b(x)$ \grey{[m]} \hfill \grey{$\leftarrow$ data}
     \begin{itemize}
-    \item[$\lc$] also defined everywhere in $\Omega$
+    \item[$\lc$] defined everywhere in $\Omega$
     \end{itemize}
 \end{itemize}
 \onslide<2>
 \begin{itemize}
-\vspace{-3mm}
+\vspace{2mm}
 
-\item \alert{surface elevation} $s(t,x)$ \hfill \grey{$\leftarrow$ solution}
+\item \alert{surface elevation} $s(t,x)$ \grey{[m]} \hfill \grey{$\leftarrow$ solution}
     \begin{itemize}
     \item[$\lc$] equivalent geometry variable: \alert{thickness} $H(t,x)=s(t,x)-b(x)$
     \item[$\lc$] required:\, $\alert{s(t,x)\ge b(x)} \, \iff \, H(t,x)\ge 0$
@@ -297,25 +301,21 @@ Aschwanden et al (2016), Nature Commun.~7, 10524
 \begin{frame}{surface elevation view: how does the surface move?}
 
 \begin{itemize}
-\item at a point on the surface of the ice this is well-known
-    \begin{itemize}
-    \item[$\lc$] e.g.~apply pillbox mass-conservation argument?
-    \end{itemize}
-
 \item \alert{surface kinematical equation}:
 \begin{equation*}
-\frac{\partial s}{\partial t} + \bu|_s \cdot \bn_s - a = 0
+\frac{\partial s}{\partial t} + \bu|_s \cdot \bn_s = a
 \end{equation*}
 
     \begin{itemize}
-    \item[$\lc$] $\bu|_s$ is the \alert{surface trace of ice velocity}
-    \item[$\lc$] $\bn_s = \left<-\tfrac{\partial s}{\partial x_1}, -\tfrac{\partial s}{\partial x_1}, 1\right>$ is the upward \alert{surface normal vector}
+    \item[$\lc$] $\bu|_s$ is the \alert{surface trace of 3D ice velocity} \only<2>{\hfill \grey{$\leftarrow$ solution}}
+    \item[$\lc$] $\bn_s = \left<-\tfrac{\partial s}{\partial x_1}, -\tfrac{\partial s}{\partial x_1}, 1\right>$ is the upward \alert{surface normal vector} \only<2>{\hfill \grey{$\leftarrow$ solution}}
+    \item[$\lc$] e.g.~apply pillbox mass-conservation argument to derive
     \end{itemize}
 
 \medskip
 \pause
-\item this applies at $z=s(t,x)$ \alert{only if  $s(t,x) > b(x)$}
-\item it therefore \alert{cannot} describe the evolution of glaciation
+\item this equation applies at the \alert{non-material} surface $z=s(t,x)$ \alert{only if  $s(t,x) > b(x)$},
+\item so it \alert{cannot}, by itself, describe the evolution of glaciation
 \end{itemize}
 \end{frame}
 
@@ -326,13 +326,13 @@ Aschwanden et al (2016), Nature Commun.~7, 10524
 
 \vspace{-9mm}
 \begin{itemize}
-\item how does the glacier (and the glaciation) \alert{evolve}?
+\item Q: how does the glacier and the glaciation \alert{evolve}?
     \begin{itemize}
     \item[$\lc$] for the moment, ignoring the stress balance in $\Lambda(t)$
     \end{itemize}
 
 \pause
-\item via a \alert{nonlinear complementarity problem} (NCP) on $[0,T]\times\Omega$:
+\item A: via a \alert{nonlinear complementarity problem} (NCP) on $[0,T]\times\Omega$:
 \begin{align*}
 s - b &\ge 0 \\
 \frac{\partial s}{\partial t} + \bu|_s \cdot \bn_s - a &\ge 0 \\
@@ -341,9 +341,9 @@ s - b &\ge 0 \\
 
     \begin{itemize}
     \item[$\lc$] assuming: \,\alert{$\bu|_s$ is extended by zero to ice-free land}
-    \item[$\lc$] at ice-free locations ($s=b$, $\bu|_s=\bzero$) we have $a\le 0$
+    \item[$\lc$] at ice-free locations ($s=b$, $\partial s/\partial t=0$, $\bu|_s=\bzero$) we have $a\le 0$, ablation
     \end{itemize}
-\item this is an \alert{obstacle problem}, with $b$ as the obstacle
+\item this is an \alert{obstacle problem}, in strong form, with $b$ as the obstacle
 \end{itemize}
 \end{frame}
 
@@ -354,7 +354,9 @@ s - b &\ge 0 \\
 
 \vspace{-15mm}
 \begin{itemize}
-\item using thickness $H(t,x)=s(t,x)-b(x)$
+\item there is another view, equally valid,
+
+using thickness $H(t,x)=s(t,x)-b(x)$
 \item $\bU=$ (horizontal ice velocity in $\Lambda(t)$)
 \item define the \alert{ice flux}:
 $$\alert{\bq(t,x)=\int_{b(x)}^{s(t,x)} \bU(t,x,z)\,dz} \hspace{30mm}$$
@@ -371,7 +373,7 @@ H\left(\frac{\partial H}{\partial t} + \Div\bq - a\right) &= 0
 
     \begin{itemize}
     \item[$\lc$] \alert{where ice is present mass is conserved}: \,$\frac{\partial H}{\partial t} + \Div\bq - a = 0$
-    \item[$\lc$] at ice-free locations ($H=0$, $\bq=\bzero$) we have $a\le 0$
+    \item[$\lc$] at ice-free locations ($H=0$, $\partial H/\partial t = 0$, $\bq=\bzero$) we have $a\le 0$, ablation
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -392,7 +394,7 @@ data from Morlighem et al.~2017}
 
 \medskip
 \begin{itemize}
-\item \alert{ice flow causes surface $s(t,x)$ to become smoother}
+\item gravity-driven \alert{ice flow} causes the surface $s(t,x)$ to \alert{become smoother}
 \item meanwhile $H(t,x)=s(t,x)-b(x)$ inherits the (spatial) low regularity of the bed
 \end{itemize}
 \end{frame}
@@ -410,7 +412,7 @@ An inequality constraint ``$f(x)\ge c$'' is \alert{active} on $\{x\,:\,f(x)=c\}$
 \end{definition}
 
 \medskip
-\item<2> equivalences for map-plane subsets of $\Omega$, at $t$:
+\item<2> for map-plane subsets of $\Omega$, at $t$:
 \end{itemize}
 \end{column}
 \begin{column}{0.37\textwidth}
@@ -437,26 +439,25 @@ glacier margin & $\leftrightarrow$ & free boundary & \,\, $\Omega \cap \partial\
 \begin{frame}{equivalence: weak surface motion equals weak flux divergence}
 
 \begin{itemize}
-\item recall equivalent equations, applying only on the inactive set $\Lambda(t)^\perp$:
-   $$\frac{\partial s}{\partial t} + \bu|_s \cdot \bn_s - a = 0 \qquad \leftrightarrow \qquad \frac{\partial H}{\partial t} + \Div\bq - a=0$$
+\item recall equivalent equations, applying in the inactive set $\Lambda(t)^\perp$:
+   $$\frac{\partial s}{\partial t} + \bu|_s \cdot \bn_s = a \qquad \leftrightarrow \qquad \frac{\partial H}{\partial t} + \Div\bq = a$$
+\item I will call $-\bu|_s \cdot \bn_s$ the \alert{surface motion}
 \end{itemize}
 
 \begin{lemma}
-If \,\alert{$\bu|_b\cdot \hat\bn = 0$} (non-penetrating at base) then for test function $\omega(x)$ on $\Omega$:
+If ice is incompressible and if $\bu|_b\cdot \hat\bn = 0$ then for a test function $\omega(x)$ on $\Omega$:
 
 \hspace{30mm} $\displaystyle \alert{\int_\Omega (\bu|_s\cdot \bn_s)\, \omega \,dx = \int_\Omega \bq \cdot \grad \omega\,dx}$.
 \end{lemma}
 
 \pause
 {\footnotesize
-\begin{proof}
-Extend $\omega(x)=\tilde\omega(x,z)$ to $\Lambda(t)\subset \RR^3$.  Recall \alert{$\bn_s = \left<-\grad s,1\right>$}.  Then
+\noindent \textbf{proof.} \, Extend to $\Lambda(t)\subset \RR^3$:\, $\omega(x)=\tilde\omega(x,z)$.  Recall $\bn_s = \left<-\grad s,1\right>$.  Then
 \begin{align*}
 \int_\Omega (\bu|_s\cdot \bn_s)\, \omega\,dx &= \int_{\partial\Lambda(t)} \tilde\omega\,\bu\cdot\hat\bn\,ds && \afcomm{only top contributes;\, \alert{$\bn_s\,dx=\hat\bn\,ds$}} \\
 &= \int_{\Lambda(t)} \Div\left(\tilde\omega\,\bu\right)\,dx\,dz = \int_{\Lambda(t)} \bu\cdot\grad\tilde\omega\,dx\,dz && \afcomm{div theorem;\, \alert{incompressibility}} \\
-&= \int_\Omega \bq \cdot\grad\omega\,dx && \afcomm{$\tilde\omega$ indep of $z$;\, def of $\bq$} \hspace{15mm} \qedhere
+&= \int_\Omega \bq \cdot\grad\omega\,dx && \afcomm{$\tilde\omega$ indep of $z$;\, def of $\bq$} \hspace{15mm} \hfill \qed
 \end{align*}
-\end{proof}
 }
 \end{frame}
 

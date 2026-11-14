@@ -26,4 +26,4 @@ This lecture uses the existing slides from [stokes-ice-tutorial/](https://github
 
 ## lecture 4 on 17 November: The mathematical (and numerical) problem of glaciation
 
-TODO: well-posedness and extruded-mesh solvers.  Mine talks from glacier-fe-estimate/talk/UW26/
+TODO
