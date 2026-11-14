@@ -1,11 +1,17 @@
+all: talk4.pdf
+
 # build talk with lualatex; shared theme files and fonts live in ../theme/
 export TEXINPUTS := ../theme//:
 export OPENTYPEFONTS := ../theme/fonts//:
 
+# build talk with environment accessing matplotlib (e.g. venv-firedrake)
+figs/notation?.pdf: figs/stokesdomain.py
+	(cd figs/ && python3 stokesdomain.py)
+
 TALK := talk4
 LATEX := lualatex -shell-escape -interaction=nonstopmode -halt-on-error
 
-$(TALK).pdf: $(TALK).tex ../theme/icl26.sty $(wildcard figs/*) $(wildcard tikz/*.tex) references.tex
+$(TALK).pdf: $(TALK).tex ../theme/icl26.sty figs/notation?.pdf $(wildcard figs/*) $(wildcard tikz/*.tex) references.tex
 	$(LATEX) $(TALK) > /dev/null || (grep -A5 '^!' $(TALK).log; false)
 	$(LATEX) $(TALK) > /dev/null
 
