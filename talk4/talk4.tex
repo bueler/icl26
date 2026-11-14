@@ -466,7 +466,7 @@ If ice is incompressible and if $\bu|_b\cdot \hat\bn = 0$ then for a test functi
 \begin{align*}
 -\Div\left(2\nu(D\bu)D\bu\right)+\grad p &= \rhoi\bg && \text{in $\Lambda$} \qquad\qquad\quad \grey{\text{stress balance}} \\
 \Div\bu &= 0                                         && \text{in $\Lambda$} \qquad\qquad\quad \grey{\text{incompressible}} \\
-\left(2\nu D\bu-pI\right) \hat\bn &= \bzero && \text{on $\Gamma_s\subset\partial \Lambda$ \qquad \grey{stress free}} \\
+\left(2\nu(D\bu)D\bu-pI\right) \hat\bn &= \bzero && \text{on $\Gamma_s\subset\partial \Lambda$ \qquad \grey{stress free}} \\
 \bu &= \bzero && \text{on $\Gamma_b\subset\partial \Lambda$ \qquad \grey{#1}}
 \end{align*}
 }
@@ -489,7 +489,7 @@ If ice is incompressible and if $\bu|_b\cdot \hat\bn = 0$ then for a test functi
 \pause
 \vspace{-1mm}
 \begin{block}{fixed-domain Stokes well-posedness \grey{(Jouvet \& Rappaz 2011, for example)}}
-if $\Lambda$ is a bounded Lipschitz domain then there is a unique $(\bu,p)\in W^{1,\pp}(\Lambda;\RR^3)\times L^{\pp'}(\Lambda)$ solving the above
+If $\Lambda$ is a bounded Lipschitz domain then there is a unique $(\bu,p)\in W^{1,\pp}(\Lambda;\RR^3)\times L^{\pp'}(\Lambda)$ solving the above \alert{$\pp$-Stokes problem}.
 \end{block}
 
 \begin{itemize}
@@ -520,8 +520,7 @@ $$s - b \ge 0, \qquad
     \begin{itemize}
     \item[$\lc$] evolving state variables: \,\alert{$s,\bu,p$}
     \item[$\lc$] the Stokes block is an \alert{algebraic constraint} in the coupled evolution problem
-    \item[$\lc$] coupled problem is a \alert{differential-algebraic system with inequality constraints}
-    \item[$\lc$] implicit steps would seem to be natural
+    %\item[$\lc$] implicit steps would seem to be natural
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -532,7 +531,7 @@ $$s - b \ge 0, \qquad
 \begin{columns}
 \begin{column}{0.555\textwidth}
 \begin{block}{canonical glacier evolution model}
-\vspace{-2mm}
+\vspace{-4mm}
 
 {\small
 \begin{align*}
@@ -541,8 +540,8 @@ s - b &\ge 0 && \text{on $\Omega$} \\
 (s-b) \left(\frac{\partial s}{\partial t} + \bu|_s \cdot \bn_s - a\right) &= 0  && \text{on $\Omega$} \\
 -\Div\left(2\nu(D\bu)D\bu\right)+\grad p &= \rhoi\bg && \text{in $\Lambda(t)$} \\
 \Div\bu &= 0                                         && \text{in $\Lambda(t)$} \\
-\left(2\nu D\bu-pI\right) \hat\bn &= \bzero && \text{on $\Gamma_s(t)$} \\
-\bu &= \bzero && \text{on $\Gamma_b(t)$}
+\left(2\nu(D\bu)D\bu-pI\right) \hat\bn &= \bzero && \text{on $\Gamma_s(t)\subset \partial\Lambda(t)$} \\
+\bu &= \bzero && \text{on $\Gamma_b(t)\subset \partial\Lambda(t)$}
 \end{align*}
 }
 \end{block}
@@ -553,6 +552,14 @@ s - b &\ge 0 && \text{on $\Omega$} \\
 \vfill
 \end{column}
 \end{columns}
+
+\pause
+\medskip
+\begin{itemize}
+\small
+\item key definition and coupling:\, $\displaystyle \alert{\Lambda(t) = \left\{(x,z)\,:\,b(x) < z < s(t,x)\right\}}$
+\item coupled problem is a \alert{differential-algebraic system with inequality constraints}
+\end{itemize}
 \end{frame}
 
 
@@ -563,7 +570,7 @@ s - b &\ge 0 && \text{on $\Omega$} \\
 \begin{frame}{shallow ice approximation (SIA)}
 
 \begin{itemize}
-\item as for many fluid problems, the lubrication approximation was first historically
+\item first try, historically-speaking:\, the lubrication approximation
     \begin{itemize}
     \item[$\lc$] \alert{shallow ice approximation} evolution model \hfill \pfcomm{Fowler, Larson, Hutter, Halfar 1980s}
     \item[$\lc$] scales: $[L]$ horizontal extent, $[H]$ thickness
@@ -583,41 +590,55 @@ s - b &\ge 0 && \text{on $\Omega$} \\
     $$\frac{\partial s}{\partial t} - \Div\left(\gamma_0 (s-b)^{\nn+2} |\grad s|^{\nn-1}\grad s\right) = a$$
 
     \begin{itemize}
-    \item[$\lc$] this is a \alert{diffusion} for $s(t,x)$
+    \item[$\lc$] in the SIA, $s(t,x)$ solves a \alert{diffusion}
     \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{power transformation converts to $\pp$-Laplacian diffusion}
-
-FIXME write in $s$
+\begin{frame}{power transformation, $\pp$-Laplacian diffusion}
 
 \begin{itemize}
-\item if the bed is flat, the transformation $w=H^{m}$, $m=2(\nn+1)/\nn=8/3$, gives a $\pp$-Laplacian with $\pp=\nn+1=4$:
-    $$\frac{\partial}{\partial t}\left(w^{1/m}\right) - \mu \Div\left(|\grad w|^{\pp-2}\grad w\right) - a \ge 0$$
-\item if the bed is not flat, there is a solution-dependent ``tilt'': \, $\grad w \to \grad w - \Phi_b(w)$
-\item FIXME this is the only place where we have well-posedness theorems for glacier geometry
+\item SIA diffusion equation:
+    $$\frac{\partial s}{\partial t} - \Div\left(\gamma_0 (s-b)^{\nn+2} |\grad s|^{\nn-1}\grad s\right) = a$$
+
+\medskip
+\item in the flat bed case ($b=0$, so $s=H$) there is a \emph{tool} of long standing: \hfill \pfcomm{Raviart, 1969}
+
+\quad let $\alert{w=s^m}=H^m$ where $\alert{m}=2(\nn+1)/\nn \alert{\approx 8/3}$
+
+\medskip
+\item now the SIA is a \alert{p-Laplacian} diffusion with exponent $\alert{\qq}=\nn+1 \alert{\approx 4}$:
+    $$\frac{\partial (w^{1/m})}{\partial t} - \mu_0 \alert{\Div\left(|\grad w|^{\qq-2}\grad w\right)} = a$$
+
+    \begin{itemize}
+    \item[$\lc$] relatively accessible analysis (next slides)
+    \item[$\lc$] if $\grad b\ne 0$ then $w=(s-b)^m$ generates a solution-dependent ``tilt'': \hfill \pfcomm{Jouvet \& B, 2012}
+
+\quad $\grad w \to \grad w - \Phi(w,\grad b)$
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Calvo et al (2002): flat 1D, time-dependent}
+\begin{frame}{1D, flat bed: time-dependent SIA is well-posed}
 
-FIXME
+\begin{itemize}
+\item using $w=s^m$, for $b=0$ the problem is a parabolic obstacle (NCP) problem:
+    $$w\ge 0, \qquad F(w)\ge 0, \qquad w F(w) = 0$$
+with $\displaystyle F(w) = \frac{\partial (w^{1/m})}{\partial t} - \mu_0 \Div\left(|\grad w|^{\qq-2}\grad w\right) - a$
 
 \begin{theorem}[Calvo, D\'iaz, Durany, Schiavi, V\'azquez 2002]
-on a flat bed in one horizontal dimension, for bounded data $a$ and $w_0$, there is a unique bounded weak solution $w\in L^\pp(0,T;W_0^{1,\pp}(\Omega))$; for no sliding (or spatially-constant sliding) and $H_i=w_i^{1/m}$ we have the comparison
-    $$\int_\Omega [H_1(t)-H_2(t)]_+ \le \int_\Omega [H_1(0)-H_2(0)]_+ + \int_0^t\!\!\int_\Omega [a_1-a_2]_+$$
+For $\Omega\subset\RR^1$, bounded data $a(t,x)$, and $b=0$, there is a unique bounded weak solution $w\in L^\qq(0,T;W_0^{1,\qq}(\Omega))$.
 \end{theorem}
 
-\begin{itemize}
-\item the first place the problem is posed as an obstacle problem
+\pause
+\item \alert{first recognition of glacier evolution as an obstacle problem}
+\item proven qualities of solutions:
     \begin{itemize}
-    \item[$\lc$] the constraint is enforced by a multivalued term: \, $H_t - (\dots)_x + \beta(H) \ni a$
+    \item[$\lc$] in an ablating climate ($a<0$), the free boundary retreats, eventually causing $w=0$
+    \item[$\lc$] \alert{waiting time} is possible in advance: margin waits until slope rebuilds
     \end{itemize}
-\item the free boundary is proven to exist: in a strongly-ablating region, far enough from accumulation, $H=0$ after some time
-\item \alert{waiting time} property: a margin can stay put for a while, until its slope rebuilds
 \end{itemize}
 \end{frame}
 
