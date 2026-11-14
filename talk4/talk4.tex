@@ -462,9 +462,99 @@ If ice is incompressible and if $\bu|_b\cdot \hat\bn = 0$ then for a test functi
 \end{frame}
 
 
+\newcommand{\stokesblock}{%
+\begin{align*}
+-\Div\left(2\nu(D\bu)D\bu\right)+\grad p &= \rhoi\bg && \text{in $\Lambda$} \qquad\qquad\quad \grey{\text{stress balance}} \\
+\Div\bu &= 0                                         && \text{in $\Lambda$} \qquad\qquad\quad \grey{\text{incompressible}} \\
+\left(2\nu D\bu-pI\right)\bn_s &= \bzero && \text{on $\Gamma_s\subset\partial \Lambda$ \qquad \grey{stress free}} \\
+\bu &= \bzero && \text{on $\Gamma_b\subset\partial \Lambda$ \qquad \grey{non-sliding}}
+\end{align*}
+}
+
 \section{well-posedness, and coercivity confusion}
 
+\begin{frame}{momentum conservation: Stokes on domain $\Lambda(t)$ at fixed $t$}
+
+\begin{itemize}
+\item let \alert{$\pp = 1 + 1/\nn \approx 4/3$}, where $\nn\approx 3$ is \alert{Glen's exponent} for ice rheology
+\item $D\bu = 0.5 (\grad \bu + \grad \bu^\top)$ is the \alert{strain rate}
+\item fix $t$ and consider the ice domain $\Lambda=\Lambda(t)=\{(x,z):b<z<s\}$
+\item for the \alert{effective viscosity} $\nu(D\bu)=\nu_0 |D\bu|^{\pp-2}$,
+\end{itemize}
+
+\vspace{-4mm}
+{\small
+\stokesblock
+}
+
+\pause
+\vspace{-1mm}
+\begin{block}{fixed-domain theory \grey{(Jouvet \& Rappaz 2011, for example)}}
+if $\Lambda$ is a bounded Lipschitz domain then there is a unique $(\bu,p)\in W^{1,\pp}(\Lambda;\RR^3)\times L^{\pp'}(\Lambda)$ solving the above
+\end{block}
+
+\begin{itemize}
+\item a surface trace bound applies \pfcomm{B 2026}:\,$\int_{\Gamma_s}\big|\bu|_s\big|^\pp\,dS \le C$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{the surface-Stokes evolution model?}
+
+{\small
+\stokesblock
+}
+
+\begin{itemize}
+\item let \alert{$\pp = 1 + 1/\nn \approx 4/3$}, where $\nn\approx 3$ is \alert{Glen's exponent} for ice rheology
+\item $D\bu = 0.5 (\grad \bu + \grad \bu^\top)$ is the \alert{strain rate}
+\item fix $t$ and consider the ice domain $\Lambda=\Lambda(t)=\{(x,z):b<z<s\}$
+\item for the \alert{effective viscosity} $\nu(D\bu)=\nu_0 |D\bu|^{\pp-2}$,
+\end{itemize}
+
+\vspace{-4mm}
+{\small
+\begin{align*}
+-\Div\left(2\nu(D\bu)D\bu\right)+\grad p &= \rhoi\bg && \text{in $\Lambda$} \qquad\qquad\quad \grey{\text{stress balance}} \\
+\Div\bu &= 0                                         && \text{in $\Lambda$} \qquad\qquad\quad \grey{\text{incompressible}} \\
+\left(2\nu D\bu-pI\right)\bn_s &= \bzero && \text{on $\Gamma_s\subset\partial \Lambda$ \qquad \grey{stress free}} \\
+\bu &= \bzero && \text{on $\Gamma_b\subset\partial \Lambda$ \qquad \grey{non-sliding}}
+\end{align*}
+}
+
+\pause
+\vspace{-1mm}
+\begin{block}{fixed-domain theory \grey{(Jouvet \& Rappaz 2011, for example)}}
+if $\Lambda$ is a bounded Lipschitz domain then there is a unique $(\bu,p)\in W^{1,\pp}(\Lambda;\RR^3)\times L^{\pp'}(\Lambda)$ with $\bu=\bzero$ on $\Gamma_b$, and a surface trace bound applies \pfcomm{B 2026}:
+\,$\int_{\Gamma_s}\big|\bu|_s\big|^\pp\,dS \le C$
+\end{block}
+
+\begin{itemize}
+\item but the domain is \alert{not} fixed, and the surface is itself the solution
+\item no time derivative: Stokes is an \alert{algebraic} constraint on a free-boundary evolution \, $\implies$ \, a differential-algebraic system with inequality constraints, so implicit steps are natural
+\end{itemize}
+\end{frame}
+
+
 \subsection{shallow ice approximation}
+
+\begin{frame}{shallow ice approximation (SIA)}
+
+\begin{itemize}
+\item as with many fluid properties, the \alert{lubrication approximation} model was first historically
+\item scales: $[L]$ horizontal extent, $[H]$ thickness
+\item 
+\item in the small aspect-ratio limit, with no sliding and isothermal ice, Glen exponent $\nn\approx 3$, the flux is \alert{local}:
+    $$\bq = -\Gamma\, H^{\nn+2} |\grad s|^{\nn-1}\grad s, \qquad \Gamma = \frac{2A(\rho g)^\nn}{\nn+2}$$
+\item so thickness solves a \alert{degenerate, doubly-nonlinear} obstacle problem:
+    $$H\ge 0, \qquad \frac{\partial H}{\partial t} - \Div\left(\Gamma H^{\nn+2} |\grad (H+b)|^{\nn-1}\grad (H+b)\right) - a \ge 0, \qquad \text{complementarity}$$
+\item if the bed is flat, the transformation $w=H^{m}$, $m=2(\nn+1)/\nn=8/3$, gives a $\pp$-Laplacian with $\pp=\nn+1=4$:
+    $$\frac{\partial}{\partial t}\left(w^{1/m}\right) - \mu \Div\left(|\grad w|^{\pp-2}\grad w\right) - a \ge 0$$
+\item if the bed is not flat, there is a solution-dependent ``tilt'': \, $\grad w \to \grad w - \Phi_b(w)$
+\item this is the only place where we have well-posedness theorems for glacier geometry
+\end{itemize}
+\end{frame}
+
 
 \begin{frame}{shallow ice approximation (SIA): velocity and flux from a formula}
 
@@ -479,7 +569,6 @@ If ice is incompressible and if $\bu|_b\cdot \hat\bn = 0$ then for a test functi
 \item this is the only place where we have well-posedness theorems for glacier geometry
 \end{itemize}
 \end{frame}
-
 
 \begin{frame}{Jouvet \& B (2012): bumpy 2D, steady}
 
@@ -633,33 +722,6 @@ let $\cK=\{\sigma\in\cX : \sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{
 
 \begin{itemize}
 \item derivation: on $\{s>b\}$ the integrand is zero; on $\{s=b\}$ the residual $b-\ell^n$ and $\sigma-b$ are both $\ge 0$
-\end{itemize}
-\end{frame}
-
-\begin{frame}{non-shallow: Stokes on the unknown domain}
-
-\begin{itemize}
-\item on the ice domain $\Lambda(b,s)=\{b<z<s\}$, and with $\nu(D\bu)=\nu_\pp\left(|D\bu|^2+\mu_0\right)^{(\pp-2)/2}$, usually $\pp=4/3$:
-\end{itemize}
-
-\vspace{-2mm}
-{\small
-\begin{align*}
--\Div\left(2\nu(D\bu)D\bu\right)+\grad p &= \rhoi\bg, \quad \Div\bu = 0 && \text{in $\Lambda(b,s)$} \\
-\left(2\nu D\bu-pI\right)\bn_s &= \bzero && \text{on $\Gamma_s$, stress free} \\
-\bu &= \bzero && \text{on $\Gamma_b$, non-sliding}
-\end{align*}
-}
-
-\vspace{-3mm}
-\begin{block}{fixed-domain theory}
-if $\Lambda$ is a bounded Lipschitz domain then there is a unique $(\bu,p)\in W^{1,\pp}(\Lambda;\RR^3)\times L^{\pp'}(\Lambda)$ with $\bu=\bzero$ on $\Gamma_b$ \pfcomm{Jouvet \& Rappaz 2011}, and a surface trace bound applies \pfcomm{B 2026}:
-\,$\int_{\Gamma_s}\big|\bu|_s\big|^\pp\,dS \le C$
-\end{block}
-
-\begin{itemize}
-\item but the domain is \alert{not} fixed, and the surface is itself the solution
-\item no time derivative: Stokes is an \alert{algebraic} constraint on a free-boundary evolution \, $\implies$ \, a differential-algebraic system with inequality constraints, so implicit steps are natural
 \end{itemize}
 \end{frame}
 
