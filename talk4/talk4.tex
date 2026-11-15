@@ -36,6 +36,7 @@
 
 \newcommand{\RR}{{\mathbb{R}}}
 
+\newcommand{\mm}{\mathrm{m}}
 \newcommand{\nn}{\mathrm{n}}
 \newcommand{\pp}{\mathrm{p}}
 \newcommand{\qq}{\mathrm{q}}
@@ -474,7 +475,7 @@ If ice is incompressible and if $\bu|_b\cdot \hat\bn = 0$ then for a test functi
 
 \pause
 \vspace{-1mm}
-\begin{block}{fixed-domain Stokes well-posedness \grey{(Jouvet \& Rappaz 2011, for example)}}
+\begin{block}{fixed-domain Stokes well-posedness \grey{(Jouvet \& Rappaz 2011)}}
 If $\Lambda$ is a bounded Lipschitz domain then there is a unique $(\bu,p)\in W^{1,\pp}(\Lambda;\RR^3)\times L^{\pp'}(\Lambda)$ solving the above \alert{$\pp$-Stokes problem}.
 \end{block}
 
@@ -484,7 +485,7 @@ If $\Lambda$ is a bounded Lipschitz domain then there is a unique $(\bu,p)\in W^
 \end{frame}
 
 
-\begin{frame}{the surface-Stokes evolution model}
+\begin{frame}{we want a glacier evolution model}
 
 \begin{itemize}
 \item the Stokes block:
@@ -512,11 +513,11 @@ $$s - b \ge 0, \qquad
 \end{frame}
 
 
-\begin{frame}{the surface-Stokes evolution model}
+\begin{frame}{the canonical glacier evolution model}
 
 \begin{columns}
 \begin{column}{0.555\textwidth}
-\begin{block}{canonical glacier evolution model}
+\begin{block}{surface-Stokes model}
 \vspace{-4mm}
 
 {\small
@@ -539,7 +540,6 @@ s - b &\ge 0 && \text{on $\Omega$} \\
 \end{column}
 \end{columns}
 
-\pause
 \medskip
 \begin{itemize}
 \small
@@ -568,11 +568,11 @@ s - b &\ge 0 && \text{on $\Omega$} \\
     $$\hspace{35mm} \bq = -\underbrace{\gamma_0 \, (s-b)^{\nn+2} |\grad s|^{\nn-1}}_{\text{diffusivity } D}\, \grad s \hspace{20mm} \text{\afcomm{$\gamma>0$ constant}}$$
 
     \begin{itemize}
-    \item[$\lc$] \alert{ice flows downhill} in this model since $D>0$ \hfill \pfcomm{down $\grad s$, not $\grad H$!}
+    \item[$\lc$] \alert{ice flows downhill} in this model since $D>0$ \hfill \pfcomm{down $\grad s$; not necessarily down $\grad H$}
     \end{itemize}
 
 \pause
-\item so $s(t,x)$ solves a \alert{degenerate, doubly-nonlinear} obstacle problem for this PDE:
+\item so $s(t,x)$ solves a degenerate, doubly-nonlinear obstacle problem, with this PDE:
     $$\frac{\partial s}{\partial t} - \Div\left(\gamma_0 (s-b)^{\nn+2} |\grad s|^{\nn-1}\grad s\right) = a$$
 
     \begin{itemize}
@@ -582,110 +582,98 @@ s - b &\ge 0 && \text{on $\Omega$} \\
 \end{frame}
 
 
-\begin{frame}{power transformation, $\pp$-Laplacian diffusion}
+\begin{frame}{flat bed: well-posedness for 1D time-dependent SIA}
 
 \begin{itemize}
-\item SIA diffusion equation:
-    $$\frac{\partial s}{\partial t} - \Div\left(\gamma_0 (s-b)^{\nn+2} |\grad s|^{\nn-1}\grad s\right) = a$$
+\item for $b=0$, SIA evolution is a clean NCP:
+    $$s\ge 0, \qquad F(s)\ge 0, \qquad s F(s) = 0 \hspace{40mm}$$
+
+\vspace{-8mm}
+\hfill \grey{\scriptsize $\displaystyle \left[F(s) = \frac{\partial s}{\partial t} - \Div\left(\gamma_0 (s-b)^{\nn+2} |\grad s|^{\nn-1}\grad s\right) - a\right]$}
+\end{itemize}
 
 \medskip
-\item in the flat bed case ($b=0$, so $s=H$) there is a \emph{tool} of long standing: \hfill \pfcomm{Raviart, 1969}
+\begin{theorem}[Calvo, D\'iaz, Durany, Schiavi, V\'azquez 2002]
+Suppose $\Omega\subset\RR^1$, bounded data $a(t,x)$, and $b=0$.  For $\mm=2(\nn+1)/\nn \approx 8/3$, there is a unique bounded weak solution $s(t,x) \ge 0$, where \alert{$s^\mm \in L^\qq(0,T;W_0^{1,\qq}(\Omega))$ } for $\alert{\qq}=\nn+1\alert{\approx 4}$.
+\end{theorem}
 
-\quad let $\alert{w=s^m}=H^m$ where $\alert{m}=2(\nn+1)/\nn \alert{\approx 8/3}$
+{\small
+\noindent \textbf{proof idea.} Use Raviart (1970) power transformation $\alert{w=s^\mm}$ on doubly-nonlinear diffusion.  Converts surface motion into \alert{p-Laplacian} form:\, $\displaystyle (s-b)^{\nn+2} |\grad s|^{\nn-1}\grad s \to \Div\left(|\grad w|^{\qq-2}\grad w\right)$.
+}
 
 \medskip
-\item now the SIA is a \alert{p-Laplacian} diffusion with exponent $\alert{\qq}=\nn+1 \alert{\approx 4}$:
-    $$\frac{\partial (w^{1/m})}{\partial t} - \mu_0 \alert{\Div\left(|\grad w|^{\qq-2}\grad w\right)} = a$$
+\begin{itemize}
+\item also proved certain qualities: ablation implies retreat, ``waiting'' possible in advance
 
-    \begin{itemize}
-    \item[$\lc$] relatively accessible analysis (next slides)
-    \item[$\lc$] if $\grad b\ne 0$ then $w=(s-b)^m$ generates a solution-dependent ``tilt'': \hfill \pfcomm{Jouvet \& B, 2012}
-
-\quad $\grad w \to \grad w - \Phi(w,\grad b)$
-    \end{itemize}
+\medskip
+\item first recognition that \alert{glacier evolution is a (parabolic) obstacle problem}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{1D, flat bed: time-dependent SIA is well-posed}
+\begin{frame}{flat bed: existence for 2D time-dependent SIA \, (\emph{technical caveats})}
+
+\begin{withpeople}{\vspace{5mm} \photo{figs/people/ppiersanti.png}{P.~Piersanti} \photo{figs/people/rtemam.jpg}{R.~Temam}}
+\begin{theorem}[Piersanti \& Temam 2023]
+Suppose $\Omega\subset\RR^2$, $b=0$, $\qq>2$, and well-behaved $a(t,x)$.  Under technical conditions on solution regularity, and technical decrease condition on the iterates of the penalty scheme in the proof, there exists a weak solution $s(t,x)\ge 0$, again with $s^\mm \in L^\qq(0,T;W_0^{1,\qq}(\Omega))$.
+\end{theorem}
+\end{withpeople}
+
+\medskip
+\begin{itemize}
+\item the technical conditions are not very natural
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{general bed: existence for 2D steady SIA}
 
 \begin{itemize}
-\item using $w=s^m$, for $b=0$ the problem is a parabolic obstacle (NCP) problem:
-    $$w\ge 0, \qquad F(w)\ge 0, \qquad w F(w) = 0$$
-with $\displaystyle F(w) = \frac{\partial (w^{1/m})}{\partial t} - \mu_0 \Div\left(|\grad w|^{\qq-2}\grad w\right) - a$
+\item if $\grad b\ne 0$ then Raviart's power transformation $w=(s-b)^\mm=H^\mm$ implies a \alert{solution-dependent ``tilt''} \, $\grad w \to \grad w + c w^{(\qq+1)/(2\qq)} \grad b$ \, inside the diffusion
+\end{itemize}
 
-\begin{theorem}[Calvo, D\'iaz, Durany, Schiavi, V\'azquez 2002]
-For $\Omega\subset\RR^1$, bounded data $a(t,x)$, and $b=0$, there is a unique bounded weak solution $w\in L^\qq(0,T;W_0^{1,\qq}(\Omega))$.
+\begin{withpeople}{\vspace{5mm} \photo[13mm]{figs/people/gjouvet.png}{G.~Jouvet}}
+\begin{theorem}[Jouvet \& B 2012]
+Suppose $\Omega\subset\RR^2$, $\qq>2$, \alert{general bed $b\in W^{1,\qq}(\Omega)$}, and bounded $a(x)$.  There exists a weak thickness solution $H(x)\ge 0$ to the \alert{steady} SIA obstacle problem, with $H^\mm \in W_0^{1,\qq}(\Omega)$.
 \end{theorem}
+\end{withpeople}
+
+\medskip
+{\small
+\noindent \textbf{proof ideas.} Use Raviart (1970) power transformation, freeze the nonlinearities to create monotone variational inequality problems, nontrivial \emph{a priori} bound on the iterates \pfcomm{Guillaume!}, apply Schaefer fixed point theorem.
+}
+
+\medskip
+\begin{itemize}
+\item proof technique permits various bells \& whistles: sliding, variable softness, elevation-dependent $a$
 
 \pause
-\item \alert{first recognition of glacier evolution as an obstacle problem}
-\item proven qualities of solutions:
+\medskip
+\item \alert{uniqueness left open}
     \begin{itemize}
-    \item[$\lc$] in an ablating climate ($a<0$), the free boundary retreats, eventually causing $w=0$
-    \item[$\lc$] \alert{waiting time} is possible in advance: margin waits until slope rebuilds
+    \item[$\lc$] but it holds in the $b=0$, non-sliding, elevation-independent case
     \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{Piersanti \& Temam (2023): flat 2D, time-dependent}
+\begin{frame}{general bed with dips: steady-state uniqueness fails where $a=0$}
 
-\begin{withpeople}{\photo{figs/people/ppiersanti.png}{P.~Piersanti} \photo{figs/people/rtemam.jpg}{R.~Temam}}
-\begin{theorem}[Piersanti \& Temam 2023]
-for $\Omega\subset\RR^2$ and $2.8\le\pp\le 5$, under the assumptions below, a time-dependent VI over $\cK=\{v\in W_0^{1,\pp}(\Omega):v\ge 0\}$ has a solution, by a semi-discrete scheme and penalty method
-\end{theorem}
+\centerline{\includegraphics[width=0.33\textwidth]{figs/filled.pdf} \quad \includegraphics[width=0.33\textwidth]{figs/icefree.pdf}}
+\figcite{$s_1$ fills basins with flat ice, $s_2=b$ is ice-free}
+
+\begin{proposition}[B 2026, App.~B]
+For $\Omega \subset \RR^d$, if $b$ is continuous \alert{with strict local minima}, and then there exist climates $a(x)$, with \alert{$a=0$ over the dips}, so that there are multiple steady solutions for $s(x)$.
+\end{proposition}
+
+{\small
+\noindent \textbf{proof.} Both $s_1,s_2$ have $\bu|_{s_i}=\bzero$, so both solve NCP when $a=0$ covers the dip:
+   $$\hspace{35mm} s-b\ge 0, \quad -\bu|_s\cdot\bn_s\ge 0, \quad (s-b)(\bu|_s\cdot\bn_s)=0. \hspace{35mm} \qed$$
+}
 
 \medskip
 \begin{itemize}
-\item ordinary assumptions: flat bed, no sliding, height-independent $A$ and $a$
-\item \alert{less ordinary:} a ``decrease condition'' on the \alert{iterates of the penalized scheme}, for all $N\ge 1$:
-    $$\left\{w_{\ell}^{n+1,k}\right\}_- \ge \left\{w_{\ell}^{n,k}\right\}_-$$
-    \begin{itemize}
-    \item[$\lc$] not on data; the authors associate it to a regime of pure melting
-    \item[$\lc$] also a regularity condition on the penalized solutions
-    \item[$\lc$] the authors: not clear whether existence holds without these
-    \end{itemize}
-\item uniqueness, continuous dependence, regularity: deferred to future work
-\end{itemize}
-\end{withpeople}
-\end{frame}
-
-
-\begin{frame}{Jouvet \& B (2012): bumpy 2D, steady}
-
-FIXME steady
-
-\begin{withpeople}{\photo[13mm]{figs/people/gjouvet.png}{G.~Jouvet}}
-\begin{theorem}[Jouvet \& B 2012]
-for $\Omega\subset\RR^2$, $\pp>2$, general bed $b\in W^{1,\pp}(\Omega)$, plus sliding, variable softness, and elevation-dependent $a$, the steady SIA as a VI over $\cK=\{v\in W_0^{1,\pp}(\Omega):v\ge 0\}$,
-    $$\int_\Omega \left(\mu(x,w)|\grad w-\Phi_b(x,w)|^{\pp-2}\left(\grad w-\Phi_b(x,w)\right) - \Psi(x,w)\right)\cdot\grad(v-w) \ge \int_\Omega \alpha(x,w)\,(v-w)$$
-for all $v\in\cK$, has \alert{at least one solution}, and every solution satisfies $\|w\|_{W^{1,\pp}}<C$
-\end{theorem}
-
-\begin{itemize}
-\item proof: a fixed point argument; freezing the nonlinearities gives a monotone problem
-\item uniqueness in the flat, no-sliding, elevation-independent case (convex minimization)
-\item for general beds: \alert{uniqueness left open}
-\item steady state corresponds to $\Delta t\to\infty$
-\end{itemize}
-\end{withpeople}
-\end{frame}
-
-
-\begin{frame}{uniqueness fails for steady states on bumpy beds}
-
-\centerline{\includegraphics[width=0.38\textwidth]{figs/filled.pdf} \quad \includegraphics[width=0.38\textwidth]{figs/icefree.pdf}}
-\figcite{$s_1$ fills basins with flat ice, $s_2=b$ is ice-free; from B (2026), Appendix B}
-
-\begin{proposition}[B 2026]
-let $b$ be smooth with strict local minima, and let $a=0$ on the basins and $a\le 0$ elsewhere; then the steady glacier model, in \alert{any} stress balance for which flat ice does not flow, has more than one solution
-\end{proposition}
-
-\begin{itemize}
-\item proof: both $s_1,s_2$ have $\bu|_{s_i}=\bzero$, so both solve $s-b\ge 0$, \, $-\bu|_s\cdot\bn_s\ge 0$, \, complementarity
-\item resolves the open question, for elevation-\emph{in}dependent climates; generally infinitely many solutions
-\item consequence: the surface motion map is \alert{not strictly monotone}
+\item underlying observation: the surface motion $\Phi(s) = -\bu|_s\cdot\bn_s$ is \alert{not strictly monotone} as a function of $s$
 \end{itemize}
 \end{frame}
 
@@ -695,34 +683,31 @@ let $b$ be smooth with strict local minima, and let $a=0$ on the basins and $a\l
 \begin{center}
 \setlength{\tabcolsep}{5pt}
 \begin{tabular}{llllll}
-\toprule
  & bed & time & existence & uniqueness \\
 \midrule
 Calvo et al (2002) & flat (1D) & dependent & yes & yes \\
-Piersanti \& Temam (2023) & flat (2D) & dependent & yes$^*$ & not addressed \\
+Piersanti \& Temam (2023) & flat (2D) & dependent & yes$^*$ & -- \\
 Jouvet \& B (2012) & general & steady & yes & only flat case \\
-B (2026), App.~B & bumpy & steady & -- & \alert{no}$^\dagger$ \\
-\bottomrule
+B (2026), App.~B & bumpy & steady & -- & \alert{no}$^\dagger$ if $a\equiv 0$ locally \\
+\midrule
 \end{tabular}
 \end{center}
 
 \vspace{-2mm}
-{\hfill \footnotesize $^*$ assumes a condition on proof-scheme iterates}
+{\hfill \footnotesize $^*$ several technical conditions}
 
 {\hfill \footnotesize $^\dagger$ applies for any stress balance}
 
-\medskip
+\smallskip
 \begin{itemize}
-\item open: time-dependent SIA on a general bed \pfcomm{to my knowledge}
-\item conceptual question: regarding uniqueness, what about finite $\Delta t$ in an implicit step?
+\item open well-posedness problem: time-dependent SIA on a general bed
     \begin{itemize}
-    \item[$\lc$] the mass term $\int_\Omega s\,\omega$ should help
+    \item[$\lc$] is the Raviart power transformation a worn-out tool?
     \end{itemize}
 
 \pause
-\smallskip
-\item but real glaciers and ice sheets are not shallow in detail
-\item there is \alert{no such existence theory for surface-Stokes}
+\medskip
+\item but real glaciers and ice sheets are \emph{not} shallow for the purposes of scientifically-useful modeling, and there are \alert{no such existence results} for the canonical, non-shallow surface-Stokes model
 \end{itemize}
 \end{frame}
 
@@ -730,6 +715,8 @@ B (2026), App.~B & bumpy & steady & -- & \alert{no}$^\dagger$ \\
 \subsection{surface-Stokes}
 
 \begin{frame}{thickness form: an implicit step is a VI}
+
+FIXME
 
 \begin{itemize}
 \item apply backward Euler, with $a^n$ the average climate over the step
