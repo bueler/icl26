@@ -714,32 +714,9 @@ B (2026), App.~B & bumpy & steady & -- & \alert{no}$^\dagger$ if $a\equiv 0$ loc
 
 \subsection{surface-Stokes}
 
-\begin{frame}{thickness form: an implicit step is a VI}
+\begin{frame}{implicit step for surface-Stokes}
 
 FIXME
-
-\begin{itemize}
-\item apply backward Euler, with $a^n$ the average climate over the step
-\end{itemize}
-
-\begin{definition}[B 2021]
-let $\cX=W_0^{1,p}(\Omega)$ and $\cK=\{\eta\in\cX : \eta\ge 0\}$; the \alert{time-step problem} seeks $H^n\in\cK$ so that
-    $$\int_\Omega \left(H^n - H^{n-1} - \Delta t\, a^n\right)(\eta-H^n) \alert{\,-\, \Delta t \int_\Omega \bq(H^n)\cdot\grad(\eta-H^n)} \ge 0 \quad \text{for all } \eta\in\cK$$
-\end{definition}
-
-\begin{itemize}
-\item the margin \alert{is not an input}, and the stress balance is hidden in the flux term
-\end{itemize}
-
-\begin{theorem}[B 2021]
-suppose $\bq=\bq(\grad v,v,x)$ is a \alert{local} flux, with standard assumptions, and $a^n$ does not depend on thickness; if for some $c>0$, $r>1$,
-\,$\int_\Omega \left(\bq(v)-\bq(w)\right)\cdot\grad(v-w) \le -c\|v-w\|_{W^{1,p}}^r$ on $\cK$,
-then the problem has a unique solution
-\end{theorem}
-\end{frame}
-
-
-\begin{frame}{surface elevation form: an implicit step is also a VI}
 
 \begin{itemize}
 \item the surface kinematical equation (SKE) says that the surface is moved by the ice velocity and the climate:
