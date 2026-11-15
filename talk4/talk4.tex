@@ -241,7 +241,7 @@ Aschwanden et al (2016), Nature Commun.~7, 10524
 
 \section{mathematical models of glaciation}
 
-\begin{frame}{notation for evolving glacier models}
+\begin{frame}{notation for evolving glaciers}
 
 \hfill\includegraphics<1>[width=0.54\textwidth]{figs/notation1.pdf}%
 \includegraphics<2>[width=0.54\textwidth]{figs/notation2.pdf}
@@ -563,7 +563,7 @@ s - b &\ge 0 && \text{on $\Omega$} \\
 
 \pause
 \item in limit $\eps\to 0$, the flux $\bq = \int_b^s \bU\,dz$ resolves to a \alert{local differential operator} on $s$:
-    $$\hspace{35mm} \bq = -\underbrace{\gamma_0 \, (s-b)^{\nn+2} |\grad s|^{\nn-1}}_{\text{diffusivity } D}\, \grad s \hspace{20mm} \text{\afcomm{$\gamma>0$ constant}}$$
+    $$\hspace{35mm} \bq = -\underbrace{\gamma_0 \, (s-b)^{\nn+2} |\grad s|^{\nn-1}}_{\text{diffusivity } D}\, \grad s \hspace{20mm} \text{\afcomm{$\gamma_0>0$ constant}}$$
 
     \begin{itemize}
     \item[$\lc$] \alert{ice flows downhill} in this model since $D>0$ \hfill \pfcomm{down $\grad s$; not necessarily down $\grad H$}
@@ -671,7 +671,7 @@ For $\Omega \subset \RR^d$, if $b$ is continuous \alert{with strict local minima
 
 \medskip
 \begin{itemize}
-\item underlying observation: the surface motion $\Phi(s) = -\bu|_s\cdot\bn_s$ is \alert{not strictly monotone} as a function of $s$
+\item observation: surface motion $\Phi(s) = -\bu|_s\cdot\bn_s$ is \alert{not strictly monotone} as function of $s$
 \end{itemize}
 \end{frame}
 
@@ -800,27 +800,28 @@ For a bed with local minima, $\Phi$ is \alert{not} strictly-monotone, thus not $
 \begin{frame}{numerical coercivity experiment}
 
 \begin{itemize}
-\item but Firedrake is powerful
+\item but the Firedrake \includegraphics[width=5mm]{figs/firedrake-small.png} is powerful
 
 \pause
 \medskip
-\item \alert{run Stokes simulations} to \alert{generate} 2000 random \alert{surface pairs}
+\item \alert{run Stokes simulations} to generate 2000 \alert{random surface pairs}
     \begin{itemize}
-    \item[$\lc$] 1D domain $\Omega=(-100,100)$ km, either flat or rough bed
-    \item[$\lc$] 3 different climates, advance and retreat cases, up to complete disappearance
+    \item[$\lc$] 1D domain $\Omega$, length 200 km, $h=$500 m mesh resolution
+    \item[$\lc$] either flat or rough bed, initial ice thickness 1400 m
+    \item[$\lc$] 3 different climates, advance/retreat/deglaciation cases
     \end{itemize}
 
 \medskip
 \centerline{\includegraphics[width=0.32\textwidth]{figs/snapsflat.png} \quad \includegraphics[width=0.32\textwidth]{figs/snapsrough.png}}
 \figcite{from B (2026), App.~C}
 
-\item \alert{sample} actual surface pairs, and \alert{compute the $4$-coercivity ratios}:
+\item \alert{sample} surface pairs and \alert{compute the $4$-coercivity ratios}:
     $$\rho(\sigma,s)=\frac{\left(\Phi(\sigma)-\Phi(s)\right)[\sigma-s]}{\|\sigma-s\|_{W^{1,4}}^4}$$
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{numerical surface-Stokes ratios: nearly coercive?}
+\begin{frame}{numerical surface-Stokes: nearly coercive?}
 
 \begin{itemize}
 \item what do we see?
@@ -830,7 +831,7 @@ For a bed with local minima, $\Phi$ is \alert{not} strictly-monotone, thus not $
 \centerline{\includegraphics[width=0.44\textwidth]{figs/bflat500mNOREG.png} \quad \includegraphics[width=0.44\textwidth]{figs/brough500mNOREG.png}}
 
 \medskip
-\figcite{histograms of ratio magnitudes: flat (left) and rough (right)}
+\figcite{histograms of ratio magnitudes $|\rho(\sigma,s)|$: flat (left) and rough (right) beds}
 
 \pause
 \medskip
@@ -850,7 +851,7 @@ For a bed with local minima, $\Phi$ is \alert{not} strictly-monotone, thus not $
 \item using SIA formula with $\nn=3$, define
 \begin{align*}
 \Phi(s)[\omega] &= -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega \\
-\Phi^\eps(s)[\omega] &= (1-\eps)\Phi(s)[\omega]+\eps\,\Gamma\eta_0^{5}\int_\Omega|\grad s|^{2}\grad s\cdot\grad\omega
+\Phi^\eps(s)[\omega] &= (1-\eps)\Phi(s)[\omega] \alert{+\eps\,\gamma_0\eta_0^{5}\int_\Omega|\grad s|^{2}\grad s\cdot\grad\omega}
 \end{align*}
 \item that is, \alert{regularize with $4$-Laplacian}
 \end{itemize}
@@ -868,110 +869,37 @@ On $\cK = \{\sigma \ge b\} \subset \cX=W^{1,4}(\Omega)$, there exist $\eps>0$, $
 \centerline{\includegraphics[width=0.44\textwidth]{figs/bflat500mREG.png} \qquad \includegraphics[width=0.44\textwidth]{figs/brough500mREG.png}}
 
 \medskip
-\figcite{histograms of ratio magnitudes: flat (left) and rough (right)}
+\figcite{histograms of regularized ratio magnitudes: flat (left) and rough (right) beds}
 
 \medskip
 \begin{itemize}
-\item with $\eps=0.01$ and $\eta_0=500$ m, \alert{all ratios are positive}, and $\alpha=10^{-22}$ is credible
-
-\pause
+\item with $\eps=0.01$ and $\eta_0=500$ m: \, \alert{all ratios are positive}
+\item $\alpha=10^{-22}$ is credible in $\left(\Phi^\eps(\sigma)-\Phi^\eps(s)\right)[\sigma-s]\ge\alpha\|\sigma-s\|_\cX^4$
 \medskip
 \item the regularization does not need to do much work
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{implicit step for surface-Stokes}
+\begin{frame}{what is the regularization doing?}
 
-is $\Phi$ \alert{nearly} coercive? \, nothing in a usual statement of Stokes says so
+$$\Phi^\eps(s)[\omega] = -(1-\eps)\int_\Omega (\bu|_s \cdot \bn_s)\, \omega +\eps\,\gamma_0\eta_0^{5}\int_\Omega|\grad s|^{2}\grad s\cdot\grad\omega$$
 
-FIXME
-
+\medskip
 \begin{itemize}
-\item the surface kinematical equation (SKE) says that the surface is moved by the ice velocity and the climate:
-    $$\frac{\partial s}{\partial t} - \bu|_s\cdot\bn_s - a = 0 \qquad \bn_s=\left<-\grad s,1\right>$$
-\item extend the surface velocity trace $\bu|_s$ by zero to bare ground; again the complete statement is an NCP: \quad $s-b\ge 0$, \quad residual $\ge 0$, \quad product $=0$
+\item surface-Stokes evolution only mildly smooths high-frequency surface bumps
+\item the $\eps>0$ regularization helps with that
+\item for $\eps>0$, the $s_1$ surface has lower ``energy'' than $s_2$:
+
+\medskip
+\centerline{\includegraphics[width=0.26\textwidth]{figs/filled.pdf} \qquad \includegraphics[width=0.26\textwidth]{figs/icefree.pdf}}
+
+\pause
+\medskip
+\item and it helps with \alert{removing margin overhangs}:
 \end{itemize}
 
-\begin{definition}[B 2026]
-let $\cK=\{\sigma\in\cX : \sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{\partial\Omega}\}$ and $\ell^n=s^{n-1}+\Delta t\,a^n$; the \alert{implicit time-step problem} seeks $s=s^n\in\cK$ so that
-    $$\int_\Omega \left(s - \Delta t\,\bu|_s\cdot\bn_s - \ell^n\right)(\sigma-s) \ge 0 \quad \text{for all } \sigma\in\cK$$
-\end{definition}
-
-\begin{itemize}
-\item derivation: on $\{s>b\}$ the integrand is zero; on $\{s=b\}$ the residual $b-\ell^n$ and $\sigma-b$ are both $\ge 0$
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{the Stokes implicit-step problem}
-
-\begin{itemize}
-\item $\Phi:\cK\to\cX'$ means: Stokes on $\Lambda(b,s)$, then the trace, then multiply by $\bn_s$; this is well-defined for $\cX=W^{1,\rr}(\Omega)$ with \alert{$2<\rr\le\infty$}
-\end{itemize}
-
-\begin{definition}[B 2026]
-$F_{\Delta t}(s)[\omega]=\Delta t\,\Phi(s)[\omega]+\int_\Omega s\,\omega$; the \alert{implicit time-step problem} seeks $s\in\cK\subset\cX$ so that
-    $$F_{\Delta t}(s)[\sigma-s]\ge\ell^n[\sigma-s] \quad \text{for all } \sigma\in\cK$$
-\end{definition}
-
-\begin{itemize}
-\item simultaneously determines the \alert{extent}, the \alert{surface elevation}, and the \alert{velocity and pressure}
-\item \alert{conjecture:} $\bu|_s$ is Lipschitz in $s$ on bounded subsets of $\cK$
-\item the choice of $\rr$ is really about margin shape, where viscous theory is doubtful:
-\end{itemize}
-
-\centerline{\includegraphics[height=12mm]{figs/wedge.png} \qquad \includegraphics[height=12mm]{figs/unbounded.png} \qquad \includegraphics[height=12mm]{figs/realistic.png}}
-\figcite{wedge margin; fractional-power margin from shallow theory; real margins overhang and fracture; from B (2026)}
-
-\begin{theorem}[B 2026]
-assume the two conjectures; then for any $\Delta t>0$ and $s^{n-1}\in\cK$ the regularized implicit time-step VI, with operator $F^\eps_{\Delta t}(s)[\omega]=\Delta t\,\Phi^\eps(s)[\omega]+\int_\Omega s\,\omega$, has a \alert{unique} solution $s\in\cK$
-\end{theorem}
-
-\begin{itemize}
-\item proof: Lipschitz and $4$-coercive; apply Kinderlehrer \& Stampacchia (1980), Cor.~III.1.8
-\item says nothing about time-dependent well-posedness or about $\Delta t\to 0$
-\end{itemize}
-
-\end{frame}
-
-
-\begin{frame}{consequence: \emph{a priori} bound on an implicit step}
-
-\begin{itemize}
-\item $P_1$ surfaces with $b_h\ge b$, so $\cK_h\subset\cK$; \, $\bu_h$ from \emph{any} numerical Stokes solve on $\Lambda(b_h,s_h)$
-\end{itemize}
-
-\begin{theorem}[B 2026]
-assume the conjectures, and that $s\in\cK$, $s_h\in\cK_h$ solve the regularized VI and its FE version; let $\Pi_h$ be interpolation with truncation into $\cK_h$, and $Z=\left(1+C_\infty[L]^{-1}\|s_h\|_\cX\right)\big\|\bu_h|_{s_h}-\bu|_{s_h}\big\|_{L^{4/3}}$; then with $e_h=s_h-s$,
-\begin{align*}
-\frac{\alpha\Delta t}{4}\|e_h\|_\cX^4+\frac{1}{2}\|e_h\|_{L^2}^2 &\le \Delta t\int_{\Omega_A(s)}(\Pi_h(s)-b)\,d\nu_s && \text{\alert{[bed and margin]}} \\
-&\quad + \Delta t\left(\tfrac{3}{4}\alpha^{-1/3}Z^{4/3}+Z\|\Pi_h(s)-s\|_\cX\right) && \text{\alert{[Stokes solve]}} \\
-&\quad + \Delta t\,C\|\Pi_h(s)-s\|_\cX^{4/3}+\frac{1}{2}\|\Pi_h(s)-s\|_{L^2}^2 && \text{\alert{[C\'ea]}}
-\end{align*}
-\end{theorem}
-
-\begin{itemize}
-\item $\nu_s$ is the positive residual measure, on the ice-free set $\Omega_A(s)$; \, proof extends Falk (1974) to nonlinear $F$
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{what the three terms say}
-
-\centerline{\includegraphics[width=0.5\textwidth]{figs/extruded.pdf}}
-\figcite{from B (2026)}
-
-\begin{itemize}
-\item \alert{bed and margin:} error in the \alert{unknown ice-free region}, weighted by ablation
-    \begin{itemize}
-    \item[$\lc$] far from ice, $b_h$ can simply be declared the bare land
-    \item[$\lc$] near the exact margin, an inaccurate bed sets an error floor, however good the solver
-    \end{itemize}
-\item \alert{Stokes solve:} only the \alert{surface trace} error on the numerical domain matters
-\item \alert{C\'ea:} interpolation error in $s$, including truncation into $\cK_h$
-\item all reduced by refinement, but a \alert{rate} is hard: $s\in W^{2,\mu}$ would need a margin tangent to the bed
-\end{itemize}
+\centerline{\includegraphics[height=16mm]{figs/wedge.png} \qquad \includegraphics[height=16mm]{figs/unbounded.png} \qquad \includegraphics[height=17mm]{figs/realistic.png} \qquad \includegraphics[height=19mm]{figs/polaris.png} }
 \end{frame}
 
 
@@ -1125,6 +1053,96 @@ moving margin (\texttt{stage4/}, CFL) & $\Delta t\sim\Delta x/U$ & $O\left(U L^{
     \item[$\lc$] stability is not accuracy; \, \texttt{stage4/} itself uses direct linear algebra ($\alpha\approx 1$)
     \end{itemize}
 \item<3-> an implicit solver would have to beat this: it would remove the margin CFL \pfcomm{see also Ahlkrona et al 2026}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{implicit step for surface-Stokes}
+
+is $\Phi$ \alert{nearly} coercive? \, nothing in a usual statement of Stokes says so
+
+FIXME
+
+\begin{itemize}
+\item the surface kinematical equation (SKE) says that the surface is moved by the ice velocity and the climate:
+    $$\frac{\partial s}{\partial t} - \bu|_s\cdot\bn_s - a = 0 \qquad \bn_s=\left<-\grad s,1\right>$$
+\item extend the surface velocity trace $\bu|_s$ by zero to bare ground; again the complete statement is an NCP: \quad $s-b\ge 0$, \quad residual $\ge 0$, \quad product $=0$
+\end{itemize}
+
+\begin{definition}[B 2026]
+let $\cK=\{\sigma\in\cX : \sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{\partial\Omega}\}$ and $\ell^n=s^{n-1}+\Delta t\,a^n$; the \alert{implicit time-step problem} seeks $s=s^n\in\cK$ so that
+    $$\int_\Omega \left(s - \Delta t\,\bu|_s\cdot\bn_s - \ell^n\right)(\sigma-s) \ge 0 \quad \text{for all } \sigma\in\cK$$
+\end{definition}
+
+\begin{itemize}
+\item derivation: on $\{s>b\}$ the integrand is zero; on $\{s=b\}$ the residual $b-\ell^n$ and $\sigma-b$ are both $\ge 0$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{the Stokes implicit-step problem}
+
+\begin{itemize}
+\item $\Phi:\cK\to\cX'$ means: Stokes on $\Lambda(b,s)$, then the trace, then multiply by $\bn_s$; this is well-defined for $\cX=W^{1,\rr}(\Omega)$ with \alert{$2<\rr\le\infty$}
+\end{itemize}
+
+\begin{definition}[B 2026]
+$F_{\Delta t}(s)[\omega]=\Delta t\,\Phi(s)[\omega]+\int_\Omega s\,\omega$; the \alert{implicit time-step problem} seeks $s\in\cK\subset\cX$ so that
+    $$F_{\Delta t}(s)[\sigma-s]\ge\ell^n[\sigma-s] \quad \text{for all } \sigma\in\cK$$
+\end{definition}
+
+\begin{itemize}
+\item simultaneously determines the \alert{extent}, the \alert{surface elevation}, and the \alert{velocity and pressure}
+\item \alert{conjecture:} $\bu|_s$ is Lipschitz in $s$ on bounded subsets of $\cK$
+\end{itemize}
+
+\begin{theorem}[B 2026]
+assume the two conjectures; then for any $\Delta t>0$ and $s^{n-1}\in\cK$ the regularized implicit time-step VI, with operator $F^\eps_{\Delta t}(s)[\omega]=\Delta t\,\Phi^\eps(s)[\omega]+\int_\Omega s\,\omega$, has a \alert{unique} solution $s\in\cK$
+\end{theorem}
+
+\begin{itemize}
+\item proof: Lipschitz and $4$-coercive; apply Kinderlehrer \& Stampacchia (1980), Cor.~III.1.8
+\item says nothing about time-dependent well-posedness or about $\Delta t\to 0$
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{consequence: \emph{a priori} bound on an implicit step}
+
+\begin{itemize}
+\item $P_1$ surfaces with $b_h\ge b$, so $\cK_h\subset\cK$; \, $\bu_h$ from \emph{any} numerical Stokes solve on $\Lambda(b_h,s_h)$
+\end{itemize}
+
+\begin{theorem}[B 2026]
+assume the conjectures, and that $s\in\cK$, $s_h\in\cK_h$ solve the regularized VI and its FE version; let $\Pi_h$ be interpolation with truncation into $\cK_h$, and $Z=\left(1+C_\infty[L]^{-1}\|s_h\|_\cX\right)\big\|\bu_h|_{s_h}-\bu|_{s_h}\big\|_{L^{4/3}}$; then with $e_h=s_h-s$,
+\begin{align*}
+\frac{\alpha\Delta t}{4}\|e_h\|_\cX^4+\frac{1}{2}\|e_h\|_{L^2}^2 &\le \Delta t\int_{\Omega_A(s)}(\Pi_h(s)-b)\,d\nu_s && \text{\alert{[bed and margin]}} \\
+&\quad + \Delta t\left(\tfrac{3}{4}\alpha^{-1/3}Z^{4/3}+Z\|\Pi_h(s)-s\|_\cX\right) && \text{\alert{[Stokes solve]}} \\
+&\quad + \Delta t\,C\|\Pi_h(s)-s\|_\cX^{4/3}+\frac{1}{2}\|\Pi_h(s)-s\|_{L^2}^2 && \text{\alert{[C\'ea]}}
+\end{align*}
+\end{theorem}
+
+\begin{itemize}
+\item $\nu_s$ is the positive residual measure, on the ice-free set $\Omega_A(s)$; \, proof extends Falk (1974) to nonlinear $F$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{what the three terms say}
+
+\centerline{\includegraphics[width=0.5\textwidth]{figs/extruded.pdf}}
+\figcite{from B (2026)}
+
+\begin{itemize}
+\item \alert{bed and margin:} error in the \alert{unknown ice-free region}, weighted by ablation
+    \begin{itemize}
+    \item[$\lc$] far from ice, $b_h$ can simply be declared the bare land
+    \item[$\lc$] near the exact margin, an inaccurate bed sets an error floor, however good the solver
+    \end{itemize}
+\item \alert{Stokes solve:} only the \alert{surface trace} error on the numerical domain matters
+\item \alert{C\'ea:} interpolation error in $s$, including truncation into $\cK_h$
+\item all reduced by refinement, but a \alert{rate} is hard: $s\in W^{2,\mu}$ would need a margin tangent to the bed
 \end{itemize}
 \end{frame}
 
