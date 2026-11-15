@@ -239,7 +239,7 @@ Aschwanden et al (2016), Nature Commun.~7, 10524
 }
 
 
-\section{mathematical problem of glaciation}
+\section{mathematical models of glaciation}
 
 \begin{frame}{notation for evolving glacier models}
 
@@ -549,9 +549,7 @@ s - b &\ge 0 && \text{on $\Omega$} \\
 \end{frame}
 
 
-\section[well-posedness]{well-posedness, and coercivity confusion}
-
-\subsection{shallow ice approximation}
+\section{shallow ice approximation is mostly well-posed}
 
 \begin{frame}{shallow ice approximation (SIA)}
 
@@ -712,9 +710,92 @@ B (2026), App.~B & bumpy & steady & -- & \alert{no}$^\dagger$ if $a\equiv 0$ loc
 \end{frame}
 
 
-\subsection{surface-Stokes}
+\section{surface-Stokes is nearly coercive}
+
+\begin{frame}{behavior of the surface motion?}
+
+\begin{itemize}
+\item the ice flow aspect of glacier evolution comes down to understanding the \alert{surface motion} as a weak-form operator:
+    $$\Phi(s)[\omega] = -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega \stackrel{\text{\grey{recall}}}{=} -\int_\Omega \bq(s)\cdot\grad \omega$$
+\item is $\Phi$ a nice nonlinear operator? \pause \, ``nice''?
+\end{itemize}
+
+\begin{definitions}
+For a Banach space $\cX$, a subset $\cK\subset \cX$, and a map $F:\cK\to\cX'$.
+\begin{itemize}
+\item $F$ is \alert{$\qq$-coercive} if there is $\alpha>0$ so that \alert{$\left(F(v)-F(w)\right)[v-w]\ge\alpha\|v-w\|^\qq$} for all $v,w\in\cK$
+\item $f$ is \alert{monotone} if $\left(F(v)-F(w)\right)[v-w] \ge 0$; \, \alert{strictly} if $v\ne w$ implies ``$>$''
+\end{itemize}
+\end{definitions}
+
+\begin{itemize}
+\item if $F$ is $\qq$-coercive then it it strictly-monotone
+\item if $F=\grad J$ for a smooth objective $J:\cK\to\RR$ then:
+
+\centerline{$F$ strictly-monotone $\iff$ $J$ strictly-convex}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{the coercivity question for surface motion}
+
+\begin{itemize}
+\item the surface motion acting weakly on admissible surfaces:
+    $$\Phi(s)[\omega] = -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega, \qquad \cK = \{\sigma \,:\,\sigma \ge b\}$$
+\end{itemize}
+
+\begin{overprint}
+\onslide<1>
+\begin{block}{I.~lemma (B, 2026)}
+For any $\qq\ge 2$, \alert{$\Phi$ is a well-defined map from $\cK\subset \cX=W^{1,\qq}(\Omega)$ to $\cX'$}.
+\end{block}
+\onslide<2>
+\begin{block}{II.~intuition}
+$\Phi:\cK\to\cX$ \alert{should be $2$-coercive} because ice flows downhill.
+\end{block}
+
+{\small
+\noindent \textbf{argument.}  It is reasonable to believe $\bq(s)\approx -C\grad s$ for $C>0$.  Thus
+    $$\left(\Phi(\sigma)-\Phi(s)\right)[\sigma-s] \stackrel{\text{\grey{recall}}}{=} -\int_\Omega \left(\bq(\sigma)-\bq(s)\right)\cdot\grad(\sigma-s) \approx \int_\Omega \left(C\grad(\sigma)-C\grad(s)\right)\cdot\grad(\sigma-s) = \tilde C \|\sigma-s\|_{W^{1,2}}^2.$$
+}
+
+\medskip
+\begin{itemize}
+\item the power-law rheology does not appear in this informal reasoning
+\end{itemize}
+\onslide<3>
+\begin{block}{III.~SIA case}
+\begin{itemize}
+\item In the SIA, $\Phi$ is \alert{not $\qq$-coercive} on $s\in W^{1,\qq}(\Omega)$, for any $\qq$, even in the flat case, because the \alert{diffusivity degenerates}.
+\item But in the SIA flat-bed case it \alert{is} $\qq$-coercive, $\qq=\nn+1\approx 4$, when redefined by the Raviart transformation to act on the powers $w=s^\mm \in W^{1,\qq}(\Omega)$.
+\end{itemize}
+\end{block}
+\onslide<4>
+\begin{block}{IV.~observation}
+\begin{itemize}
+\item in the general-bed SIA, $\Phi \ne \grad J$ for any objective $J:\cK\to \RR$
+\item nothing about the surface-Stokes equations suggests that symmetry either
+\end{itemize}
+\end{block}
+
+\begin{itemize}
+\item computing steady-state glaciers is \alert{not an optimization problem} in general
+\item though it \emph{is} inequality-constrained
+\end{itemize}
+\onslide<5>
+\begin{block}{V.~counter-example (B, 2026)}
+For a bed with local minima, $\Phi$ is \alert{not} strictly-monotone, thus not $\qq$-coercive for any $\qq>0$.
+\end{block}
+
+\bigskip
+\centerline{\includegraphics[width=0.33\textwidth]{figs/filled.pdf} \qquad \includegraphics[width=0.33\textwidth]{figs/icefree.pdf}}
+\end{overprint}
+\end{frame}
+
 
 \begin{frame}{implicit step for surface-Stokes}
+
+is $\Phi$ \alert{nearly} coercive? \, nothing in a usual statement of Stokes says so
 
 FIXME
 
@@ -754,26 +835,6 @@ $F_{\Delta t}(s)[\omega]=\Delta t\,\Phi(s)[\omega]+\int_\Omega s\,\omega$; the \
 
 \centerline{\includegraphics[height=12mm]{figs/wedge.png} \qquad \includegraphics[height=12mm]{figs/unbounded.png} \qquad \includegraphics[height=12mm]{figs/realistic.png}}
 \figcite{wedge margin; fractional-power margin from shallow theory; real margins overhang and fracture; from B (2026)}
-\end{frame}
-
-
-\begin{frame}{the coercivity question}
-
-\begin{definition}
-$f:\cK\to\cX'$ is \alert{$\qq$-coercive} if there is $\alpha>0$ so that $\left(f(v)-f(w)\right)[v-w]\ge\alpha\|v-w\|^\qq$ for all $v,w\in\cK$
-\end{definition}
-
-\begin{itemize}
-\item bad news: for a bed with local minima, $\Phi$ is \alert{not} $\qq$-coercive for any $\qq$ \pfcomm{Appendix B}
-\item good news, heuristically: by the flux form,
-    $$\left(\Phi(\sigma)-\Phi(s)\right)[\sigma-s] = -\int_\Omega \left(\bq(\sigma)-\bq(s)\right)\cdot\grad(\sigma-s)$$
-    and ice flows downhill: $\bq(s)\sim-\grad s$, \, thus
-    $$\left(\Phi(\sigma)-\Phi(s)\right)[\sigma-s]\sim\int_\Omega|\grad\sigma-\grad s|^2$$
-    \begin{itemize}
-    \item[$\lc$] the rheology does not appear in this reasoning
-    \end{itemize}
-\item is $\Phi$ \alert{nearly} coercive? \, nothing in a usual statement of Stokes says so
-\end{itemize}
 \end{frame}
 
 
