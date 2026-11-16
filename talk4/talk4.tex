@@ -723,7 +723,7 @@ B (2026), App.~B & bumpy & steady & -- & \alert{no}$^\dagger$ when $a\equiv 0$ \
 \begin{itemize}
 \item the ice flow aspect of glacier evolution comes down to understanding the \alert{surface motion} as a weak-form operator:
     $$\Phi(s)[\omega] = -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega \stackrel{\text{\grey{recall}}}{=} -\int_\Omega \bq(s)\cdot\grad \omega$$
-\item is $\Phi$ a nice nonlinear operator?
+\item is $\Phi$ a nice nonlinear operator?  \only<2>{what does ``nice'' mean?}
 \end{itemize}
 
 \pause
@@ -855,7 +855,7 @@ confusing, especially when $\bu|_s$ comes from Stokes
 \begin{frame}{regularize using SIA-type diffusion}
 
 \begin{itemize}
-\item surface motion: \, $\Phi(s)[\omega] = -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega$
+\item surface motion: \, $\Phi(s)[\omega] = -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega$ with $\bu|_s$ from Stokes
 \item choose a fixed thickness $\eta_0>0$, and $0<\eps\ll 1$
 \item using SIA formula with $\nn=3$, define
 \begin{align*}
@@ -891,7 +891,7 @@ On $\cK = \{\sigma \ge b\} \subset \alert{\cX=W^{1,4}(\Omega)}$, there exist $\e
 
 \begin{frame}{what is the regularization doing?}
 
-$$\Phi^\eps(s)[\omega] = -(1-\eps)\int_\Omega (\bu|_s \cdot \bn_s)\, \omega +\eps\,\gamma_0\eta_0^{5}\int_\Omega|\grad s|^{2}\grad s\cdot\grad\omega$$
+$$\Phi^\eps(s)[\omega] = -(1-\eps)\int_\Omega (\bu|_s \cdot \bn_s)\, \omega +\eps\,\gamma_0\eta_0^{5}\int_\Omega|\grad s|^{2}\grad s\cdot\grad\omega \qquad \text{with $\bu|_s$ from Stokes}$$
 
 \medskip
 \begin{itemize}
@@ -909,6 +909,39 @@ $$\Phi^\eps(s)[\omega] = -(1-\eps)\int_\Omega (\bu|_s \cdot \bn_s)\, \omega +\ep
 \end{itemize}
 
 \centerline{\includegraphics[height=16mm]{figs/wedge.png} \qquad \includegraphics[height=16mm]{figs/unbounded.png} \qquad \includegraphics[height=17mm]{figs/realistic.png} \qquad \includegraphics[height=19mm]{figs/polaris.png} }
+\end{frame}
+
+
+\begin{frame}{what if surface-motion is coercive?}
+
+{\small
+$$\Phi^\eps(s)[\omega] = -(1-\eps)\int_\Omega (\bu|_s \cdot \bn_s)\, \omega +\eps\,\gamma_0\eta_0^{5}\int_\Omega|\grad s|^{2}\grad s\cdot\grad\omega \qquad \text{with $\bu|_s$ from Stokes}$$
+
+\begin{conjecture}[$4$-coercivity of regularized surface motion $\Phi^\eps$]
+On $\cK = \{\sigma \ge b\} \subset \cX=W^{1,4}(\Omega)$, there exist $\eps>0$, $\eta_0>0$, and $\alpha>0$ so that $\Phi^\eps$ is $4$-coercive:
+    $$\left(\Phi^\eps(\sigma)-\Phi^\eps(s)\right)[\sigma-s]\ge\alpha\|\sigma-s\|_\cX^4 \quad \text{for all } \sigma,s\in\cK.$$
+\end{conjecture}
+}
+
+\medskip
+\begin{itemize}
+\item suppose this conjecture is true?  then what?
+
+\pause
+\item 2 important things follow:
+   \begin{enumerate}
+   \item for coupled surface-Stokes, the fully-implicit time-step problem is well-posed
+   \item \emph{a priori} estimate exists for the surface elevation error in a finite element scheme
+   \end{enumerate}
+
+\pause
+\item such a Stokes scheme would be unconditionally-stable, and capable of arbitrary retreat or advance during a time step
+
+\medskip
+{\small
+\item more on this in B (2026), \href{https://arxiv.org/abs/2408.06470}{\emph{Surface elevation errors in finite element Stokes models for glacier evolution}, arXiv:2408.06470}
+}
+\end{itemize}
 \end{frame}
 
 
