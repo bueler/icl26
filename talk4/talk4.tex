@@ -932,7 +932,7 @@ It follows that: \quad $\|s\|_{L^2} \le \|s(t=0)\|_{L^2}+\int_0^t\|a\|_{L^2}$.
 
 \smallskip
 {\small
-\noindent \textbf{proof.}  Test Stokes weak form with $\bu,p$, and weak surface equation with $s$. \hfill \qed
+\noindent \textbf{proof.}  Test Stokes weak form with $\bu,p$, and weak surface equation with $s$. \hspace{12mm} $\qed$
 }
 
 \medskip
@@ -940,21 +940,21 @@ It follows that: \quad $\|s\|_{L^2} \le \|s(t=0)\|_{L^2}+\int_0^t\|a\|_{L^2}$.
 \item idea: \, gravity-driven Stokes flow dissipates potential energy source $\rho g a$
 
 \pause
-\item however, $L^2$ norm gives \alert{no control of $\partial\Lambda(t)$ regularity} for Stokes problem
+\item however, $L^2$ norm on $s(t,x)$ gives \alert{no control of $\partial\Lambda(t)$ regularity} for Stokes problem
 \end{itemize}
 \end{frame}
 
 
 \section{state of play: explicit vs implicit}
 
-\begin{frame}{an explicit (semi-implicit) solver that works}
+\begin{frame}{a mostly-explicit solver that works}
 
 \begin{itemize}
 \item from the same group (L\"ofgren et al 2022, Tominec et al 2026)
 \end{itemize}
 
 {\small
-\begin{block}{stabilized semi-implicit scheme for surface-Stokes}
+\begin{block}{twice-stabilized semi-implicit scheme for surface-Stokes}
 \begin{enumerate}
 \item At time $t_k$, solve weak Stokes on the current geometry, with \alert{load stabilization}, for $\bu,p$:
     $$\int_{\Lambda^k}2\nu\,D\bu:D\bv-p\Div\bv-q\Div\bu-\rho\bg\cdot\bv+\alert{\int_{\Gamma_s^k}\rho g\Delta t\left[\tfrac{1}{2}\bu\cdot\bn_{s^k}+a\right]\bv\cdot\hat\bn}=0 \qquad \forall \bv,q$$
@@ -971,11 +971,11 @@ It follows that: \quad $\|s\|_{L^2} \le \|s(t=0)\|_{L^2}+\int_0^t\|a\|_{L^2}$.
 \end{frame}
 
 
-\begin{frame}{an explicit (semi-implicit) solver that is provably stable}
+\begin{frame}{a mostly-explicit solver that is provably stable}
 
 \begin{theorem}[Tominec et al 2026]
-For the stabilized semi-implicit scheme, the updated solution is bounded by the data:
-    $$\|s^{k+1}\|_{L^2}^2+\frac{4\Delta t}{\rho g}\|\sqrt{\mu}D\bu\|_{L^2}^2+2\Delta t\,J_k(s^{k+1},s^{k+1})\le\|s^k\|_{L^2}^2+2\Delta t(a,s^k)+\Delta t^2\|a\|_{L^2}^2.$$
+In twice-stabilized semi-implicit scheme, the new solution is bounded by the data:
+    $$\|s^{k+1}\|_{L^2}^2+\frac{4\Delta t}{\rho g}\|\sqrt{\mu}D\bu\|_{L^2}^2+2\Delta t\,J_k(s^{k+1},s^{k+1})\le\|s^k+\Delta t \,a\|_{L^2}^2.$$
 \end{theorem}
 
 \medskip
@@ -991,191 +991,73 @@ For the stabilized semi-implicit scheme, the updated solution is bounded by the 
 \end{frame}
 
 
-\begin{frame}{performance analysis: the setting}
+\begin{frame}{performance modeling}
 
 \begin{itemize}
-\item parameters \pfcomm{B 2023}:
+\item B (2023): \, is such a solver efficient?
+\item parameters for a performance model:
     \begin{itemize}
-    \item[$\lc$] $\Delta x\to 0$ is the map-plane resolution and $m\sim L^2/\Delta x^2$ the number of map-plane nodes
-    \item[$\lc$] $q$ is time steps per year needed for ice-climate coupling; $U$ a speed and $D$ an SIA diffusivity
-    \item[$\lc$] one Stokes solve is $O(m^{1+\alpha})$ flops; one coupled implicit Stokes step is $O(m^{1+\gamma})$; one implicit SIA step is $O(m^{1+\beta})$
+    \item[$\lc$] $L$ typical domain length \hfill \pfcomm{for 2D domain $\Omega$}
+    \item[$\lc$] $h$ resolution \hfill \pfcomm{for mesh over $\Omega$}
+    \item[$\lc$] $m\sim L^2/h^2$ number nodes \hfill \pfcomm{for mesh over $\Omega$}
+    \item[$\lc$] $U$ typical ice speed
+    \item[$\lc$] $D$ typical diffusivity \hfill \pfcomm{from SIA formula}
+    \item[$\lc$] $q$ number of time steps per model year needed for climate coupling
     \end{itemize}
-\item stability sets the number of steps per year:
-\end{itemize}
+\item cost in flops ($m\to\infty$ asymptotic models; note $\alpha,\beta,\gamma\ge 0$):
 
-\begin{center}
+\centerline{%
 \begin{tabular}{ll}
-\toprule
-explicit SIA, and \emph{pessimistic} Stokes & $\Delta t<O(D^{-1}\Delta x^2)$ \\
-\emph{optimistic} Stokes (advective) & $\Delta t<O(U^{-1}\Delta x)$ \\
-implicit: \alert{unconditional}, so only climate limits & $\Delta t<O(q^{-1})$ \\
-\bottomrule
+Stokes solve                            & $O(m^{1+\alpha})$ \\
+implicit SIA time-step solve            & $O(m^{1+\beta})$ \\
+coupled implicit Stokes time-step solve & $O(m^{1+\gamma})$
 \end{tabular}
-\end{center}
+}
 
-\begin{itemize}
-\item \alert{implicit} means no aspect of geometry or velocity is held fixed in the coupled solve, including the extent
-\item (flops per model year) $=$ (steps per year) $\times$ (flops per step)
-\end{itemize}
-\end{frame}
+\item define:
 
-
-\begin{frame}{performance analysis: the scaling}
-
-\begin{center}
-\begin{tabular}{lll}
-\toprule
-time-stepping & dynamics & flops per model year \\
-\midrule
-explicit & SIA & $O\left(D L^2\,\Delta x^{-4}\right)$ \\
-explicit & Stokes (optimistic) & $O\left(U L^{2+2\alpha}\,\Delta x^{-(3+2\alpha)}\right)$ \\
-explicit & Stokes (pessimistic) & $O\left(D L^{2+2\alpha}\,\Delta x^{-(4+2\alpha)}\right)$ \\
-implicit & SIA & $O\left(q L^{2+2\beta}\,\Delta x^{-(2+2\beta)}\right)$ \\
-implicit & Stokes & $O\left(q L^{2+2\gamma}\,\Delta x^{-(2+2\gamma)}\right)$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-\figcite{Table 2 in B (2023)}
-
-\begin{itemize}
-\item explicit Stokes with direct linear algebra ($\alpha\approx 1$) has a horrific $\Delta x^{-5}$ to $\Delta x^{-6}$
-\item an existing implicit SIA solver has $\beta=0.8$, so $\Delta x^{-3.6}$; \, implicit constants are large
-\item goal: \alert{$\gamma<1/2$ implicit Stokes, thus $O(\Delta x^{-3})$}, better than explicit SIA, presumably by multigrid
-    \begin{itemize}
-    \item[$\lc$] this is ``an appropriate goal for coming decades''
-    \end{itemize}
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{better news from the stabilized solver}
-
-\begin{itemize}
-\item a stabilized split scheme does \alert{one fixed-geometry Stokes solve per step}, so $\alpha$ applies, and not $\gamma$:
-\end{itemize}
-
-\begin{center}
-\begin{tabular}{lll}
-\toprule
-stabilized, split & case & flops per model year \\
-\midrule
-fixed extent (proven if $s>b$) & $\Delta t=1/q$ & $O\left(q L^{2+2\alpha}\,\Delta x^{-(2+2\alpha)}\right)$ \\
-moving margin (\texttt{stage4/}, CFL) & $\Delta t\sim\Delta x/U$ & $O\left(U L^{2+2\alpha}\,\Delta x^{-(3+2\alpha)}\right)$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-\figcite{my extension of Table 2 in B (2023)}
-
-\begin{itemize}
-\item<2-> with a near-optimal Stokes solver ($\alpha\approx 0$): \alert{$\Delta x^{-2}$} and \alert{$\Delta x^{-3}$}
-    \begin{itemize}
-    \item[$\lc$] the $\Delta x^{-3}$ goal for implicit solvers is available with no coupled implicit solver
-    \item[$\lc$] the ``optimistic'' row is now a demonstrated scheme, not only a paradigm, but so far with a 1D map plane
-    \end{itemize}
-\item<3-> but:
-    \begin{itemize}
-    \item[$\lc$] proof assumes $s>b$; margin CFL is empirical, and $U$ may be a large maximum speed
-    \item[$\lc$] stability is not accuracy; \, \texttt{stage4/} itself uses direct linear algebra ($\alpha\approx 1$)
-    \end{itemize}
-\item<3-> an implicit solver would have to beat this: it would remove the margin CFL \pfcomm{see also Ahlkrona et al 2026}
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{implicit step for surface-Stokes}
-
-is $\Phi$ \alert{nearly} coercive? \, nothing in a usual statement of Stokes says so
-
-FIXME
-
-\begin{itemize}
-\item the surface kinematical equation (SKE) says that the surface is moved by the ice velocity and the climate:
-    $$\frac{\partial s}{\partial t} - \bu|_s\cdot\bn_s - a = 0 \qquad \bn_s=\left<-\grad s,1\right>$$
-\item extend the surface velocity trace $\bu|_s$ by zero to bare ground; again the complete statement is an NCP: \quad $s-b\ge 0$, \quad residual $\ge 0$, \quad product $=0$
-\end{itemize}
-
-\begin{definition}[B 2026]
-let $\cK=\{\sigma\in\cX : \sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{\partial\Omega}\}$ and $\ell^n=s^{n-1}+\Delta t\,a^n$; the \alert{implicit time-step problem} seeks $s=s^n\in\cK$ so that
-    $$\int_\Omega \left(s - \Delta t\,\bu|_s\cdot\bn_s - \ell^n\right)(\sigma-s) \ge 0 \quad \text{for all } \sigma\in\cK$$
-\end{definition}
-
-\begin{itemize}
-\item derivation: on $\{s>b\}$ the integrand is zero; on $\{s=b\}$ the residual $b-\ell^n$ and $\sigma-b$ are both $\ge 0$
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{the Stokes implicit-step problem}
-
-\begin{itemize}
-\item $\Phi:\cK\to\cX'$ means: Stokes on $\Lambda(b,s)$, then the trace, then multiply by $\bn_s$; this is well-defined for $\cX=W^{1,\rr}(\Omega)$ with \alert{$2<\rr\le\infty$}
-\end{itemize}
-
-\begin{definition}[B 2026]
-$F_{\Delta t}(s)[\omega]=\Delta t\,\Phi(s)[\omega]+\int_\Omega s\,\omega$; the \alert{implicit time-step problem} seeks $s\in\cK\subset\cX$ so that
-    $$F_{\Delta t}(s)[\sigma-s]\ge\ell^n[\sigma-s] \quad \text{for all } \sigma\in\cK$$
-\end{definition}
-
-\begin{itemize}
-\item simultaneously determines the \alert{extent}, the \alert{surface elevation}, and the \alert{velocity and pressure}
-\item \alert{conjecture:} $\bu|_s$ is Lipschitz in $s$ on bounded subsets of $\cK$
-\end{itemize}
-
-\begin{theorem}[B 2026]
-assume the two conjectures; then for any $\Delta t>0$ and $s^{n-1}\in\cK$ the regularized implicit time-step VI, with operator $F^\eps_{\Delta t}(s)[\omega]=\Delta t\,\Phi^\eps(s)[\omega]+\int_\Omega s\,\omega$, has a \alert{unique} solution $s\in\cK$
-\end{theorem}
-
-\begin{itemize}
-\item proof: Lipschitz and $4$-coercive; apply Kinderlehrer \& Stampacchia (1980), Cor.~III.1.8
-\item says nothing about time-dependent well-posedness or about $\Delta t\to 0$
-\end{itemize}
-
-\end{frame}
-
-
-\begin{frame}{consequence: \emph{a priori} bound on an implicit step}
-
-\begin{itemize}
-\item $P_1$ surfaces with $b_h\ge b$, so $\cK_h\subset\cK$; \, $\bu_h$ from \emph{any} numerical Stokes solve on $\Lambda(b_h,s_h)$
-\end{itemize}
-
-\begin{theorem}[B 2026]
-assume the conjectures, and that $s\in\cK$, $s_h\in\cK_h$ solve the regularized VI and its FE version; let $\Pi_h$ be interpolation with truncation into $\cK_h$, and $Z=\left(1+C_\infty[L]^{-1}\|s_h\|_\cX\right)\big\|\bu_h|_{s_h}-\bu|_{s_h}\big\|_{L^{4/3}}$; then with $e_h=s_h-s$,
+\vspace{-5mm}
 \begin{align*}
-\frac{\alpha\Delta t}{4}\|e_h\|_\cX^4+\frac{1}{2}\|e_h\|_{L^2}^2 &\le \Delta t\int_{\Omega_A(s)}(\Pi_h(s)-b)\,d\nu_s && \text{\alert{[bed and margin]}} \\
-&\quad + \Delta t\left(\tfrac{3}{4}\alpha^{-1/3}Z^{4/3}+Z\|\Pi_h(s)-s\|_\cX\right) && \text{\alert{[Stokes solve]}} \\
-&\quad + \Delta t\,C\|\Pi_h(s)-s\|_\cX^{4/3}+\frac{1}{2}\|\Pi_h(s)-s\|_{L^2}^2 && \text{\alert{[C\'ea]}}
+\text{\alert{FPMY}} &= \text{(flops per model year)} \\
+  &= \text{(steps per year)} \times \text{(flops per step)}
 \end{align*}
-\end{theorem}
-
-\begin{itemize}
-\item $\nu_s$ is the positive residual measure, on the ice-free set $\Omega_A(s)$; \, proof extends Falk (1974) to nonlinear $F$
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{what the three terms say}
+\newcommand{\sgrey}[1]{\grey{\small #1}}
 
-\centerline{\includegraphics[width=0.5\textwidth]{figs/extruded.pdf}}
-\figcite{from B (2026)}
+\begin{frame}{performance modeling}
+
+\begin{center}
+\begin{tabular}{lllll}
+\toprule
+type & condition & dynamics & FPMY & \sgrey{examples} \\
+\midrule
+explicit & $\Delta t \le Ch^2/D$ & SIA & $O\left(D L^2\,h^{-4}\right)$ & \sgrey{old/mature ice sheet models} \\
+         & $\Delta t \le Ch^2/D$ & Stokes & $O\left(D L^{2+2\alpha}\,h^{-(4+2\alpha)}\right)$ & \sgrey{current Stokes glacier models} \\
+         & $\Delta t \le Ch/U$   & Stokes & $O\left(U L^{2+2\alpha}\,h^{-(3+2\alpha)}\right)$ & \sgrey{\alert{TSSI}, Tominec et al (2026)} \\
+implicit & $\Delta t \le 1/q$    & SIA & $O\left(q L^{2+2\beta}\,h^{-(2+2\beta)}\right)$ & \sgrey{B (2016); B \& Farrell (2024)} \\
+         & $\Delta t \le 1/q$    & Stokes & $O\left(q L^{2+2\gamma}\,h^{-(2+2\gamma)}\right)$ & \sgrey{Ahlkrona, Henry, L\"ofgren (2026)} \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \begin{itemize}
-\item \alert{bed and margin:} error in the \alert{unknown ice-free region}, weighted by ablation
-    \begin{itemize}
-    \item[$\lc$] far from ice, $b_h$ can simply be declared the bare land
-    \item[$\lc$] near the exact margin, an inaccurate bed sets an error floor, however good the solver
-    \end{itemize}
-\item \alert{Stokes solve:} only the \alert{surface trace} error on the numerical domain matters
-\item \alert{C\'ea:} interpolation error in $s$, including truncation into $\cK_h$
-\item all reduced by refinement, but a \alert{rate} is hard: $s\in W^{2,\mu}$ would need a margin tangent to the bed
+\item twice-stabilized semi-implicit scheme (TSSI) avoids the $\Delta t=O(h^2)$ tragedy
+\item warning: for implicit schemes the constants in $O(\dots)$ are large
+
+\pause
+\item if direct sparse linear algebra is used for Stokes in TSSI then $\alpha\approx 1$, at best, so we get bad $O(h^{-5})$ FPMY scaling \hfill \sgrey{makes it hard to do science}
+\item $\beta,\gamma$ large if these implicit solvers have mesh-dependent iterations \hfill \sgrey{need multigrid}
+\item goal: \alert{$\gamma<0.5$ for implicit Stokes}, presumably multigrid, giving $O(h^{-3})$ FPMY
 \end{itemize}
 \end{frame}
 
-
-\setbeamertemplate{frame footer}{}
 
 \begin{frame}{summary}
 
+FIXME
 \begin{itemize}
 \item glaciation is a free-boundary problem; \alert{extent is an output of a VI}
 \item thickness (flux) and surface (kinematical) forms are the same VI, by incompressibility
