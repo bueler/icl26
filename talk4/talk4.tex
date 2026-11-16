@@ -914,26 +914,51 @@ $$\Phi^\eps(s)[\omega] = -(1-\eps)\int_\Omega (\bu|_s \cdot \bn_s)\, \omega +\ep
 
 \section{state of play: explicit vs implicit}
 
-\begin{frame}{the $L^2$ bound of Tominec et al (2026)}
+\begin{frame}{$L^2$ evolution bound of Tominec et al (2026)}
 
 \begin{withpeople}{\photo[9mm]{figs/people/itominec.jpg}{I.~Tominec} \photo[9mm]{figs/people/llundgren.jpg}{L.~Lundgren} \photo[9mm]{figs/people/alofgren.jpg}{A.~L\"ofgren} \photo[9mm]{figs/people/jahlkrona.png}{J.~Ahlkrona}}
 \begin{theorem}[Tominec, Lundgren, L\"ofgren, Ahlkrona 2026]
-if $s>b$ and $\bu$ solve the coupled Stokes and free-surface problem, then
-    $$\frac{1}{2}\frac{\partial}{\partial t}\|s\|_{L^2}^2=-\frac{2}{\rho g}\|\sqrt{\mu}\,D\bu\|_{L^2(\Lambda(t))}^2+(a,s), \quad \text{thus} \quad \|s(t)\|_{L^2}\le\|s_0\|_{L^2}+\int_0^t\|a\|_{L^2}$$
+Suppose $s,\bu,p$ solve the time-dependent, coupled surface-Stokes problem.  Then
+  $$\frac{1}{2}\frac{\partial}{\partial t}\|s\|_{L^2}^2 = -\frac{2}{\rho g}\|\sqrt{\nu}\,D\bu\|_{L^2}^2+(a,s),$$
+and it follows that
+  $$\|s\|_{L^2} \le \|s_0\|_{L^2}+\int_0^t\|a\|_{L^2}.$$
+\end{theorem}
+\end{withpeople}
+
+\begin{itemize}
+\item $L^2=L^2(\Lambda(t); \RR^{3\times 3})$ for the $D\bu$ integral
+    \begin{itemize}
+    \item[$\lc$] $\nu=\nu(D\bu)$ is the effective viscosity in that integral
+    \end{itemize}
+\item $L^2=L^2(\Lambda(t)^\perp)$ for the other integrals
+\item interpretation: \, the ice surface (provably) falls if $a\le 0$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{$L^2$ evolution bound of Tominec et al (2026)}
+
+\begin{theorem}[Tominec, Lundgren, L\"ofgren, Ahlkrona 2026]
+Suppose $s,\bu,p$ solve the time-dependent, coupled surface-Stokes problem.  Then
+\begin{align*}
+\frac{1}{2}\frac{\partial}{\partial t}\|s\|_{L^2}^2 &= -\frac{2}{\rho g}\|\sqrt{\mu}\,D\bu\|_{L^2}^2+(a,s) \\
+\|s\|_{L^2} &\le \|s_0\|_{L^2}+\int_0^t\|a\|_{L^2}
+\end{align*}
+where $L^2=L^2(\Lambda(t); \RR^{3\times 3})$ for the $D\bu$ integral, and $L^2=L^2(\Lambda(t)^\perp)$ for the other integrals
 \end{theorem}
 
 \begin{itemize}
+\item FIXME
 \item proof: test Stokes with $\bu$, and the surface equation with $s$
 \item my reading, combining with the flux form: for any admissible $s$,
     $$\Phi(s)[s]=\alert{-\int_\Omega\bq(s)\cdot\grad s}=\frac{1}{\rho g}\int_{\Lambda}2\nu|D\bu|^2\ge 0$$
 so ice \alert{provably flows downhill, on average}
 \item but: $L^2$ only, assumes $s>b$, and \alert{no control of Stokes domain regularity}
 \end{itemize}
-\end{withpeople}
 \end{frame}
 
 
-\begin{frame}{the \texttt{stage4/} solver \pcomm{recall lecture 3}}
+\begin{frame}{an explicit (\dots semi-implicit) solver that works}
 
 \begin{withpeople}{\photo[9mm]{figs/people/itominec.jpg}{I.~Tominec} \photo[9mm]{figs/people/alofgren.jpg}{A.~L\"ofgren} \photo[9mm]{figs/people/jahlkrona.png}{J.~Ahlkrona} \photo[9mm]{figs/people/chelanow.png}{C.~Helanow}}
 \begin{enumerate}
