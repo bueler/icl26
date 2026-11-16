@@ -746,11 +746,11 @@ For a Banach space $\cX$, a subset $\cK\subset \cX$, and a nonlinear map $F:\cK\
 
 \begin{frame}{coercivity question for surface motion}
 
-\begin{itemize}
-\item consider the surface motion acting weakly on admissible surfaces:
-    $$\Phi(s)[\omega] = -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega, \qquad \cK = \{\sigma \,:\,\sigma \ge b\}$$
-\end{itemize}
+\vspace{-10mm}
 
+    $$\Phi(s)[\omega] = -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega, \qquad \cK = \{\sigma \,:\,\sigma \ge b\}$$
+
+\medskip
 \begin{overprint}
 \onslide<1>
 \begin{itemize}
@@ -900,101 +900,92 @@ $$\Phi^\eps(s)[\omega] = -(1-\eps)\int_\Omega (\bu|_s \cdot \bn_s)\, \omega +\ep
 \pause
 \item \emph{and} it means the $s_1$ surface has lower ``energy'' than $s_2$:
 
-\medskip
+\bigskip
 \centerline{\includegraphics[width=0.26\textwidth]{figs/filled.pdf} \qquad \includegraphics[width=0.26\textwidth]{figs/icefree.pdf}}
 
 \pause
-\medskip
-\item \emph{and} it helps with \alert{removing margin overhangs}:
+\smallskip
+\item \emph{and} it should stop creation of \alert{margin overhang}:
 \end{itemize}
 
 \centerline{\includegraphics[height=16mm]{figs/wedge.png} \qquad \includegraphics[height=16mm]{figs/unbounded.png} \qquad \includegraphics[height=17mm]{figs/realistic.png} \qquad \includegraphics[height=19mm]{figs/polaris.png} }
 \end{frame}
 
 
+\begin{frame}{$L^2$ evolution bound of Tominec et al (2026)}
+
+\begin{itemize}
+\item enter a different idea, a \alert{continuum stability bound for surface-Stokes}
+\end{itemize}
+
+\vspace{-3mm}
+\begin{withpeople}{\vspace{3mm} \photo[8mm]{figs/people/itominec.jpg}{I.~Tominec} \photo[8mm]{figs/people/llundgren.jpg}{L.~Lundgren} \photo[8mm]{figs/people/alofgren.jpg}{A.~L\"ofgren} \photo[8mm]{figs/people/jahlkrona.png}{J.~Ahlkrona}}
+\begin{theorem}[Tominec, Lundgren, L\"ofgren, Ahlkrona 2026]
+Suppose $s(t,x)$ and $\bu(t,x,z)$ solve the time-dependent, coupled surface-Stokes problem, and write $\nu=\nu(D\bu)$ for the effective viscosity.  Then
+  $$\frac{\rho g}{2}\frac{\partial}{\partial t}\|s\|_{L^2}^2 = -2\|\sqrt{\nu}\,D\bu\|_{L^2}^2+(\rho g a,s)_{L^2}.$$
+It follows that: \quad $\|s\|_{L^2} \le \|s(t=0)\|_{L^2}+\int_0^t\|a\|_{L^2}$.
+
+\smallskip
+\grey{\small The norm is $L^2(\Lambda(t); \RR^{3\times 3})$ for the $D\bu$ integral and $L^2(\Lambda(t)^\perp)$ for the others.}
+\end{theorem}
+\end{withpeople}
+
+\smallskip
+{\small
+\noindent \textbf{proof.}  Test Stokes weak form with $\bu,p$, and weak surface equation with $s$. \hfill \qed
+}
+
+\medskip
+\begin{itemize}
+\item idea: \, gravity-driven Stokes flow dissipates potential energy source $\rho g a$
+
+\pause
+\item however, $L^2$ norm gives \alert{no control of $\partial\Lambda(t)$ regularity} for Stokes problem
+\end{itemize}
+\end{frame}
+
+
 \section{state of play: explicit vs implicit}
 
-\begin{frame}{$L^2$ evolution bound of Tominec et al (2026)}
-
-\begin{withpeople}{\photo[9mm]{figs/people/itominec.jpg}{I.~Tominec} \photo[9mm]{figs/people/llundgren.jpg}{L.~Lundgren} \photo[9mm]{figs/people/alofgren.jpg}{A.~L\"ofgren} \photo[9mm]{figs/people/jahlkrona.png}{J.~Ahlkrona}}
-\begin{theorem}[Tominec, Lundgren, L\"ofgren, Ahlkrona 2026]
-Suppose $s,\bu,p$ solve the time-dependent, coupled surface-Stokes problem.  Then
-  $$\frac{1}{2}\frac{\partial}{\partial t}\|s\|_{L^2}^2 = -\frac{2}{\rho g}\|\sqrt{\nu}\,D\bu\|_{L^2}^2+(a,s),$$
-and it follows that
-  $$\|s\|_{L^2} \le \|s_0\|_{L^2}+\int_0^t\|a\|_{L^2}.$$
-\end{theorem}
-\end{withpeople}
+\begin{frame}{an explicit (semi-implicit) solver that works}
 
 \begin{itemize}
-\item $L^2=L^2(\Lambda(t); \RR^{3\times 3})$ for the $D\bu$ integral
-    \begin{itemize}
-    \item[$\lc$] $\nu=\nu(D\bu)$ is the effective viscosity in that integral
-    \end{itemize}
-\item $L^2=L^2(\Lambda(t)^\perp)$ for the other integrals
-\item interpretation: \, the ice surface (provably) falls if $a\le 0$
+\item from the same group (L\"ofgren et al 2022, Tominec et al 2026)
 \end{itemize}
-\end{frame}
 
-
-\begin{frame}{$L^2$ evolution bound of Tominec et al (2026)}
-
-\begin{theorem}[Tominec, Lundgren, L\"ofgren, Ahlkrona 2026]
-Suppose $s,\bu,p$ solve the time-dependent, coupled surface-Stokes problem.  Then
-\begin{align*}
-\frac{1}{2}\frac{\partial}{\partial t}\|s\|_{L^2}^2 &= -\frac{2}{\rho g}\|\sqrt{\mu}\,D\bu\|_{L^2}^2+(a,s) \\
-\|s\|_{L^2} &\le \|s_0\|_{L^2}+\int_0^t\|a\|_{L^2}
-\end{align*}
-where $L^2=L^2(\Lambda(t); \RR^{3\times 3})$ for the $D\bu$ integral, and $L^2=L^2(\Lambda(t)^\perp)$ for the other integrals
-\end{theorem}
-
-\begin{itemize}
-\item FIXME
-\item proof: test Stokes with $\bu$, and the surface equation with $s$
-\item my reading, combining with the flux form: for any admissible $s$,
-    $$\Phi(s)[s]=\alert{-\int_\Omega\bq(s)\cdot\grad s}=\frac{1}{\rho g}\int_{\Lambda}2\nu|D\bu|^2\ge 0$$
-so ice \alert{provably flows downhill, on average}
-\item but: $L^2$ only, assumes $s>b$, and \alert{no control of Stokes domain regularity}
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{an explicit (\dots semi-implicit) solver that works}
-
-\begin{withpeople}{\photo[9mm]{figs/people/itominec.jpg}{I.~Tominec} \photo[9mm]{figs/people/alofgren.jpg}{A.~L\"ofgren} \photo[9mm]{figs/people/jahlkrona.png}{J.~Ahlkrona} \photo[9mm]{figs/people/chelanow.png}{C.~Helanow}}
+{\small
+\begin{block}{stabilized semi-implicit scheme for surface-Stokes}
 \begin{enumerate}
-\item Stokes on the \alert{current} geometry, with a \alert{load stabilization} \pfcomm{L\"ofgren 2022; Tominec 2026 (4.28)}:
-    $$\int_{\Lambda^k}2\nu\,D\bu:D\bv-p\Div\bv-q\Div\bu-\rho\bg\cdot\bv+\alert{\int_{\Gamma_s^k}\rho g\Delta t\left[\tfrac{1}{2}\bu\cdot\bn_{s^k}+a\right]\bv\cdot\hat\bn}=0$$
-\item surface update as a \alert{VI}, with implicit \alert{edge stabilization} \pfcomm{Tominec 2026 (4.3)}: find $s^{k+1}\in\cK_h$,
-    $$\int_\Omega\left(\frac{s^{k+1}-s^k}{\Delta t}-\bu|_{s^k}\cdot\bn_{s^k}-a\right)(\sigma-s^{k+1})+J\left(s^{k+1},\sigma-s^{k+1}\right)\ge 0$$
-    with \, $J(s,r)=\sum_e\int_e\tfrac{1}{2}h_e^2\big|\bu|_{s^k}\big|\jump{\grad s}\jump{\grad r}\,dS$
-\item choose $\Delta t=C_{\text{CFL}}\min h/|\bu|$ when margins move \pfcomm{$C_{\text{CFL}}=0.25$}
+\item At time $t_k$, solve weak Stokes on the current geometry, with \alert{load stabilization}, for $\bu,p$:
+    $$\int_{\Lambda^k}2\nu\,D\bu:D\bv-p\Div\bv-q\Div\bu-\rho\bg\cdot\bv+\alert{\int_{\Gamma_s^k}\rho g\Delta t\left[\tfrac{1}{2}\bu\cdot\bn_{s^k}+a\right]\bv\cdot\hat\bn}=0 \qquad \forall \bv,q$$
+\item Choose $\Delta t=C_{\text{CFL}}\min h/|\bu|$, then update surface as a VI for $s^{k+1}\in\cK_h=\{\sigma\,:\,\sigma\ge b_h\}$, with implicit \alert{edge stabilization}, $J_k(s,r)=\sum_e\int_e\tfrac{1}{2}h_e^2\big|\bu|_{s^k}\big|\jump{\grad s}\jump{\grad r}\,dS$:
+    $$\int_\Omega\left(\frac{s^{k+1}-s^k}{\Delta t}-\bu|_{s^k}\cdot\bn_{s^k}-a\right)(\sigma-s^{k+1})+\alert{J_k\left(s^{k+1},\sigma-s^{k+1}\right)}\ge 0 \qquad \forall \sigma\in\cK_h$$
+\item Repeat.
 \end{enumerate}
+\end{block}
+}
 
-
-\medskip
 \begin{itemize}
-\item \alert{split}: only one Stokes solve per step; the VI step is cheap
+\item only one Stokes solve per step, very cheap VI solve
 \end{itemize}
-\end{withpeople}
 \end{frame}
 
 
-\begin{frame}{what \texttt{stage4/} does: proof and practice}
+\begin{frame}{an explicit (semi-implicit) solver that is provably stable}
 
-\begin{proposition}[Tominec et al 2026: stability of the scheme, if $s^{k+1}>b$]
-\vspace{-3mm}
-    $$\|s^{k+1}\|_{L^2}^2+\frac{4\Delta t}{\rho g}\|\sqrt{\mu}D\bu\|_{L^2}^2+2\Delta t\,J(s^{k+1},s^{k+1})\le\|s^k\|_{L^2}^2+2\Delta t(a,s^k)+\Delta t^2\|a\|_{L^2}^2$$
-\end{proposition}
+\begin{theorem}[Tominec et al 2026]
+For the stabilized semi-implicit scheme, the updated solution is bounded by the data:
+    $$\|s^{k+1}\|_{L^2}^2+\frac{4\Delta t}{\rho g}\|\sqrt{\mu}D\bu\|_{L^2}^2+2\Delta t\,J_k(s^{k+1},s^{k+1})\le\|s^k\|_{L^2}^2+2\Delta t(a,s^k)+\Delta t^2\|a\|_{L^2}^2.$$
+\end{theorem}
 
 \medskip
 \begin{itemize}
-\item with walls ($s>b$): \alert{arbitrary time steps are stable}; without the load term, runs needed $\Delta t\le 0.125$--$0.25$ a
-
-\medskip
-\item with moving margins: the VI gives the extent, but velocity is explicit, so \alert{advance is at most one element per step}
+\item \alert{arbitrary time steps are stable}
+\item consistent and mass-conserving (if Stokes solve is mass conserving)
+\item CFL still needed for accurate moving margins
     \begin{itemize}
-    \item[$\lc$] without the CFL limit: not obviously unstable, but the margin shape is wrong
-    \item[$\lc$] with it: ice area drifts about 1\% over 5 years, which is a moving margin effect
+    \item[$\lc$] the velocity is explicit, so margin can advance at most one element per step
+    \item[$\lc$] CFL still needed for accuracy generally? \hfill \pfcomm{no convergence proof yet}
     \end{itemize}
 \end{itemize}
 \end{frame}
