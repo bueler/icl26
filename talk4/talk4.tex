@@ -154,29 +154,32 @@
 
 \begin{columns}
 \begin{column}{0.5\textwidth}
-\only<1-2>{
+\only<1>{
 \includegraphics[width=\textwidth]{figs/polaris.png}
 \figcite{Polaris Glacier, Greenland; Post \& LaChappelle 2000}
 }
-\only<3>{
+\only<2>{
 \includegraphics[width=\textwidth]{figs/truffertaku2016.jpg}
 \figcite{M.~Truffer photo; Taku Glacier 2016}
 }
 \end{column}
 \begin{column}{0.5\textwidth}
 \begin{itemize}
-\item a \alert{glacier} is a mass of water ice, as a very-viscous, gravity-driven flow
+\item a \alert{glacier} is water ice in a very-viscous, gravity-driven flow
     \begin{itemize}
     \item[$\circ$] formed from compressed snow
-    \item[$\circ$] an \alert{ice sheet} is just a big, continent-scale glacier
-    \item[$\circ$] \emph{sea ice is something quite different!}
     \end{itemize}
-\item<2-> \alert{glaciation} means the glacier-covered, time-dependent 2D domain
-\item<3> the \alert{glacier margin} is the free boundary of glaciation
+\item an \alert{ice sheet} is just a big glacier
+    \begin{itemize}
+    \item[$\circ$] continental scale
+    \item[$\circ$] \emph{sea ice} is something quite different
+    \end{itemize}
+\item \alert{glaciation} means the glacier-covered, time-dependent 2D domain
+\item<2> the \alert{glacier margin} is the free boundary of glaciation
     \begin{itemize}
     \item[$\circ$] location determined by combined effects of climate, bed topography, boundary stresses, and ice flow
-    \item[$\circ$] fractures and crevasses \emph{may} dominate margins at small scale
     \item[$\circ$] steeper surface slopes near margins
+    \item[$\circ$] non-fluid features (fractures and crevasses) often dominate margins at small scale
     \end{itemize}
 \end{itemize}
 \end{column}
@@ -196,7 +199,7 @@
 \medskip
 \begin{itemize}
 \item there are two present-day ice sheets: Antarctica (big!), Greenland (medium)
-\item very thin
+\item very thin (in aspect-ratio sense)
 \item smooth surface, often above a rough bed
 \item steeper surface slopes near margins
 \end{itemize}
@@ -215,7 +218,7 @@
 \begin{itemize}
 \item large velocity contrasts
 \item fast flow concentrated in narrow outlets near boundary
-\item near-fractal boundaries
+\item nearly-fractal boundaries
 \end{itemize}
 
 \vspace{20mm}
@@ -285,7 +288,7 @@ Aschwanden et al (2016), Nature Commun.~7, 10524
 \end{frame}
 
 
-\begin{frame}{surface elevation view: how does the surface move?}
+\begin{frame}{how does the glacier surface move?}
 
 \begin{itemize}
 \item \alert{surface kinematical equation}:
@@ -294,13 +297,13 @@ Aschwanden et al (2016), Nature Commun.~7, 10524
 \end{equation*}
 
     \begin{itemize}
-    \item[$\lc$] $\bu|_s$ is the \alert{surface trace of 3D ice velocity} \only<2>{\hfill \grey{$\leftarrow$ solution}}
-    \item[$\lc$] $\bn_s = \left<-\tfrac{\partial s}{\partial x_1}, -\tfrac{\partial s}{\partial x_1}, 1\right>$ is the upward \alert{surface normal vector} \only<2>{\hfill \grey{$\leftarrow$ solution}}
-    \item[$\lc$] e.g.~apply pillbox mass-conservation argument to derive
+    \item[$\lc$] $\bu|_s$ is the surface trace of 3D ice velocity \hfill \grey{$\leftarrow$ solution}
+    \item[$\lc$] $\bn_s = \left<-\tfrac{\partial s}{\partial x_1}, -\tfrac{\partial s}{\partial x_1}, 1\right>$ is the upward surface normal vector \hfill \grey{$\leftarrow$ solution}
+    \item[$\lc$] derive via e.g.~apply pillbox mass-conservation argument
     \end{itemize}
 
-\medskip
 \pause
+\medskip
 \item this equation applies at the \alert{non-material} surface $z=s(t,x)$ \alert{only if  $s(t,x) > b(x)$},
 \item so it \alert{cannot}, by itself, describe the evolution of glaciation
 \end{itemize}
@@ -327,27 +330,29 @@ s - b &\ge 0 \\
 \end{align*}
 
     \begin{itemize}
-    \item[$\lc$] assuming: \,\alert{$\bu|_s$ is extended by zero to ice-free land}
-    \item[$\lc$] at ice-free locations ($s=b$, $\partial s/\partial t=0$, $\bu|_s=\bzero$) we have $a\le 0$, ablation
+    \item[$\lc$] assuming: \,\alert{$s=b$} and \alert{$\bu|_s$ is extended by zero} over ice-free land
+
     \end{itemize}
-\item this is an \alert{obstacle problem}, in strong form, with $b$ as the obstacle
+\pause
+\item where $s>b$: \, $\frac{\partial s}{\partial t} + \bu|_s \cdot \bn_s = a$
+\item at ice-free locations $s=b$: \, $\partial s/\partial t=0$ and $\bu|_s=\bzero$ therefore $a\le 0$, ablation
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{thickness view: scalar conservation with inequality constraint}
+\begin{frame}{thickness view: conservation with inequality constraint}
 
 \hfill \includegraphics[width=0.35\textwidth]{figs/notation2.pdf}
 
 \vspace{-15mm}
 \begin{itemize}
-\item there is another view, equally valid,
+\item another view, equally valid, using thickness:
 
-using thickness $H(t,x)=s(t,x)-b(x)$
+\quad $H(t,x)=s(t,x)-b(x)$
 \item $\bU=$ (horizontal ice velocity in $\Lambda(t)$)
 \item define the \alert{ice flux}:
 $$\alert{\bq(t,x)=\int_{b(x)}^{s(t,x)} \bU(t,x,z)\,dz} \hspace{30mm}$$
-\item again an NCP, an obstacle problem:
+\item again an NCP:
 
 \vspace{-5mm}
 {\small
@@ -359,76 +364,22 @@ H\left(\frac{\partial H}{\partial t} + \Div\bq - a\right) &= 0
 }
 
     \begin{itemize}
-    \item[$\lc$] \alert{where ice is present mass is conserved}: \,$\frac{\partial H}{\partial t} + \Div\bq - a = 0$
+    \item[$\lc$] \alert{where ice is present}, $H\ge 0$, \alert{mass is conserved}: \,$\frac{\partial H}{\partial t} + \Div\bq - a = 0$
     \item[$\lc$] at ice-free locations ($H=0$, $\partial H/\partial t = 0$, $\bq=\bzero$) we have $a\le 0$, ablation
     \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{why prefer surface elevation?}
-
-\centering
-\mbox{%
-\hspace{20mm}
-\includegraphics[height=0.56\textheight]{figs/giscross.pdf} \,
-\begin{minipage}{0.3\textwidth}
-\grey{\scriptsize Greenland cross-section at $70^\circ$N
-
-data from Morlighem et al.~2017}
-\end{minipage}
-}
-
-\medskip
-\begin{itemize}
-\item gravity-driven \alert{ice flow} causes the surface $s(t,x)$ to \alert{become smoother}
-\item meanwhile $H(t,x)=s(t,x)-b(x)$ inherits the (spatial) low regularity of the bed
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{translation: glaciers $\leftrightarrow$ optimization}
-
-\begin{columns}
-\begin{column}{0.63\textwidth}
-\begin{itemize}
-\item some language from inequality-constrained optimization is useful
-
-\begin{definition}
-An inequality constraint ``$f(x)\ge c$'' is \alert{active} on $\{x\,:\,f(x)=c\}$ and \alert{inactive} otherwise, on $\{x\,:\,f(x)>c\}$.
-\end{definition}
-
-\medskip
-\item<2> for map-plane subsets of $\Omega$, at $t$:
-\end{itemize}
-\end{column}
-\begin{column}{0.37\textwidth}
-\hfill \includegraphics<1->[width=\textwidth]{figs/notation2.pdf}
-
-\vspace{10mm}
-\vspace{0pt}
-\end{column}
-\end{columns}
-
-\onslide<2>{
-\begin{center}
-\begin{tabular}{rcl|c}
-glaciology     &                   & optimization  & subset \\ \hline
-glaciated area & $\leftrightarrow$ & inactive set  & $\Lambda(t)^\perp${\Large \strut} \\
-ice-free area  & $\leftrightarrow$ & active set    & \,\,$\Omega \setminus \Lambda(t)^\perp${\large \strut} \\
-glacier margin & $\leftrightarrow$ & free boundary & \,\, $\Omega \cap \partial\Lambda(t)^\perp${\large \strut}
-\end{tabular}
-\end{center}
-}
-\end{frame}
-
-
 \begin{frame}{equivalence: weak surface motion equals weak flux divergence}
 
 \begin{itemize}
-\item recall equivalent equations, applying in the inactive set $\Lambda(t)^\perp$:
+\item recall equivalent equations, applying where $s>b$ and $H > 0$:
    $$\frac{\partial s}{\partial t} + \bu|_s \cdot \bn_s = a \qquad \leftrightarrow \qquad \frac{\partial H}{\partial t} + \Div\bq = a$$
-\item I will call $-\bu|_s \cdot \bn_s$ the \alert{surface motion}
+
+    \begin{itemize}
+    \item[$\lc$] let's call $\bu|_s \cdot \bn_s$ the \alert{surface motion}
+    \end{itemize}
 \end{itemize}
 
 \begin{lemma}
@@ -446,6 +397,61 @@ If ice is incompressible and if $\bu|_b\cdot \hat\bn = 0$ then for a test functi
 &= \int_\Omega \bq \cdot\grad\omega\,dx && \afcomm{$\tilde\omega$ indep of $z$;\, def of $\bq$} \hspace{15mm} \hfill \qed
 \end{align*}
 }
+\end{frame}
+
+
+\begin{frame}{why prefer surface elevation?}
+
+\centering
+\mbox{%
+\hspace{20mm}
+\includegraphics[height=0.65\textheight]{figs/giscross.pdf} \,
+\begin{minipage}{0.3\textwidth}
+\vspace{-5mm}
+
+\grey{\scriptsize Greenland cross-section at $70^\circ$N
+
+data from Morlighem et al.~2017}
+\end{minipage}
+}
+
+\medskip
+\begin{itemize}
+\item gravity-driven ice \alert{flow causes the surface $s(t,x)$ to become smoother}
+\item meanwhile $H(t,x)=s(t,x)-b(x)$ inherits the (spatial) low regularity of the bed
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{translation: \, glacier language $\leftrightarrow$ optimization language}
+
+\begin{columns}
+\begin{column}{0.63\textwidth}
+\begin{definition}
+An inequality constraint ``$f(x)\ge c$'' is \alert{active} on $\{x\,:\,f(x)=c\}$ and \alert{inactive} otherwise, on $\{x\,:\,f(x)>c\}$.
+\end{definition}
+\end{column}
+\begin{column}{0.37\textwidth}
+\hfill \includegraphics<1->[width=\textwidth]{figs/notation2.pdf}
+\end{column}
+\end{columns}
+
+\bigskip
+\begin{itemize}
+\item for map-plane subsets of $\Omega$, at $t$:
+
+\begin{center}
+\begin{tabular}{rcl|c}
+glaciology     &                   & optimization  & subset \\ \hline
+glaciation     & $\leftrightarrow$ & inactive set  & $\Lambda(t)^\perp${\Large \strut} \\
+ice-free area  & $\leftrightarrow$ & active set    & \,\,$\Omega \setminus \Lambda(t)^\perp${\large \strut} \\
+glacier margin & $\leftrightarrow$ & free boundary & \,\, $\Omega \cap \partial\Lambda(t)^\perp${\large \strut}
+\end{tabular}
+\end{center}
+
+\medskip
+\item glacier evolution is an inequality-constrained \alert{obstacle problem} subject to \, $s\ge b \iff H\ge 0$
+\end{itemize}
 \end{frame}
 
 
@@ -485,29 +491,27 @@ If $\Lambda$ is a bounded Lipschitz domain then there is a unique $(\bu,p)\in W^
 \end{frame}
 
 
-\begin{frame}{we want a glacier evolution model}
+\begin{frame}{we want a glacier \underline{evolution} model}
 
 \begin{itemize}
 \item the Stokes block:
 {\footnotesize
 \stokesblock{non-sliding}
 }
-\item has no time derivative, so this is \alert{not an evolution model} by itself
+\item this has no time derivative, so this is \alert{not an evolution model} by itself
     \begin{itemize}
-    \item[$\lc$] the domain $\Lambda(t)$ is not fixed
-    \item[$\lc$] both surface $s(t,x)$ and domain $\Lambda(t)$ are parts of the evolution solution
+    \item[$\lc$] the domain $\Lambda(t)$ is not fixed in reality
+    \item[$\lc$] both surface $s(t,x)$ and domain $\Lambda(t)$ are aspects of the evolution solution
     \end{itemize}
 
 \pause
-\item main idea for evolution: \alert{couple the surface kinematical NCP}
+\item evolution model: \alert{couple} Stokes to the \alert{surface kinematical NCP}
 $$s - b \ge 0, \qquad
 \frac{\partial s}{\partial t} + \bu|_s \cdot \bn_s - a \ge 0, \qquad
 (s-b) \left(\frac{\partial s}{\partial t} + \bu|_s \cdot \bn_s - a\right) = 0$$
 
     \begin{itemize}
-    \item[$\lc$] evolving state variables: \,\alert{$s,\bu,p$}
-    \item[$\lc$] the Stokes block is an \alert{algebraic constraint} in the coupled evolution problem
-    %\item[$\lc$] implicit steps would seem to be natural
+    \item[$\lc$] evolving state variables: \,\alert{$s(t,x), \, \bu(t,x,z), \, p(t,x,z)$}
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -517,7 +521,7 @@ $$s - b \ge 0, \qquad
 
 \begin{columns}
 \begin{column}{0.555\textwidth}
-\begin{block}{surface-Stokes model}
+\begin{block}{surface-Stokes evolution model}
 \vspace{-4mm}
 
 {\small
@@ -544,7 +548,10 @@ s - b &\ge 0 && \text{on $\Omega$} \\
 \begin{itemize}
 \small
 \item key definition and coupling:\, $\displaystyle \alert{\Lambda(t) = \left\{(x,z)\,:\,b(x) < z < s(t,x)\right\}}$
-\item coupled problem is a \alert{differential-algebraic system with inequality constraints}
+
+\pause
+\item the Stokes block acts as an \alert{algebraic constraint} in the coupled dynamical system
+\item glacier evolution is a \alert{differential-algebraic system with inequality constraints}
 \end{itemize}
 \end{frame}
 
@@ -570,11 +577,11 @@ s - b &\ge 0 && \text{on $\Omega$} \\
     \end{itemize}
 
 \pause
-\item so $s(t,x)$ solves a degenerate, doubly-nonlinear obstacle problem, with this PDE:
+\item so $s(t,x)$ solves a degenerate, \alert{doubly-nonlinear} PDE where $s>b$:
     $$\frac{\partial s}{\partial t} - \Div\left(\gamma_0 (s-b)^{\nn+2} |\grad s|^{\nn-1}\grad s\right) = a$$
 
     \begin{itemize}
-    \item[$\lc$] in the SIA, $s(t,x)$ solves a \alert{diffusion}
+    \item[$\lc$] in the SIA, $s$ solves a \alert{diffusion}
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -596,7 +603,7 @@ Suppose $\Omega\subset\RR^1$, bounded data $a(t,x)$, and $b=0$.  For $\mm=2(\nn+
 \end{theorem}
 
 {\small
-\noindent \textbf{proof idea.} Use Raviart (1970) power transformation $\alert{w=s^\mm}$ on doubly-nonlinear diffusion.  Converts surface motion into \alert{p-Laplacian} form:\, $\displaystyle (s-b)^{\nn+2} |\grad s|^{\nn-1}\grad s \to \Div\left(|\grad w|^{\qq-2}\grad w\right)$.
+\noindent \textbf{proof idea.} Use Raviart (1970) power transformation $\alert{w=s^\mm}$ on doubly-nonlinear diffusion.  Converts surface motion into \alert{$\qq$-Laplacian} form:\, $\displaystyle s^{\nn+2} |\grad s|^{\nn-1}\grad s \to c |\grad w|^{\qq-2}\grad w$.
 }
 
 \medskip
@@ -638,16 +645,13 @@ Suppose $\Omega\subset\RR^2$, $\qq>2$, \alert{general bed $b\in W^{1,\qq}(\Omega
 
 \medskip
 {\small
-\noindent \textbf{proof ideas.} Use Raviart (1970) power transformation, freeze the nonlinearities to create monotone variational inequality problems, nontrivial \emph{a priori} bound on the iterates \pfcomm{Guillaume!}, apply Schaefer fixed point theorem.
+\noindent \textbf{proof ideas.} The weak form is a \alert{variational inequality} (VI).  Use the Raviart power transformation, freeze the nonlinearities to create monotone VI problems, prove nontrivial \emph{a priori} bound on the iterates \pfcomm{Guillaume!}, and apply Schaefer fixed point theorem.
 }
 
 \medskip
 \begin{itemize}
 \item proof technique permits various bells \& whistles: sliding, variable softness, elevation-dependent $a$
-
-\pause
-\medskip
-\item \alert{uniqueness left open}
+\item \alert{uniqueness was left open}
     \begin{itemize}
     \item[$\lc$] but it holds in the $b=0$, non-sliding, elevation-independent case
     \end{itemize}
@@ -661,9 +665,10 @@ Suppose $\Omega\subset\RR^2$, $\qq>2$, \alert{general bed $b\in W^{1,\qq}(\Omega
 \figcite{$s_1$ fills basins with flat ice, $s_2=b$ is ice-free}
 
 \begin{proposition}[B 2026, App.~B]
-For $\Omega \subset \RR^d$, if $b$ is continuous \alert{with strict local minima}, and then there exist climates $a(x)$, with \alert{$a=0$ over the dips}, so that there are multiple steady solutions for $s(x)$.
+For $\Omega \subset \RR^d$, if $b$ is continuous \alert{with strict local minima}, and then there exist steady climates $a(x)$, with \alert{$a=0$ over the dips}, giving multiple steady solutions for $s(x)$.
 \end{proposition}
 
+\pause
 {\small
 \noindent \textbf{proof.} Both $s_1,s_2$ have $\bu|_{s_i}=\bzero$, so both solve NCP when $a=0$ covers the dip:
    $$\hspace{35mm} s-b\ge 0, \quad -\bu|_s\cdot\bn_s\ge 0, \quad (s-b)(\bu|_s\cdot\bn_s)=0. \hspace{35mm} \qed$$
@@ -672,6 +677,7 @@ For $\Omega \subset \RR^d$, if $b$ is continuous \alert{with strict local minima
 \medskip
 \begin{itemize}
 \item observation: surface motion $\Phi(s) = -\bu|_s\cdot\bn_s$ is \alert{not strictly monotone} as function of $s$
+\item above applies for any stress balance
 \end{itemize}
 \end{frame}
 
@@ -686,7 +692,7 @@ For $\Omega \subset \RR^d$, if $b$ is continuous \alert{with strict local minima
 Calvo et al (2002) & flat (1D) & dependent & yes & yes \\
 Piersanti \& Temam (2023) & flat (2D) & dependent & yes$^*$ & -- \\
 Jouvet \& B (2012) & general & steady & yes & only flat case \\
-B (2026), App.~B & bumpy & steady & -- & \alert{no}$^\dagger$ if $a\equiv 0$ locally \\
+B (2026), App.~B & bumpy & steady & -- & \alert{no}$^\dagger$ when $a\equiv 0$ \\
 \midrule
 \end{tabular}
 \end{center}
@@ -700,7 +706,7 @@ B (2026), App.~B & bumpy & steady & -- & \alert{no}$^\dagger$ if $a\equiv 0$ loc
 \begin{itemize}
 \item open well-posedness problem: time-dependent SIA on a general bed
     \begin{itemize}
-    \item[$\lc$] is the Raviart power transformation a worn-out tool?
+    \item[$\lc$] is the Raviart power transformation exhausted?
     \end{itemize}
 
 \pause
@@ -717,19 +723,20 @@ B (2026), App.~B & bumpy & steady & -- & \alert{no}$^\dagger$ if $a\equiv 0$ loc
 \begin{itemize}
 \item the ice flow aspect of glacier evolution comes down to understanding the \alert{surface motion} as a weak-form operator:
     $$\Phi(s)[\omega] = -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega \stackrel{\text{\grey{recall}}}{=} -\int_\Omega \bq(s)\cdot\grad \omega$$
-\item is $\Phi$ a nice nonlinear operator? \pause \, ``nice''?
+\item is $\Phi$ a nice nonlinear operator?
 \end{itemize}
 
+\pause
 \begin{definitions}
-For a Banach space $\cX$, a subset $\cK\subset \cX$, and a map $F:\cK\to\cX'$.
+For a Banach space $\cX$, a subset $\cK\subset \cX$, and a nonlinear map $F:\cK\to\cX'$.
 \begin{itemize}
 \item $F$ is \alert{$\qq$-coercive} if there is $\alpha>0$ so that \alert{$\left(F(v)-F(w)\right)[v-w]\ge\alpha\|v-w\|^\qq$} for all $v,w\in\cK$
-\item $f$ is \alert{monotone} if $\left(F(v)-F(w)\right)[v-w] \ge 0$; \, \alert{strictly} if $v\ne w$ implies ``$>$''
+\item $F$ is \alert{monotone} if $\left(F(v)-F(w)\right)[v-w] \ge 0$; \, \alert{strictly} if $v\ne w$ implies ``$>$''
 \end{itemize}
 \end{definitions}
 
 \begin{itemize}
-\item if $F$ is $\qq$-coercive then it it strictly-monotone
+\item $\qq$-coercive \, $\implies$ \, strictly-monotone
 \item if $F=\grad J$ for a smooth objective $J:\cK\to\RR$ then:
 
 \centerline{$F$ strictly-monotone $\iff$ $J$ strictly-convex}
@@ -793,6 +800,10 @@ For a bed with local minima, $\Phi$ is \alert{not} strictly-monotone, thus not $
 \item computing steady-state glaciers is \alert{not an optimization problem} in general
 \item though it \emph{is} inequality-constrained
 \end{itemize}
+\onslide<7>
+\begin{block}{the coercivity situation}
+confusing, especially when $\bu|_s$ comes from Stokes
+\end{block}
 \end{overprint}
 \end{frame}
 
@@ -804,7 +815,7 @@ For a bed with local minima, $\Phi$ is \alert{not} strictly-monotone, thus not $
 
 \pause
 \medskip
-\item \alert{run Stokes simulations} to generate 2000 \alert{random surface pairs}
+\item \alert{run Stokes simulations} to generate 2000 \alert{random surface pair samples}
     \begin{itemize}
     \item[$\lc$] 1D domain $\Omega$, length 200 km, $h=$500 m mesh resolution
     \item[$\lc$] either flat or rough bed, initial ice thickness 1400 m
@@ -815,7 +826,7 @@ For a bed with local minima, $\Phi$ is \alert{not} strictly-monotone, thus not $
 \centerline{\includegraphics[width=0.32\textwidth]{figs/snapsflat.png} \quad \includegraphics[width=0.32\textwidth]{figs/snapsrough.png}}
 \figcite{from B (2026), App.~C}
 
-\item \alert{sample} surface pairs and \alert{compute the $4$-coercivity ratios}:
+\item for each sample pair, \alert{compute the $4$-coercivity ratios}:
     $$\rho(\sigma,s)=\frac{\left(\Phi(\sigma)-\Phi(s)\right)[\sigma-s]}{\|\sigma-s\|_{W^{1,4}}^4}$$
 \end{itemize}
 \end{frame}
@@ -833,12 +844,9 @@ For a bed with local minima, $\Phi$ is \alert{not} strictly-monotone, thus not $
 \medskip
 \figcite{histograms of ratio magnitudes $|\rho(\sigma,s)|$: flat (left) and rough (right) beds}
 
-\pause
 \medskip
 \begin{itemize}
 \item more than \alert{10\%} of ratios $\rho(\sigma,s)$ are \alert{negative}, which violates coercivity
-
-\pause
 \item but magnitudes are much smaller; \alert{Stokes surface motion ``wants'' to be coercive}
 \end{itemize}
 \end{frame}
@@ -847,18 +855,18 @@ For a bed with local minima, $\Phi$ is \alert{not} strictly-monotone, thus not $
 \begin{frame}{regularize using SIA-type diffusion}
 
 \begin{itemize}
+\item surface motion: \, $\Phi(s)[\omega] = -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega$
 \item choose a fixed thickness $\eta_0>0$, and $0<\eps\ll 1$
 \item using SIA formula with $\nn=3$, define
 \begin{align*}
-\Phi(s)[\omega] &= -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega \\
 \Phi^\eps(s)[\omega] &= (1-\eps)\Phi(s)[\omega] \alert{+\eps\,\gamma_0\eta_0^{5}\int_\Omega|\grad s|^{2}\grad s\cdot\grad\omega}
 \end{align*}
-\item that is, \alert{regularize with $4$-Laplacian}
+\item that is, add a bit of the $4$-Laplacian operator to regularize
 \end{itemize}
 
 \pause
 \begin{conjecture}[B 2026]
-On $\cK = \{\sigma \ge b\} \subset \cX=W^{1,4}(\Omega)$, there exist $\eps>0$, $\eta_0>0$, and $\alpha>0$ so that
+On $\cK = \{\sigma \ge b\} \subset \alert{\cX=W^{1,4}(\Omega)}$, there exist $\eps>0$, $\eta_0>0$, and $\alpha>0$ so that \alert{$\Phi^\eps$ is $4$-coercive}:
     $$\left(\Phi^\eps(\sigma)-\Phi^\eps(s)\right)[\sigma-s]\ge\alpha\|\sigma-s\|_\cX^4 \quad \text{for all } \sigma,s\in\cK.$$
 \end{conjecture}
 \end{frame}
@@ -887,16 +895,17 @@ $$\Phi^\eps(s)[\omega] = -(1-\eps)\int_\Omega (\bu|_s \cdot \bn_s)\, \omega +\ep
 
 \medskip
 \begin{itemize}
-\item surface-Stokes evolution only mildly smooths high-frequency surface bumps
-\item the $\eps>0$ regularization helps with that
-\item for $\eps>0$, the $s_1$ surface has lower ``energy'' than $s_2$:
+\item the $\eps>0$ regularization fixes the fact that surface-Stokes evolution only mildly smooths high-frequency surface bumps
+
+\pause
+\item \emph{and} it means the $s_1$ surface has lower ``energy'' than $s_2$:
 
 \medskip
 \centerline{\includegraphics[width=0.26\textwidth]{figs/filled.pdf} \qquad \includegraphics[width=0.26\textwidth]{figs/icefree.pdf}}
 
 \pause
 \medskip
-\item and it helps with \alert{removing margin overhangs}:
+\item \emph{and} it helps with \alert{removing margin overhangs}:
 \end{itemize}
 
 \centerline{\includegraphics[height=16mm]{figs/wedge.png} \qquad \includegraphics[height=16mm]{figs/unbounded.png} \qquad \includegraphics[height=17mm]{figs/realistic.png} \qquad \includegraphics[height=19mm]{figs/polaris.png} }
