@@ -1004,7 +1004,7 @@ In twice-stabilized semi-implicit scheme, the new solution is bounded by the dat
     \item[$\lc$] $D$ typical diffusivity \hfill \pfcomm{from SIA formula}
     \item[$\lc$] $q$ number of time steps per model year needed for climate coupling
     \end{itemize}
-\item cost in flops ($m\to\infty$ asymptotic models; note $\alpha,\beta,\gamma\ge 0$):
+\item cost in flops ($m\to\infty$ asymptotic complexity models; note $\alpha,\beta,\gamma\ge 0$):
 
 \centerline{%
 \begin{tabular}{ll}
@@ -1043,15 +1043,19 @@ implicit & $\Delta t \le 1/q$    & SIA & $O\left(q L^{2+2\beta}\,h^{-(2+2\beta)}
 \end{tabular}
 \end{center}
 
+\begin{overprint}
+\onslide<1>
 \begin{itemize}
 \item twice-stabilized semi-implicit scheme (TSSI) avoids the $\Delta t=O(h^2)$ tragedy
 \item warning: for implicit schemes the constants in $O(\dots)$ are large
-
-\pause
-\item if direct sparse linear algebra is used for Stokes in TSSI then $\alpha\approx 1$, at best, so we get bad $O(h^{-5})$ FPMY scaling \hfill \sgrey{makes it hard to do science}
+\end{itemize}
+\onslide<2>
+\begin{itemize}
+\item if direct sparse linear algebra is used for explicit Stokes then $\alpha\approx 1$, at best, so we get bad $O(h^{-5})$ FPMY scaling \hfill \sgrey{makes it hard to do science}
 \item $\beta,\gamma$ large if these implicit solvers have mesh-dependent iterations \hfill \sgrey{need multigrid}
 \item goal: \alert{$\gamma<0.5$ for implicit Stokes}, presumably multigrid, giving $O(h^{-3})$ FPMY
 \end{itemize}
+\end{overprint}
 \end{frame}
 
 
