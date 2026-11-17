@@ -16,7 +16,7 @@ A [video of the talk](https://www.youtube.com/watch?v=z6Rhpzk2j8E) is at the [Fi
 
 ## lecture 2 on 27 October: New solvers for variational inequalities
 
-See [slides-oct27.pdf](slides-oct27.pdf), with LaTeX sources in [talk2/](talk1/).
+See [slides-oct27.pdf](slides-oct27.pdf), with LaTeX sources in [talk2/](talk2/).
 
 A [video of the talk](https://www.youtube.com/watch?v=hJ1zuOk1ywA) is at the [Firedrake YouTube page](https://www.youtube.com/@FiredrakeFEM/videos).
 
@@ -24,6 +24,6 @@ A [video of the talk](https://www.youtube.com/watch?v=hJ1zuOk1ywA) is at the [Fi
 
 This lecture uses the existing slides from [stokes-ice-tutorial/](https://github.com/bueler/stokes-ice-tutorial).
 
-## lecture 4 on 17 November: The mathematical (and numerical) problem of glaciation
+## lecture 4 on 17 November: The mathematical problem of glaciation
 
-TODO
+See [slides-nov17.pdf](slides-nov17.pdf), with LaTeX sources in [talk4/](talk4/).
