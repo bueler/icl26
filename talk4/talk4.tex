@@ -456,7 +456,7 @@ glacier margin & $\leftrightarrow$ & free boundary & \,\, $\Omega \cap \partial\
 }
 
 
-\begin{frame}{momentum conservation: Stokes on domain $\Lambda(t)$}
+\begin{frame}{momentum conservation: Stokes}
 
 \begin{itemize}
 \item let $\alert{\pp} = 1 + 1/\nn \alert{\approx 4/3}$, where $\nn\approx 3$ is \alert{Glen's exponent} for ice rheology
@@ -491,8 +491,8 @@ If $\Lambda$ is a bounded Lipschitz domain then there is a unique $(\bu,p)\in W^
 }
 \item this has no time derivative, so this is \alert{not an evolution model} by itself
     \begin{itemize}
-    \item[$\lc$] the domain $\Lambda(t)$ is not fixed in reality
-    \item[$\lc$] both surface $s(t,x)$ and domain $\Lambda(t)$ are aspects of the evolution solution
+    \item[$\lc$] the domain $\Lambda(t)$ evolves; it is not fixed in reality
+    \item[$\lc$] both surface $s(t,x)$ and domain $\Lambda(t)$ are parts of model solution
     \end{itemize}
 
 \pause
@@ -698,7 +698,7 @@ B (2026), App.~B & bumpy & steady & -- & \alert{no}$^\dagger$ when $a\equiv 0$ \
 \medskip
 \item but real glaciers and ice sheets are \emph{not} shallow for most scientifically-useful modeling purposes
 \item \alert{no such existence results} for the canonical surface-Stokes model
-\item this talk is about that canonical model, though informed by above SIA results
+\item this talk is about the surface-Stokes canonical model (informed by SIA results)
 \end{itemize}
 \end{frame}
 
@@ -731,7 +731,7 @@ For a Banach space $\cX$, a subset $\cK\subset \cX$, and a nonlinear map $F:\cK\
 \end{frame}
 
 
-\begin{frame}{coercivity question for surface motion}
+\begin{frame}{coercivity question for weak surface motion}
 
 \vspace{-10mm}
 
@@ -745,11 +745,12 @@ For a Banach space $\cX$, a subset $\cK\subset \cX$, and a nonlinear map $F:\cK\
 \end{itemize}
 \onslide<2>
 \begin{block}{I.~lemma (B, 2026)}
-For any $\qq\ge 2$, and Stokes dynamics to determine $\bu|_s$, \alert{$\Phi$ is a well-defined map from $\cK\subset \cX=W^{1,\qq}(\Omega)$ to $\cX'$}.
+%If $\Lambda(t)$ is a Lipschitz domain then Stokes dynamics will generate a trace $\bu|_s \in L^\pp(\Gamma_s)$.
+For any $\qq\ge 2$, \alert{$\Phi$ is a well-defined map} from $s\in \cK \subset \alert{\cX=W^{1,\qq}(\Omega)}$ to $\cX'$.
 \end{block}
 \onslide<3>
 \begin{block}{II.~intuition}
-$\Phi:\cK\to\cX$ \alert{should be $2$-coercive} because ice flows downhill.
+$\Phi$ \alert{should be $2$-coercive} because ice flows downhill.
 \end{block}
 
 {\small
@@ -776,8 +777,8 @@ For a bed with local minima, $\Phi$ is \alert{not} strictly-monotone, thus not $
 \bigskip
 \centerline{\includegraphics[width=0.33\textwidth]{figs/filled.pdf} \qquad \includegraphics[width=0.33\textwidth]{figs/icefree.pdf}}
 \onslide<6>
-\begin{block}{V.~the coercivity situation}
-is \alert{confusing} when $\bu|_s$ comes from Stokes
+\begin{block}{V.~speaking for myself}
+the coercivity situation is \alert{confusing} when $\bu|_s$ comes from Stokes
 \end{block}
 \end{overprint}
 \end{frame}
@@ -786,7 +787,7 @@ is \alert{confusing} when $\bu|_s$ comes from Stokes
 \begin{frame}{numerical coercivity experiment}
 
 \begin{itemize}
-\item but the Firedrake \includegraphics[width=5mm]{figs/firedrake-small.png} is a friend
+\item but the Firedrake \includegraphics[width=5mm]{figs/firedrake-small.png} is a good friend
 
 \pause
 \medskip
@@ -801,7 +802,7 @@ is \alert{confusing} when $\bu|_s$ comes from Stokes
 \centerline{\includegraphics[width=0.32\textwidth]{figs/snapsflat.png} \quad \includegraphics[width=0.32\textwidth]{figs/snapsrough.png}}
 \figcite{from B (2026), App.~C}
 
-\item for each sample pair, \alert{compute the $4$-coercivity ratios}:
+\item for each pair, \alert{compute the $4$-coercivity ratio} using $W^{1,4}$ norm:
     $$\rho(\sigma,s)=\frac{\left(\Phi(\sigma)-\Phi(s)\right)[\sigma-s]}{\|\sigma-s\|_{W^{1,4}}^4} \hspace{45mm}$$
 
 \vspace{-7mm}
@@ -824,7 +825,9 @@ is \alert{confusing} when $\bu|_s$ comes from Stokes
 
 \medskip
 \begin{itemize}
-\item more than \alert{10\%} of ratios $\rho(\sigma,s)$ are \alert{negative}, which violates coercivity
+\item more than \alert{10\%} of ratios $\rho(\sigma,s)$ are \alert{negative}, which \alert{violates coercivity}
+
+\pause
 \item but magnitudes are much smaller; \alert{Stokes surface motion ``wants'' to be coercive}
 \end{itemize}
 \end{frame}
@@ -833,7 +836,7 @@ is \alert{confusing} when $\bu|_s$ comes from Stokes
 \begin{frame}{regularize using SIA-type diffusion}
 
 \begin{itemize}
-\item surface motion: \, $\Phi(s)[\omega] = -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega$ with $\bu|_s$ from Stokes
+\item start from weak surface motion with $\bu|_s$ from Stokes: \, $\Phi(s)[\omega] = -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega$
 \item choose a fixed thickness $\eta_0>0$, and $0<\eps\ll 1$
 \item using SIA formula with $\nn=3$, define
 \begin{align*}
@@ -873,24 +876,25 @@ $$\Phi^\eps(s)[\omega] = -(1-\eps)\int_\Omega (\bu|_s \cdot \bn_s)\, \omega +\ep
 
 \medskip
 \begin{itemize}
-\item the $\eps>0$ regularization fixes the fact that surface-Stokes evolution only mildly smooths high-frequency surface bumps
+\item surface-Stokes evolution only mildly smooths high-frequency surface bumps
+\item this $\eps>0$ regularization adds $4$-Laplacian smoothing
 
 \pause
-\item \emph{and} it means the $s_1$ surface has lower ``energy'' than $s_2$:
+\item now the $s_1$ surface has lower ``energy'' than $s_2$:
 
 \bigskip
 \centerline{\includegraphics[width=0.26\textwidth]{figs/filled.pdf} \qquad \includegraphics[width=0.26\textwidth]{figs/icefree.pdf}}
 
 \pause
 \smallskip
-\item \emph{and} it should stop creation of \alert{margin overhang}:
+\item now \alert{margin overhang} is blocked:  \hfill \grey{\small real margins often fracture-dominated} \hspace{25mm}
 \end{itemize}
 
-\centerline{\includegraphics[height=16mm]{figs/wedge.png} \qquad \includegraphics[height=16mm]{figs/unbounded.png} \qquad \includegraphics[height=17mm]{figs/realistic.png} \qquad \includegraphics[height=19mm]{figs/polaris.png} }
+\centerline{\includegraphics[height=16mm]{figs/wedge.png} \qquad \includegraphics[height=16mm]{figs/unbounded.png} \hspace{15mm} \includegraphics[height=17mm]{figs/realistic.png} \qquad \includegraphics[height=19mm]{figs/polaris.png}}
 \end{frame}
 
 
-\begin{frame}{what if surface-motion is coercive?}
+\begin{frame}{if surface-motion is coercive, then what?}
 
 {\small
 $$\Phi^\eps(s)[\omega] = -(1-\eps)\int_\Omega (\bu|_s \cdot \bn_s)\, \omega +\eps\,\gamma_0\eta_0^{5}\int_\Omega|\grad s|^{2}\grad s\cdot\grad\omega \qquad \text{with $\bu|_s$ from Stokes}$$
@@ -901,24 +905,18 @@ On $\cK = \{\sigma \ge b\} \subset \cX=W^{1,4}(\Omega)$, there exist $\eps>0$, $
 \end{conjecture}
 }
 
-\medskip
+\smallskip
 \begin{itemize}
-\item suppose this conjecture is true?  then what?
+\item suppose this conjecture is true?  then what?\footnote{see B (2026), \href{https://arxiv.org/abs/2408.06470}{\emph{Surface elevation errors in FE Stokes models for glacier evolution}, arXiv:2408.06470}}
 
 \pause
-\item 2 important things follow:
+\smallskip
+\item 2 important mathematical things follow:
    \begin{enumerate}
    \item for coupled surface-Stokes, the fully-implicit time-step problem is well-posed
    \item \emph{a priori} estimate exists for the surface elevation error in a finite element scheme
    \end{enumerate}
-
-\pause
-\item such a Stokes scheme would be unconditionally-stable, and capable of arbitrary retreat or advance during a time step
-
-\medskip
-{\small
-\item more on this in B (2026), \href{https://arxiv.org/abs/2408.06470}{\emph{Surface elevation errors in finite element Stokes models for glacier evolution}, arXiv:2408.06470}
-}
+\item practical: get implicit Stokes schemes which are unconditionally-stable and capable of arbitrary retreat or advance during a time step
 \end{itemize}
 \end{frame}
 
@@ -937,7 +935,7 @@ Suppose $s(t,x)$ and $\bu(t,x,z)$ solve the time-dependent, coupled surface-Stok
 It follows that: \quad $\|s\|_{L^2} \le \|s(t=0)\|_{L^2}+\int_0^t\|a\|_{L^2}$.
 
 \smallskip
-\grey{\small The norm is $L^2(\Lambda(t); \RR^{3\times 3})$ for the $D\bu$ integral and $L^2(\Lambda(t)^\perp)$ for the others.}
+\grey{\small For the $D\bu$ integral the norm is $L^2(\Lambda(t); \RR^{3\times 3})$.  For the others it is $L^2(\Lambda(t)^\perp)$.}
 \end{theorem}
 \end{withpeople}
 
@@ -951,7 +949,7 @@ It follows that: \quad $\|s\|_{L^2} \le \|s(t=0)\|_{L^2}+\int_0^t\|a\|_{L^2}$.
 \item idea: \, gravity-driven Stokes flow dissipates potential energy source $\rho g a$
 
 \pause
-\item however, $L^2$ norm on $s(t,x)$ gives \alert{no control of $\partial\Lambda(t)$ regularity} for Stokes problem
+\item however, $L^2$ norm bound on $s$ does not provide needed \alert{control of $\partial\Lambda(t)$ regularity for the Stokes problem}
 \end{itemize}
 \end{frame}
 
@@ -961,13 +959,13 @@ It follows that: \quad $\|s\|_{L^2} \le \|s(t=0)\|_{L^2}+\int_0^t\|a\|_{L^2}$.
 \begin{frame}{a mostly-explicit solver that works}
 
 \begin{itemize}
-\item from the same group (L\"ofgren et al 2022, Tominec et al 2026)
+\item also from the Ahlkrona group (L\"ofgren et al 2022, Tominec et al 2026)
 \end{itemize}
 
 {\small
-\begin{block}{twice-stabilized semi-implicit scheme for surface-Stokes}
+\begin{block}{twice-stabilized semi-implicit (TSSI) scheme for surface-Stokes}
 \begin{enumerate}
-\item At time $t_k$, solve weak Stokes on the current geometry, with \alert{load stabilization}, for $\bu,p$:
+\item At $t_k$, solve weak Stokes for $\bu,p$ on current geometry, with symmetrized \alert{load stabilization}:
     $$\int_{\Lambda^k}2\nu\,D\bu:D\bv-p\Div\bv-q\Div\bu-\rho\bg\cdot\bv+\alert{\int_{\Gamma_s^k}\rho g\Delta t\left[\tfrac{1}{2}\bu\cdot\bn_{s^k}+a\right]\bv\cdot\hat\bn}=0 \qquad \forall \bv,q$$
 \item Choose $\Delta t=C_{\text{CFL}}\min h/|\bu|$, then update surface as a VI for $s^{k+1}\in\cK_h=\{\sigma\,:\,\sigma\ge b_h\}$, with implicit \alert{edge stabilization}, $J_k(s,r)=\sum_e\int_e\tfrac{1}{2}h_e^2\big|\bu|_{s^k}\big|\jump{\grad s}\jump{\grad r}\,dS$:
     $$\int_\Omega\left(\frac{s^{k+1}-s^k}{\Delta t}-\bu|_{s^k}\cdot\bn_{s^k}-a\right)(\sigma-s^{k+1})+\alert{J_k\left(s^{k+1},\sigma-s^{k+1}\right)}\ge 0 \qquad \forall \sigma\in\cK_h$$
@@ -977,7 +975,8 @@ It follows that: \quad $\|s\|_{L^2} \le \|s(t=0)\|_{L^2}+\int_0^t\|a\|_{L^2}$.
 }
 
 \begin{itemize}
-\item only one Stokes solve per step, very cheap VI solve
+\item one Stokes solve per step
+\item one (cheap!) variational inequality (VI) solve per step
 \end{itemize}
 \end{frame}
 
@@ -985,18 +984,17 @@ It follows that: \quad $\|s\|_{L^2} \le \|s(t=0)\|_{L^2}+\int_0^t\|a\|_{L^2}$.
 \begin{frame}{a mostly-explicit solver that is provably stable}
 
 \begin{theorem}[Tominec et al 2026]
-In twice-stabilized semi-implicit scheme, the new solution is bounded by the data:
+In TSSI scheme, the new solution is bounded by the data:
     $$\|s^{k+1}\|_{L^2}^2+\frac{4\Delta t}{\rho g}\|\sqrt{\mu}D\bu\|_{L^2}^2+2\Delta t\,J_k(s^{k+1},s^{k+1})\le\|s^k+\Delta t \,a\|_{L^2}^2.$$
 \end{theorem}
 
 \medskip
 \begin{itemize}
 \item \alert{arbitrary time steps are stable}
-\item consistent and mass-conserving (if Stokes solve is mass conserving)
-\item CFL still needed for accurate moving margins
+\item TSSI is consistent, and globally mass-conserving
+\item CFL is still needed for accurate moving margins
     \begin{itemize}
     \item[$\lc$] the velocity is explicit, so margin can advance at most one element per step
-    \item[$\lc$] CFL still needed for accuracy generally? \hfill \pfcomm{no convergence proof yet}
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -1005,19 +1003,22 @@ In twice-stabilized semi-implicit scheme, the new solution is bounded by the dat
 \begin{frame}{performance modeling}
 
 \begin{itemize}
-\item B (2023): \, is such a solver efficient?
-\item parameters for a performance model:
+\item B (2023): \, how to model solver efficiency?  \quad \alert{an update}
+\pause
+\item parameters:
     \begin{itemize}
     \item[$\lc$] $L$ typical domain length \hfill \pfcomm{for 2D domain $\Omega$}
     \item[$\lc$] $h$ resolution \hfill \pfcomm{for mesh over $\Omega$}
-    \item[$\lc$] $m\sim L^2/h^2$ number nodes \hfill \pfcomm{for mesh over $\Omega$}
+    \item[$\lc$] $m\sim L^2/h^2$ dofs $=$ number of nodes \hfill \pfcomm{for mesh over $\Omega$}
     \item[$\lc$] $U$ typical ice speed
     \item[$\lc$] $D$ typical diffusivity \hfill \pfcomm{from SIA formula}
     \item[$\lc$] $q$ number of time steps per model year needed for climate coupling
     \end{itemize}
-\item cost in flops ($m\to\infty$ asymptotic complexity models; note $\alpha,\beta,\gamma\ge 0$):
+\item cost in flops:
 
+\vspace{-2mm}
 \centerline{%
+\hspace{30mm}
 \begin{tabular}{ll}
 Stokes solve                            & $O(m^{1+\alpha})$ \\
 implicit SIA time-step solve            & $O(m^{1+\beta})$ \\
@@ -1025,12 +1026,17 @@ coupled implicit Stokes time-step solve & $O(m^{1+\gamma})$
 \end{tabular}
 }
 
-\item define:
+\medskip
+    \begin{itemize}
+    \item[$\lc$] these are $m\to\infty$ asymptotic complexity models; note $\alpha,\beta,\gamma\ge 0$
+    \end{itemize}
 
-\vspace{-5mm}
+\item quantity of interest:
+
+\vspace{-7mm}
 \begin{align*}
-\text{\alert{FPMY}} &= \text{(flops per model year)} \\
-  &= \text{(steps per year)} \times \text{(flops per step)}
+\hspace{15mm} \text{\alert{FPMY}} &= \text{(flops per model year)} \\
+  &= \text{(time steps per year)} \times \text{(flops per step)}
 \end{align*}
 \end{itemize}
 \end{frame}
@@ -1045,7 +1051,7 @@ coupled implicit Stokes time-step solve & $O(m^{1+\gamma})$
 \toprule
 type & condition & dynamics & FPMY & \sgrey{examples} \\
 \midrule
-explicit & $\Delta t \le Ch^2/D$ & SIA & $O\left(D L^2\,h^{-4}\right)$ & \sgrey{old/mature ice sheet models} \\
+explicit & $\Delta t \le Ch^2/D$ & SIA & $O\left(D L^2\,h^{-4}\right)$ & \sgrey{mature ice sheet models} \\
          & $\Delta t \le Ch^2/D$ & Stokes & $O\left(D L^{2+2\alpha}\,h^{-(4+2\alpha)}\right)$ & \sgrey{current Stokes glacier models} \\
          & $\Delta t \le Ch/U$   & Stokes & $O\left(U L^{2+2\alpha}\,h^{-(3+2\alpha)}\right)$ & \sgrey{\alert{TSSI}, Tominec et al (2026)} \\
 implicit & $\Delta t \le 1/q$    & SIA & $O\left(q L^{2+2\beta}\,h^{-(2+2\beta)}\right)$ & \sgrey{B (2016); B \& Farrell (2024)} \\
@@ -1057,14 +1063,14 @@ implicit & $\Delta t \le 1/q$    & SIA & $O\left(q L^{2+2\beta}\,h^{-(2+2\beta)}
 \begin{overprint}
 \onslide<1>
 \begin{itemize}
-\item twice-stabilized semi-implicit scheme (TSSI) avoids the $\Delta t=O(h^2)$ tragedy
+\item TSSI (twice-stabilized semi-implicit scheme) avoids the $\Delta t=O(h^2)$ tragedy
 \item warning: for implicit schemes the constants in $O(\dots)$ are large
 \end{itemize}
 \onslide<2>
 \begin{itemize}
-\item if direct sparse linear algebra is used for explicit Stokes then $\alpha\approx 1$, at best, so we get bad $O(h^{-5})$ FPMY scaling \hfill \sgrey{makes it hard to do science}
-\item $\beta,\gamma$ large if these implicit solvers have mesh-dependent iterations \hfill \sgrey{need multigrid}
-\item goal: \alert{$\gamma<0.5$ for implicit Stokes}, presumably multigrid, giving $O(h^{-3})$ FPMY
+\item however, if direct sparse linear algebra is used for explicit Stokes then $\alpha\approx 1$, at best, so we get bad $O(h^{-5})$ scaling for FPMY \hfill \sgrey{makes it hard to do science}
+\item $\beta,\gamma$ large if implicit/coupled solvers have mesh-dependent iterations \hfill \sgrey{need multigrid}
+\item goal: \alert{$\gamma<0.5$ for implicit/coupled Stokes}, giving $O(h^{-3})$ FPMY
 \end{itemize}
 \end{overprint}
 \end{frame}
@@ -1074,18 +1080,33 @@ implicit & $\Delta t \le 1/q$    & SIA & $O\left(q L^{2+2\beta}\,h^{-(2+2\beta)}
 
 \begin{frame}{summary}
 
-FIXME
 \begin{itemize}
-\item glaciation is a free-boundary problem; \alert{extent is an output of a VI}
-\item thickness (flux) and surface (kinematical) forms are the same VI, by incompressibility
-\item SIA theory: flat time-dependent, or bumpy steady; \alert{steady uniqueness fails on bumpy beds}
-\item Stokes: conjecturally Lipschitz, and coercive with a little regularization
+\item canonical evolution model for glaciers:
+    $$\text{surface kinematical equation} \, + \, \text{Stokes-type stress balance}$$
+
     \begin{itemize}
-    \item[$\lc$] substantial numerical evidence, but no proof
-    \item[$\lc$] consequence: a three-term \emph{a priori} bound for an implicit step
+    \item[$\lc$] \alert{surface-Stokes} for short
     \end{itemize}
-\item Tominec et al: a proven $L^2$ bound, plus stabilizations which give long stable steps at fixed extent
-\item performance: stabilized split solvers narrow the case for fully-implicit solvers, except at moving margins
+
+\pause
+\medskip
+\item it's a free-boundary problem; glaciation is an output
+    \begin{itemize}
+    \item[$\lc$] as a dynamical system: \alert{differential-algebraic}, with \alert{inequality constraints}
+    \end{itemize}
+\item well-posed?
+    \begin{itemize}
+    \item[$\lc$] on bumpy beds, steady state is not unique
+    \item[$\lc$] new $L^2$ stability bound (Tominec et al, 2026)
+    \item[$\lc$] my conjecture: surface motion is coercive in $W^{1,4}$, if you regularize slightly
+    \item[$\lc$] shallow approximation: various existence results (2002--2023)
+    \end{itemize}
+\item explicit vs implicit?
+    \begin{itemize}
+    \item[$\lc$] twice-stabilized semi-implicit (Tominec et al, 2026) provably works well
+    \item[$\lc$] more-implicit schemes are under development \hfill \pfcomm{session CR2.8 at EGU?}
+    \item[$\lc$] the \alert{scaling/complexity of solvers is important} \hfill \pfcomm{both Stokes and surface VI solvers}
+    \end{itemize}
 \end{itemize}
 
 \centering
