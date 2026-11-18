@@ -756,7 +756,10 @@ B (2026), App.~B & bumpy & steady & -- & \alert{no}$^\dagger$ when $a\equiv 0$ \
     \end{itemize}
 \item more properly it is a weak-form operator:
     $$\hspace{15mm} s \quad \stackrel{\Phi}{\mapsto} \quad -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega \qquad \text{\grey{(for test functions $\omega$)}}$$
-\item recall $\int_\Omega (\bu|_s \cdot \bn_s)\, \omega = \int_\Omega \bq(s)\cdot\grad \omega$
+
+    \begin{itemize}
+    \item[$\lc$] recall: \, $\displaystyle \int_\Omega (\bu|_s \cdot \bn_s)\, \omega = \int_\Omega \bq(s)\cdot\grad \omega$
+    \end{itemize}
 
 \bigskip
 \item is $\Phi$ a nice nonlinear operator?  \qquad \only<2>{\grey{what does ``nice'' mean?}}
@@ -767,7 +770,7 @@ B (2026), App.~B & bumpy & steady & -- & \alert{no}$^\dagger$ when $a\equiv 0$ \
 \begin{frame}{abstract niceness for nonlinear operators}
 
 \begin{itemize}
-\item[example] surface motion weak-form operator \quad $\displaystyle s \, \stackrel{\Phi}{\mapsto} \, -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega$
+\item operator of interest: surface motion weak-form \quad $\displaystyle s \, \stackrel{\Phi}{\mapsto} \, -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega$
 \end{itemize}
 
 \bigskip
@@ -781,27 +784,26 @@ For a Banach space $\cX$, a subset $\cK\subset \cX$, and a nonlinear map $F:\cK\
 
 \begin{itemize}
 \item $\qq$-coercive \, $\implies$ \, strictly-monotone
-\item if $F=\grad J$ for a smooth objective $J:\cK\to\RR$ then:
-
-\centerline{$F$ strictly-monotone $\iff$ $J$ strictly-convex}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{connection to optimization}
+\begin{frame}{connecting back to optimization}
 
 \begin{itemize}
-\item $F$ is \alert{monotone} if $\left(F(v)-F(w)\right)[v-w] \ge 0$
-\item it is \alert{strictly-monotone} if also $\left(F(v)-F(w)\right)[v-w] > 0$ for $v\ne w$.
+\item abstract operator $F:\cK \to \cX'$
+\item $F$ is \alert{strictly-monotone} if $\left(F(v)-F(w)\right)[v-w] > 0$ for all $v\ne w$
 
+\bigskip
+  \centerline{\input{tikz/generalfield.tex} \qquad\qquad \onslide<2>{\input{tikz/gradfield.tex}}}
+
+\pause
 \medskip
 \item if $F=\grad J$ for a smooth objective $J:\cK\to\RR$ then:
 
 \medskip
 \centerline{$F$ strictly-monotone $\iff$ $J$ strictly-convex}
 \end{itemize}
-
-FIXME draw $F=\grad J$ vs $F$ otherwise
 \end{frame}
 
 
@@ -809,13 +811,13 @@ FIXME draw $F=\grad J$ vs $F$ otherwise
 
 \vspace{-10mm}
 
-    $$\Phi(s)[\omega] = -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega, \qquad \cK = \{\sigma \,:\,\sigma \ge b\}$$
+    $$\Phi(s)[\omega] = -\int_\Omega (\bu|_s \cdot \bn_s)\, \omega, \qquad s\in \cK = \{\sigma \,:\,\sigma \ge b\}, \qquad \bu|_s \text{ from Stokes}$$
 
 \medskip
 \begin{overprint}
 \onslide<1>
 \begin{itemize}
-\item is this operator $\qq$-coercive?
+\item is $\Phi$ a $\qq$-coercive operator?
 \item I have 5 things to say
 \end{itemize}
 \onslide<2>
@@ -853,7 +855,7 @@ For a bed with local minima, $\Phi$ is \alert{not} strictly-monotone, thus not $
 \centerline{\includegraphics[width=0.33\textwidth]{figs/filled.pdf} \qquad \includegraphics[width=0.33\textwidth]{figs/icefree.pdf}}
 \onslide<6>
 \begin{block}{V.~speaking for myself}
-the coercivity situation is \alert{confusing} when $\bu|_s$ comes from Stokes
+the coercivity situation is \alert{confusing}
 \end{block}
 \end{overprint}
 \end{frame}
@@ -865,9 +867,9 @@ the coercivity situation is \alert{confusing} when $\bu|_s$ comes from Stokes
 \item but the Firedrake \includegraphics[width=4mm]{figs/firedrake-small.png} is a good friend
 
 \medskip
-\item \alert{run Stokes simulations} to generate 2000 \alert{random surface pair samples}
+\item \alert{run many Stokes simulations} to generate 2000 \alert{random surface pair samples}
     \begin{itemize}
-    \item[$\lc$] 1D domain $\Omega$, length 200 km, $h=$500 m mesh resolution
+    \item[$\lc$] 1D domain $\Omega$, length 200 km, $h=$ 500 m mesh resolution
     \item[$\lc$] either flat or rough bed, initial ice thickness 1400 m
     \item[$\lc$] 3 different climates, advance/retreat/deglaciation cases
     \end{itemize}
@@ -1123,15 +1125,8 @@ implicit & $\Delta t \le 1/q$    & SIA & $O\left(q L^{2+2\beta}\,h^{-(2+2\beta)}
 \begin{frame}{summary}
 
 \begin{itemize}
-\item canonical evolution model for glaciers:
+\item \alert{surface-Stokes} is the canonical evolution model for glaciers:
     $$\text{surface kinematical equation} \, + \, \text{Stokes-type stress balance}$$
-
-    \begin{itemize}
-    \item[$\lc$] ``\alert{surface-Stokes}'' for short
-    \end{itemize}
-
-\pause
-\medskip
 \item it's a free-boundary problem; glaciation is an output
     \begin{itemize}
     \item[$\lc$] as a dynamical system: \alert{differential-algebraic}, with \alert{inequality constraints}
@@ -1160,6 +1155,9 @@ implicit & $\Delta t \le 1/q$    & SIA & $O\left(q L^{2+2\beta}\,h^{-(2+2\beta)}
 \end{frame}
 
 
+\appendix
+\setbeamertemplate{page number in head/foot}{}
+
 %\begin{frame}[allowframebreaks]{references}
 \begin{frame}{references}
 \input{references.tex}
@@ -1168,8 +1166,6 @@ implicit & $\Delta t \le 1/q$    & SIA & $O\left(q L^{2+2\beta}\,h^{-(2+2\beta)}
 
 \begin{frame}[standout]
 extra slides
-
-FIXME remove extra from page count
 \end{frame}
 
 

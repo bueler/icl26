@@ -1,0 +1,13 @@
+% general (non-gradient) F(x,y) = A [x y]^T with A = S + R where
+% S = [[1, 0.4], [0.4, 0.5]] (same as tikz/gradfield.tex) and R = [[0, -0.8], [0.8, 0]];
+% F is strictly-monotone (symmetric part S) but curl F != 0 so F is not grad J
+\begin{tikzpicture}[scale=0.65]
+  \foreach \x in {-2,-1.5,...,2}
+    \foreach \y in {-2,-1.5,...,2} {
+      \pgfmathsetmacro{\fx}{\x - 0.4*\y}
+      \pgfmathsetmacro{\fy}{1.2*\x + 0.5*\y}
+      \draw[-{Stealth[length=1.4mm]}, icAccent] (\x,\y) -- ++({0.15*\fx},{0.15*\fy});
+    }
+  \fill[icGrey] (0,0) circle (2.5pt) node[right, icGrey, inner sep=1pt, xshift=0.5mm] {\small $F=0$};
+  \node at (0,-3.2) {general $F$};
+\end{tikzpicture}
