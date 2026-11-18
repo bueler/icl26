@@ -1,4 +1,4 @@
-all: talk4.pdf
+all: talkbas.pdf
 
 # build talk with lualatex; shared theme files and fonts live in ../theme/
 export TEXINPUTS := ../theme//:
@@ -8,7 +8,7 @@ export OPENTYPEFONTS := ../theme/fonts//:
 figs/notation?.pdf: figs/stokesdomain.py
 	(cd figs/ && python3 stokesdomain.py)
 
-TALK := talk4
+TALK := talkbas
 LATEX := lualatex -shell-escape -interaction=nonstopmode -halt-on-error
 
 $(TALK).pdf: $(TALK).tex ../theme/icl26.sty figs/notation?.pdf $(wildcard figs/*) $(wildcard tikz/*.tex) references.tex
